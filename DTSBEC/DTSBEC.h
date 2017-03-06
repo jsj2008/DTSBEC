@@ -16,4 +16,4 @@ FOUNDATION_EXPORT const unsigned char DTSBECVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <DTSBEC/PublicHeader.h>
 
-
+#import <DTSBEC/BECHeader.h>
