@@ -1,6 +1,6 @@
 #!/bin/bash
 
-headfilename='BECHeader.h'
+headfilename='./DTSBEC/BECHeader.h'
 
 rm -rf $headfilename && touch $headfilename
 echo "#ifndef BECHeader_h" >> $headfilename
@@ -8,7 +8,7 @@ echo "#define BECHeader_h" >> $headfilename
 
 echo -e "\n" >> $headfilename
 
-filelist=`ls ./`
+filelist=`ls ./DTSBEC`
 for file in $filelist
 do 
  extension=${file##*.}
