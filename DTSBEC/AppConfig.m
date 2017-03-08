@@ -1520,6 +1520,65 @@
 @end
 
 //////////////////////////////////////////////////////////////
+@implementation DengtaPaySwitch
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.iSwitch = 1;
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    [ostream writeInt32: 0 value: self.iSwitch];
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (DengtaPaySwitch *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.iSwitch = [istream readInt32Def: 0 required: false def: self.iSwitch];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"iSwitch" value : [BaseJSON writeInt32 : self.iSwitch]];
+    return JsonRoot;
+}
+
+- (DengtaPaySwitch *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.iSwitch = [BaseJSON readInt32Def:[RootMap objectForKey:@"iSwitch"] required:false def:self.iSwitch];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
 @implementation DtPriviBannerItem
 - (id) init
 {

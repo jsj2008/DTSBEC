@@ -49,6 +49,7 @@ typedef NS_ENUM(NSUInteger, E_DT_PAY_STATUS) {
 @property (nonatomic, copy) NSString* sTitle;
 @property (nonatomic, assign) int32_t iTotalAmount;
 @property (nonatomic, assign) int32_t iNumber;
+@property (nonatomic, copy) NSString* sDesc;
 @property (nonatomic, assign) int32_t iStatus;
 
 

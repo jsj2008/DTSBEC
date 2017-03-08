@@ -2221,4 +2221,108 @@ typedef NS_ENUM(NSUInteger, E_SCENE_TYPE) {
 
 @end
 
+/////////////////////////////////////////////////////////////////
+@interface SecBsInfo : Message
+
+@property (nonatomic, copy) NSString* sDtSecCode;
+@property (nonatomic, copy) NSString* sDate;
+@property (nonatomic, assign) int32_t iBs;
+@property (nonatomic, assign) float fClose;
+@property (nonatomic, assign) float fClosePre;
+@property (nonatomic, assign) float fBetaValue;
+@property (nonatomic, assign) float fBsValue;
+@property (nonatomic, assign) float fProbability;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (SecBsInfo *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetSecBsInfoReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+@property (nonatomic, copy) NSString* sDtSecCode;
+@property (nonatomic, copy) NSString* sDate;
+@property (nonatomic, assign) int32_t iSize;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetSecBsInfoReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetSecBsInfoRsp : Message
+
+@property (nonatomic, strong) NSMutableArray* vSecBsInfo;
+@property (nonatomic, assign) float fValue;
+@property (nonatomic, copy) NSString* sTypeText;
+@property (nonatomic, copy) NSString* sDescText;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetSecBsInfoRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetSecBsTopReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetSecBsTopReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetSecBsTopRsp : Message
+
+@property (nonatomic, strong) NSMutableArray* vSecBsInfoBuy;
+@property (nonatomic, strong) NSMutableArray* vSecBsInfoSell;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetSecBsTopRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
 #endif

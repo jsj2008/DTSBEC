@@ -7,148 +7,6 @@
 #import "Account.h"
 
 //////////////////////////////////////////////////////////////
-@implementation CommitCodeReq
-- (id) init
-{
-    if (self = [super init])
-    {
-        self.stUserInfo = [[UserInfo alloc] init];
-        self.stAccountTicket = [[AccountTicket alloc] init];
-        self.sCode = @"";
-    }
-
-    return self;
-}
-
-- (void) write: (BaseEncodeStream *)ostream
-{
-    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
-    ostream.lastid = 0;
-
-    if (self.stUserInfo != nil)
-    {
-        [ostream writeMessage: 0 value: self.stUserInfo];
-    }
-    if (self.stAccountTicket != nil)
-    {
-        [ostream writeMessage: 1 value: self.stAccountTicket];
-    }
-    if (self.sCode != nil)
-    {
-        [ostream writeString: 2 value: self.sCode];
-    }
-    
-    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
-}
-
-- (CommitCodeReq *) read: (BaseDecodeStream *)istream
-{
-    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
-    istream.lastid = 0;
-
-    self.stUserInfo = (UserInfo*)[istream readMessageDef: 0 required: false def: self.stUserInfo VAR_TYPE: [UserInfo class]];
-    self.stAccountTicket = (AccountTicket*)[istream readMessageDef: 1 required: false def: self.stAccountTicket VAR_TYPE: [AccountTicket class]];
-    self.sCode = [istream readStringDef: 2 required: false def: self.sCode];
-    
-    istream.lastid = _THOTH_BASESTREAM_LASTID_;
-    return self;
-}
-
-- (NSString *) writeToJsonString
-{
-    return [BaseJSON MessageToJson : [self writeJSON]];
-}
-
-- (JSONValueMessage *) writeJSON
-{
-    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
-    [JsonRoot append:@"stUserInfo" value : [BaseJSON writeMessage : self.stUserInfo]];
-    [JsonRoot append:@"stAccountTicket" value : [BaseJSON writeMessage : self.stAccountTicket]];
-    [JsonRoot append:@"sCode" value : [BaseJSON writeString : self.sCode]];
-    return JsonRoot;
-}
-
-- (CommitCodeReq *) readFromMap : (NSMutableDictionary *) RootMap
-{
-    self.stUserInfo = [BaseJSON readMessageDef:[RootMap objectForKey:@"stUserInfo"] required:false def:self.stUserInfo VAR_TYPE: [UserInfo class]];
-    self.stAccountTicket = [BaseJSON readMessageDef:[RootMap objectForKey:@"stAccountTicket"] required:false def:self.stAccountTicket VAR_TYPE: [AccountTicket class]];
-    self.sCode = [BaseJSON readStringDef:[RootMap objectForKey:@"sCode"] required:false def:self.sCode];
-    return self;
-}
-
-- (void) readFromJsonString : (NSString *) strJson
-{
-    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
-    [self readFromMap: JsonRoot.mTemp];
-}
-
-@end
-
-//////////////////////////////////////////////////////////////
-@implementation CommitCodeRsp
-- (id) init
-{
-    if (self = [super init])
-    {
-        self.iCodeType = 0;
-        self.iGetPoints = 0;
-    }
-
-    return self;
-}
-
-- (void) write: (BaseEncodeStream *)ostream
-{
-    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
-    ostream.lastid = 0;
-
-    [ostream writeInt32: 0 value: self.iCodeType];
-    [ostream writeInt32: 1 value: self.iGetPoints];
-    
-    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
-}
-
-- (CommitCodeRsp *) read: (BaseDecodeStream *)istream
-{
-    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
-    istream.lastid = 0;
-
-    self.iCodeType = [istream readInt32Def: 0 required: false def: self.iCodeType];
-    self.iGetPoints = [istream readInt32Def: 1 required: false def: self.iGetPoints];
-    
-    istream.lastid = _THOTH_BASESTREAM_LASTID_;
-    return self;
-}
-
-- (NSString *) writeToJsonString
-{
-    return [BaseJSON MessageToJson : [self writeJSON]];
-}
-
-- (JSONValueMessage *) writeJSON
-{
-    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
-    [JsonRoot append:@"iCodeType" value : [BaseJSON writeInt32 : self.iCodeType]];
-    [JsonRoot append:@"iGetPoints" value : [BaseJSON writeInt32 : self.iGetPoints]];
-    return JsonRoot;
-}
-
-- (CommitCodeRsp *) readFromMap : (NSMutableDictionary *) RootMap
-{
-    self.iCodeType = [BaseJSON readInt32Def:[RootMap objectForKey:@"iCodeType"] required:false def:self.iCodeType];
-    self.iGetPoints = [BaseJSON readInt32Def:[RootMap objectForKey:@"iGetPoints"] required:false def:self.iGetPoints];
-    return self;
-}
-
-- (void) readFromJsonString : (NSString *) strJson
-{
-    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
-    [self readFromMap: JsonRoot.mTemp];
-}
-
-@end
-
-//////////////////////////////////////////////////////////////
 @implementation GetUserPointInfoReq
 - (id) init
 {
@@ -742,6 +600,143 @@
 @end
 
 //////////////////////////////////////////////////////////////
+@implementation OpenMemberReq
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.stUserInfo = [[UserInfo alloc] init];
+        self.stAccountTicket = [[AccountTicket alloc] init];
+        self.iOpenDays = 0;
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.stUserInfo != nil)
+    {
+        [ostream writeMessage: 0 value: self.stUserInfo];
+    }
+    if (self.stAccountTicket != nil)
+    {
+        [ostream writeMessage: 1 value: self.stAccountTicket];
+    }
+    [ostream writeInt32: 2 value: self.iOpenDays];
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (OpenMemberReq *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.stUserInfo = (UserInfo*)[istream readMessageDef: 0 required: false def: self.stUserInfo VAR_TYPE: [UserInfo class]];
+    self.stAccountTicket = (AccountTicket*)[istream readMessageDef: 1 required: false def: self.stAccountTicket VAR_TYPE: [AccountTicket class]];
+    self.iOpenDays = [istream readInt32Def: 2 required: false def: self.iOpenDays];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"stUserInfo" value : [BaseJSON writeMessage : self.stUserInfo]];
+    [JsonRoot append:@"stAccountTicket" value : [BaseJSON writeMessage : self.stAccountTicket]];
+    [JsonRoot append:@"iOpenDays" value : [BaseJSON writeInt32 : self.iOpenDays]];
+    return JsonRoot;
+}
+
+- (OpenMemberReq *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.stUserInfo = [BaseJSON readMessageDef:[RootMap objectForKey:@"stUserInfo"] required:false def:self.stUserInfo VAR_TYPE: [UserInfo class]];
+    self.stAccountTicket = [BaseJSON readMessageDef:[RootMap objectForKey:@"stAccountTicket"] required:false def:self.stAccountTicket VAR_TYPE: [AccountTicket class]];
+    self.iOpenDays = [BaseJSON readInt32Def:[RootMap objectForKey:@"iOpenDays"] required:false def:self.iOpenDays];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation OpenMemberRsp
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.sMemberEndDay = @"";
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.sMemberEndDay != nil)
+    {
+        [ostream writeString: 0 value: self.sMemberEndDay];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (OpenMemberRsp *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.sMemberEndDay = [istream readStringDef: 0 required: false def: self.sMemberEndDay];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"sMemberEndDay" value : [BaseJSON writeString : self.sMemberEndDay]];
+    return JsonRoot;
+}
+
+- (OpenMemberRsp *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.sMemberEndDay = [BaseJSON readStringDef:[RootMap objectForKey:@"sMemberEndDay"] required:false def:self.sMemberEndDay];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
 @implementation GetPointTaskListReq
 - (id) init
 {
@@ -824,6 +819,7 @@
         self.iGetPoints = 0;
         self.iTimesLimit = 0;
         self.sIcon = @"";
+        self.iMemberPoints = 0;
     }
 
     return self;
@@ -853,6 +849,7 @@
     {
         [ostream writeString: 6 value: self.sIcon];
     }
+    [ostream writeInt32: 7 value: self.iMemberPoints];
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -869,6 +866,7 @@
     self.iGetPoints = [istream readInt32Def: 4 required: false def: self.iGetPoints];
     self.iTimesLimit = [istream readInt32Def: 5 required: false def: self.iTimesLimit];
     self.sIcon = [istream readStringDef: 6 required: false def: self.sIcon];
+    self.iMemberPoints = [istream readInt32Def: 7 required: false def: self.iMemberPoints];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -889,6 +887,7 @@
     [JsonRoot append:@"iGetPoints" value : [BaseJSON writeInt32 : self.iGetPoints]];
     [JsonRoot append:@"iTimesLimit" value : [BaseJSON writeInt32 : self.iTimesLimit]];
     [JsonRoot append:@"sIcon" value : [BaseJSON writeString : self.sIcon]];
+    [JsonRoot append:@"iMemberPoints" value : [BaseJSON writeInt32 : self.iMemberPoints]];
     return JsonRoot;
 }
 
@@ -901,6 +900,7 @@
     self.iGetPoints = [BaseJSON readInt32Def:[RootMap objectForKey:@"iGetPoints"] required:false def:self.iGetPoints];
     self.iTimesLimit = [BaseJSON readInt32Def:[RootMap objectForKey:@"iTimesLimit"] required:false def:self.iTimesLimit];
     self.sIcon = [BaseJSON readStringDef:[RootMap objectForKey:@"sIcon"] required:false def:self.sIcon];
+    self.iMemberPoints = [BaseJSON readInt32Def:[RootMap objectForKey:@"iMemberPoints"] required:false def:self.iMemberPoints];
     return self;
 }
 
@@ -1125,6 +1125,7 @@
         self.stUserInfo = [[UserInfo alloc] init];
         self.stAccountTicket = [[AccountTicket alloc] init];
         self.sCode = @"";
+        self.iCodeType = 0;
     }
 
     return self;
@@ -1147,6 +1148,7 @@
     {
         [ostream writeString: 2 value: self.sCode];
     }
+    [ostream writeInt32: 3 value: self.iCodeType];
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -1159,6 +1161,7 @@
     self.stUserInfo = (UserInfo*)[istream readMessageDef: 0 required: false def: self.stUserInfo VAR_TYPE: [UserInfo class]];
     self.stAccountTicket = (AccountTicket*)[istream readMessageDef: 1 required: false def: self.stAccountTicket VAR_TYPE: [AccountTicket class]];
     self.sCode = [istream readStringDef: 2 required: false def: self.sCode];
+    self.iCodeType = [istream readInt32Def: 3 required: false def: self.iCodeType];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -1175,6 +1178,7 @@
     [JsonRoot append:@"stUserInfo" value : [BaseJSON writeMessage : self.stUserInfo]];
     [JsonRoot append:@"stAccountTicket" value : [BaseJSON writeMessage : self.stAccountTicket]];
     [JsonRoot append:@"sCode" value : [BaseJSON writeString : self.sCode]];
+    [JsonRoot append:@"iCodeType" value : [BaseJSON writeInt32 : self.iCodeType]];
     return JsonRoot;
 }
 
@@ -1183,6 +1187,7 @@
     self.stUserInfo = [BaseJSON readMessageDef:[RootMap objectForKey:@"stUserInfo"] required:false def:self.stUserInfo VAR_TYPE: [UserInfo class]];
     self.stAccountTicket = [BaseJSON readMessageDef:[RootMap objectForKey:@"stAccountTicket"] required:false def:self.stAccountTicket VAR_TYPE: [AccountTicket class]];
     self.sCode = [BaseJSON readStringDef:[RootMap objectForKey:@"sCode"] required:false def:self.sCode];
+    self.iCodeType = [BaseJSON readInt32Def:[RootMap objectForKey:@"iCodeType"] required:false def:self.iCodeType];
     return self;
 }
 
@@ -1202,6 +1207,8 @@
     {
         self.iGetPoints = 0;
         self.iGetPriviDays = 0;
+        self.iRetCode = 0;
+        self.sRetMsg = @"";
     }
 
     return self;
@@ -1214,6 +1221,11 @@
 
     [ostream writeInt32: 0 value: self.iGetPoints];
     [ostream writeInt32: 1 value: self.iGetPriviDays];
+    [ostream writeInt32: 2 value: self.iRetCode];
+    if (self.sRetMsg != nil)
+    {
+        [ostream writeString: 3 value: self.sRetMsg];
+    }
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -1225,6 +1237,8 @@
 
     self.iGetPoints = [istream readInt32Def: 0 required: false def: self.iGetPoints];
     self.iGetPriviDays = [istream readInt32Def: 1 required: false def: self.iGetPriviDays];
+    self.iRetCode = [istream readInt32Def: 2 required: false def: self.iRetCode];
+    self.sRetMsg = [istream readStringDef: 3 required: false def: self.sRetMsg];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -1240,6 +1254,8 @@
     JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
     [JsonRoot append:@"iGetPoints" value : [BaseJSON writeInt32 : self.iGetPoints]];
     [JsonRoot append:@"iGetPriviDays" value : [BaseJSON writeInt32 : self.iGetPriviDays]];
+    [JsonRoot append:@"iRetCode" value : [BaseJSON writeInt32 : self.iRetCode]];
+    [JsonRoot append:@"sRetMsg" value : [BaseJSON writeString : self.sRetMsg]];
     return JsonRoot;
 }
 
@@ -1247,6 +1263,8 @@
 {
     self.iGetPoints = [BaseJSON readInt32Def:[RootMap objectForKey:@"iGetPoints"] required:false def:self.iGetPoints];
     self.iGetPriviDays = [BaseJSON readInt32Def:[RootMap objectForKey:@"iGetPriviDays"] required:false def:self.iGetPriviDays];
+    self.iRetCode = [BaseJSON readInt32Def:[RootMap objectForKey:@"iRetCode"] required:false def:self.iRetCode];
+    self.sRetMsg = [BaseJSON readStringDef:[RootMap objectForKey:@"sRetMsg"] required:false def:self.sRetMsg];
     return self;
 }
 
@@ -1350,6 +1368,8 @@
         self.iTaskType = 0;
         self.lTimeStamp = 0;
         self.iGetPoints = 0;
+        self.sTaskDesc = @"";
+        self.sTaskClassDesc = @"";
     }
 
     return self;
@@ -1363,6 +1383,14 @@
     [ostream writeInt32: 0 value: self.iTaskType];
     [ostream writeInt64: 1 value: self.lTimeStamp];
     [ostream writeInt32: 2 value: self.iGetPoints];
+    if (self.sTaskDesc != nil)
+    {
+        [ostream writeString: 3 value: self.sTaskDesc];
+    }
+    if (self.sTaskClassDesc != nil)
+    {
+        [ostream writeString: 4 value: self.sTaskClassDesc];
+    }
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -1375,6 +1403,8 @@
     self.iTaskType = [istream readInt32Def: 0 required: false def: self.iTaskType];
     self.lTimeStamp = [istream readInt64Def: 1 required: false def: self.lTimeStamp];
     self.iGetPoints = [istream readInt32Def: 2 required: false def: self.iGetPoints];
+    self.sTaskDesc = [istream readStringDef: 3 required: false def: self.sTaskDesc];
+    self.sTaskClassDesc = [istream readStringDef: 4 required: false def: self.sTaskClassDesc];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -1391,6 +1421,8 @@
     [JsonRoot append:@"iTaskType" value : [BaseJSON writeInt32 : self.iTaskType]];
     [JsonRoot append:@"lTimeStamp" value : [BaseJSON writeInt64 : self.lTimeStamp]];
     [JsonRoot append:@"iGetPoints" value : [BaseJSON writeInt32 : self.iGetPoints]];
+    [JsonRoot append:@"sTaskDesc" value : [BaseJSON writeString : self.sTaskDesc]];
+    [JsonRoot append:@"sTaskClassDesc" value : [BaseJSON writeString : self.sTaskClassDesc]];
     return JsonRoot;
 }
 
@@ -1399,6 +1431,8 @@
     self.iTaskType = [BaseJSON readInt32Def:[RootMap objectForKey:@"iTaskType"] required:false def:self.iTaskType];
     self.lTimeStamp = [BaseJSON readInt64Def:[RootMap objectForKey:@"lTimeStamp"] required:false def:self.lTimeStamp];
     self.iGetPoints = [BaseJSON readInt32Def:[RootMap objectForKey:@"iGetPoints"] required:false def:self.iGetPoints];
+    self.sTaskDesc = [BaseJSON readStringDef:[RootMap objectForKey:@"sTaskDesc"] required:false def:self.sTaskDesc];
+    self.sTaskClassDesc = [BaseJSON readStringDef:[RootMap objectForKey:@"sTaskClassDesc"] required:false def:self.sTaskClassDesc];
     return self;
 }
 
@@ -1730,6 +1764,7 @@
         self.sDesc = @"";
         self.iSize = 20;
         self.lInvalidTimeStamp = 0;
+        self.iCodeType = 0;
     }
 
     return self;
@@ -1751,6 +1786,7 @@
     }
     [ostream writeInt32: 3 value: self.iSize];
     [ostream writeInt64: 4 value: self.lInvalidTimeStamp];
+    [ostream writeInt32: 5 value: self.iCodeType];
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -1765,6 +1801,7 @@
     self.sDesc = [istream readStringDef: 2 required: false def: self.sDesc];
     self.iSize = [istream readInt32Def: 3 required: false def: self.iSize];
     self.lInvalidTimeStamp = [istream readInt64Def: 4 required: false def: self.lInvalidTimeStamp];
+    self.iCodeType = [istream readInt32Def: 5 required: false def: self.iCodeType];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -1783,6 +1820,7 @@
     [JsonRoot append:@"sDesc" value : [BaseJSON writeString : self.sDesc]];
     [JsonRoot append:@"iSize" value : [BaseJSON writeInt32 : self.iSize]];
     [JsonRoot append:@"lInvalidTimeStamp" value : [BaseJSON writeInt64 : self.lInvalidTimeStamp]];
+    [JsonRoot append:@"iCodeType" value : [BaseJSON writeInt32 : self.iCodeType]];
     return JsonRoot;
 }
 
@@ -1793,6 +1831,7 @@
     self.sDesc = [BaseJSON readStringDef:[RootMap objectForKey:@"sDesc"] required:false def:self.sDesc];
     self.iSize = [BaseJSON readInt32Def:[RootMap objectForKey:@"iSize"] required:false def:self.iSize];
     self.lInvalidTimeStamp = [BaseJSON readInt64Def:[RootMap objectForKey:@"lInvalidTimeStamp"] required:false def:self.lInvalidTimeStamp];
+    self.iCodeType = [BaseJSON readInt32Def:[RootMap objectForKey:@"iCodeType"] required:false def:self.iCodeType];
     return self;
 }
 
@@ -1855,6 +1894,155 @@
 - (GetAccuPointConverCodeRsp *) readFromMap : (NSMutableDictionary *) RootMap
 {
     self.vConversionCode = [BaseJSON readListDef:[RootMap objectForKey:@"vConversionCode"] required:false def:self.vConversionCode VAR_TYPE: [THOTH_LIST CREATE: [THOTH_STRING class]]];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation UseAccuPointReq
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.stUserInfo = [[UserInfo alloc] init];
+        self.stAccountTicket = [[AccountTicket alloc] init];
+        self.iUseType = 0;
+        self.iUsePointNum = 0;
+        self.iGetPointNum = 0;
+        self.lTimeStamp = 0;
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.stUserInfo != nil)
+    {
+        [ostream writeMessage: 0 value: self.stUserInfo];
+    }
+    if (self.stAccountTicket != nil)
+    {
+        [ostream writeMessage: 1 value: self.stAccountTicket];
+    }
+    [ostream writeInt32: 2 value: self.iUseType];
+    [ostream writeInt32: 3 value: self.iUsePointNum];
+    [ostream writeInt32: 4 value: self.iGetPointNum];
+    [ostream writeInt64: 5 value: self.lTimeStamp];
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (UseAccuPointReq *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.stUserInfo = (UserInfo*)[istream readMessageDef: 0 required: false def: self.stUserInfo VAR_TYPE: [UserInfo class]];
+    self.stAccountTicket = (AccountTicket*)[istream readMessageDef: 1 required: false def: self.stAccountTicket VAR_TYPE: [AccountTicket class]];
+    self.iUseType = [istream readInt32Def: 2 required: false def: self.iUseType];
+    self.iUsePointNum = [istream readInt32Def: 3 required: false def: self.iUsePointNum];
+    self.iGetPointNum = [istream readInt32Def: 4 required: false def: self.iGetPointNum];
+    self.lTimeStamp = [istream readInt64Def: 5 required: false def: self.lTimeStamp];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"stUserInfo" value : [BaseJSON writeMessage : self.stUserInfo]];
+    [JsonRoot append:@"stAccountTicket" value : [BaseJSON writeMessage : self.stAccountTicket]];
+    [JsonRoot append:@"iUseType" value : [BaseJSON writeInt32 : self.iUseType]];
+    [JsonRoot append:@"iUsePointNum" value : [BaseJSON writeInt32 : self.iUsePointNum]];
+    [JsonRoot append:@"iGetPointNum" value : [BaseJSON writeInt32 : self.iGetPointNum]];
+    [JsonRoot append:@"lTimeStamp" value : [BaseJSON writeInt64 : self.lTimeStamp]];
+    return JsonRoot;
+}
+
+- (UseAccuPointReq *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.stUserInfo = [BaseJSON readMessageDef:[RootMap objectForKey:@"stUserInfo"] required:false def:self.stUserInfo VAR_TYPE: [UserInfo class]];
+    self.stAccountTicket = [BaseJSON readMessageDef:[RootMap objectForKey:@"stAccountTicket"] required:false def:self.stAccountTicket VAR_TYPE: [AccountTicket class]];
+    self.iUseType = [BaseJSON readInt32Def:[RootMap objectForKey:@"iUseType"] required:false def:self.iUseType];
+    self.iUsePointNum = [BaseJSON readInt32Def:[RootMap objectForKey:@"iUsePointNum"] required:false def:self.iUsePointNum];
+    self.iGetPointNum = [BaseJSON readInt32Def:[RootMap objectForKey:@"iGetPointNum"] required:false def:self.iGetPointNum];
+    self.lTimeStamp = [BaseJSON readInt64Def:[RootMap objectForKey:@"lTimeStamp"] required:false def:self.lTimeStamp];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation UseAccuPointRsp
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.iLeftAccuPoint = 0;
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    [ostream writeInt32: 0 value: self.iLeftAccuPoint];
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (UseAccuPointRsp *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.iLeftAccuPoint = [istream readInt32Def: 0 required: false def: self.iLeftAccuPoint];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"iLeftAccuPoint" value : [BaseJSON writeInt32 : self.iLeftAccuPoint]];
+    return JsonRoot;
+}
+
+- (UseAccuPointRsp *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.iLeftAccuPoint = [BaseJSON readInt32Def:[RootMap objectForKey:@"iLeftAccuPoint"] required:false def:self.iLeftAccuPoint];
     return self;
 }
 

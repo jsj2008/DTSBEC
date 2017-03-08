@@ -17,6 +17,7 @@
         self.iAccountId = 0;
         self.mpDeviceTokens = [NSMutableDictionary dictionaryWithCapacity: 0];
         self.sTag = @"";
+        self.iMember = 0;
     }
 
     return self;
@@ -50,6 +51,7 @@
     {
         [ostream writeString: 7 value: self.sTag];
     }
+    [ostream writeInt32: 8 value: self.iMember];
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -67,6 +69,7 @@
     self.iAccountId = [istream readUInt32Def: 5 required: false def: self.iAccountId];
     self.mpDeviceTokens = [istream readMapDef: 6 required: false def: self.mpDeviceTokens VAR_TYPE: [THOTH_MAP CREATE: [THOTH_INT32 class] VT: [THOTH_STRING class]]];
     self.sTag = [istream readStringDef: 7 required: false def: self.sTag];
+    self.iMember = [istream readInt32Def: 8 required: false def: self.iMember];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -88,6 +91,7 @@
     [JsonRoot append:@"iAccountId" value : [BaseJSON writeUInt32 : self.iAccountId]];
     [JsonRoot append:@"mpDeviceTokens" value : [BaseJSON writeMap : self.mpDeviceTokens VAR_TYPE: [THOTH_MAP CREATE: [THOTH_INT32 class] VT: [THOTH_STRING class]]]];
     [JsonRoot append:@"sTag" value : [BaseJSON writeString : self.sTag]];
+    [JsonRoot append:@"iMember" value : [BaseJSON writeInt32 : self.iMember]];
     return JsonRoot;
 }
 
@@ -101,6 +105,7 @@
     self.iAccountId = [BaseJSON readUInt32Def:[RootMap objectForKey:@"iAccountId"] required:false def:self.iAccountId];
     self.mpDeviceTokens = [BaseJSON readMapDef:[RootMap objectForKey:@"mpDeviceTokens"] required:false def:self.mpDeviceTokens VAR_TYPE: [THOTH_MAP CREATE: [THOTH_INT32 class] VT: [THOTH_STRING class]]];
     self.sTag = [BaseJSON readStringDef:[RootMap objectForKey:@"sTag"] required:false def:self.sTag];
+    self.iMember = [BaseJSON readInt32Def:[RootMap objectForKey:@"iMember"] required:false def:self.iMember];
     return self;
 }
 

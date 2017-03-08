@@ -19,7 +19,9 @@ typedef NS_ENUM(NSUInteger, AccuPointErrCode) {
     E_ACCU_POINT_CODE_USED_ALREADY = -9,
     E_ACCU_POINT_OLD_USER_COMMIT_CODE = -10,
     E_ACCU_POINT_EXPIRED_CODE = -11,
-    E_ACCU_POINT_SVR_ERR = -99
+    E_ACCU_POINT_USER_NOT_EXIST = -12,
+    E_ACCU_POINT_SVR_ERR = -99,
+    E_ACCU_POINT_BIND_PHONE = 1
 };
 
 typedef NS_ENUM(NSUInteger, AccuPointTaskType) {
@@ -31,63 +33,37 @@ typedef NS_ENUM(NSUInteger, AccuPointTaskType) {
     E_ACCU_POINT_TASK_PRAISE_FEED = 5,
     E_ACCU_POINT_TASK_COMMENT_FEED = 6,
     E_ACCU_POINT_TASK_PO_FEED = 7,
-    E_ACCU_POINT_TASK_REGISTER = 8
+    E_ACCU_POINT_TASK_REGISTER = 8,
+    E_ACCU_POINT_TASK_EXCHANGE_PRIVI = 9
 };
 
 typedef NS_ENUM(NSUInteger, AccuPointCodeType) {
     E_ACCU_POINT_CODE_INVITE = 0,
-    E_ACCU_POINT_CODE_CONVERT = 1
+    E_ACCU_POINT_CODE_CONVERT = 1,
+    E_ACCU_POINT_CODE_ACTIVATE = 2
 };
 
 typedef NS_ENUM(NSUInteger, AccuPointPriviType) {
     E_ACCU_POINT_PRIVI_CHIP = 1,
     E_ACCU_POINT_PRIVI_KLINE = 2,
-    E_ACCU_POINT_PRIVI_HISTORY = 3
+    E_ACCU_POINT_PRIVI_HISTORY = 3,
+    E_ACCU_POINT_PRIVI_BSSIGNAL = 4
 };
 
 typedef NS_ENUM(NSUInteger, AccuPointOpenType) {
     E_ACCU_POINT_OPEN_BY_POINT = 0,
-    E_ACCU_POINT_OPEN_BY_MONEY = 1
+    E_ACCU_POINT_OPEN_BY_MONEY = 1,
+    E_ACCU_POINT_OPEN_BY_CONVER_CODE = 2
 };
 
-/////////////////////////////////////////////////////////////////
-@interface CommitCodeReq : Message
+typedef NS_ENUM(NSUInteger, AccuPointUseType) {
+    E_ACCU_POINT_USE_OPEN_BLESS_PACK = 1
+};
 
-@property (nonatomic, strong) UserInfo* stUserInfo;
-@property (nonatomic, strong) AccountTicket* stAccountTicket;
-@property (nonatomic, copy) NSString* sCode;
-
-
-- (void) write: (BaseEncodeStream *)eos;
-
-- (CommitCodeReq *) read: (BaseDecodeStream *)dos;
-
-- (NSString *) writeToJsonString;
-
-- (JSONValueMessage *) writeJSON;
-
-- (void) readFromJsonString : (NSString *) strJson;
-
-@end
-
-/////////////////////////////////////////////////////////////////
-@interface CommitCodeRsp : Message
-
-@property (nonatomic, assign) int32_t iCodeType;
-@property (nonatomic, assign) int32_t iGetPoints;
-
-
-- (void) write: (BaseEncodeStream *)eos;
-
-- (CommitCodeRsp *) read: (BaseDecodeStream *)dos;
-
-- (NSString *) writeToJsonString;
-
-- (JSONValueMessage *) writeJSON;
-
-- (void) readFromJsonString : (NSString *) strJson;
-
-@end
+typedef NS_ENUM(NSUInteger, AccuPointConverCodeType) {
+    E_ACCU_POINT_CONVER_CODE_PRIVI = 0,
+    E_ACCU_POINT_CONVER_CODE_MEMBER = 1
+};
 
 /////////////////////////////////////////////////////////////////
 @interface GetUserPointInfoReq : Message
@@ -251,6 +227,44 @@ typedef NS_ENUM(NSUInteger, AccuPointOpenType) {
 @end
 
 /////////////////////////////////////////////////////////////////
+@interface OpenMemberReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+@property (nonatomic, strong) AccountTicket* stAccountTicket;
+@property (nonatomic, assign) int32_t iOpenDays;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (OpenMemberReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface OpenMemberRsp : Message
+
+@property (nonatomic, copy) NSString* sMemberEndDay;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (OpenMemberRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
 @interface GetPointTaskListReq : Message
 
 @property (nonatomic, strong) UserInfo* stUserInfo;
@@ -279,6 +293,7 @@ typedef NS_ENUM(NSUInteger, AccuPointOpenType) {
 @property (nonatomic, assign) int32_t iGetPoints;
 @property (nonatomic, assign) int32_t iTimesLimit;
 @property (nonatomic, copy) NSString* sIcon;
+@property (nonatomic, assign) int32_t iMemberPoints;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -356,6 +371,7 @@ typedef NS_ENUM(NSUInteger, AccuPointOpenType) {
 @property (nonatomic, strong) UserInfo* stUserInfo;
 @property (nonatomic, strong) AccountTicket* stAccountTicket;
 @property (nonatomic, copy) NSString* sCode;
+@property (nonatomic, assign) int32_t iCodeType;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -375,6 +391,8 @@ typedef NS_ENUM(NSUInteger, AccuPointOpenType) {
 
 @property (nonatomic, assign) int32_t iGetPoints;
 @property (nonatomic, assign) int32_t iGetPriviDays;
+@property (nonatomic, assign) int32_t iRetCode;
+@property (nonatomic, copy) NSString* sRetMsg;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -416,6 +434,8 @@ typedef NS_ENUM(NSUInteger, AccuPointOpenType) {
 @property (nonatomic, assign) int32_t iTaskType;
 @property (nonatomic, assign) int64_t lTimeStamp;
 @property (nonatomic, assign) int32_t iGetPoints;
+@property (nonatomic, copy) NSString* sTaskDesc;
+@property (nonatomic, copy) NSString* sTaskClassDesc;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -521,6 +541,7 @@ typedef NS_ENUM(NSUInteger, AccuPointOpenType) {
 @property (nonatomic, copy) NSString* sDesc;
 @property (nonatomic, assign) int32_t iSize;
 @property (nonatomic, assign) int64_t lInvalidTimeStamp;
+@property (nonatomic, assign) int32_t iCodeType;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -544,6 +565,47 @@ typedef NS_ENUM(NSUInteger, AccuPointOpenType) {
 - (void) write: (BaseEncodeStream *)eos;
 
 - (GetAccuPointConverCodeRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface UseAccuPointReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+@property (nonatomic, strong) AccountTicket* stAccountTicket;
+@property (nonatomic, assign) int32_t iUseType;
+@property (nonatomic, assign) int32_t iUsePointNum;
+@property (nonatomic, assign) int32_t iGetPointNum;
+@property (nonatomic, assign) int64_t lTimeStamp;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (UseAccuPointReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface UseAccuPointRsp : Message
+
+@property (nonatomic, assign) int32_t iLeftAccuPoint;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (UseAccuPointRsp *) read: (BaseDecodeStream *)dos;
 
 - (NSString *) writeToJsonString;
 

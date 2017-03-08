@@ -2,6 +2,7 @@
 #define BECHeader_h
 
 
+#import "AIConsultStock.h"
 #import "Account.h"
 #import "AccountCache.h"
 #import "AccountInterface.h"

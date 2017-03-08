@@ -18,6 +18,7 @@
         self.sTitle = @"";
         self.iTotalAmount = 0;
         self.iNumber = 0;
+        self.sDesc = @"";
         self.iStatus = 0;
     }
 
@@ -41,7 +42,11 @@
     }
     [ostream writeInt32: 4 value: self.iTotalAmount];
     [ostream writeInt32: 5 value: self.iNumber];
-    [ostream writeInt32: 6 value: self.iStatus];
+    if (self.sDesc != nil)
+    {
+        [ostream writeString: 6 value: self.sDesc];
+    }
+    [ostream writeInt32: 7 value: self.iStatus];
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -57,7 +62,8 @@
     self.sTitle = [istream readStringDef: 3 required: false def: self.sTitle];
     self.iTotalAmount = [istream readInt32Def: 4 required: false def: self.iTotalAmount];
     self.iNumber = [istream readInt32Def: 5 required: false def: self.iNumber];
-    self.iStatus = [istream readInt32Def: 6 required: false def: self.iStatus];
+    self.sDesc = [istream readStringDef: 6 required: false def: self.sDesc];
+    self.iStatus = [istream readInt32Def: 7 required: false def: self.iStatus];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -77,6 +83,7 @@
     [JsonRoot append:@"sTitle" value : [BaseJSON writeString : self.sTitle]];
     [JsonRoot append:@"iTotalAmount" value : [BaseJSON writeInt32 : self.iTotalAmount]];
     [JsonRoot append:@"iNumber" value : [BaseJSON writeInt32 : self.iNumber]];
+    [JsonRoot append:@"sDesc" value : [BaseJSON writeString : self.sDesc]];
     [JsonRoot append:@"iStatus" value : [BaseJSON writeInt32 : self.iStatus]];
     return JsonRoot;
 }
@@ -89,6 +96,7 @@
     self.sTitle = [BaseJSON readStringDef:[RootMap objectForKey:@"sTitle"] required:false def:self.sTitle];
     self.iTotalAmount = [BaseJSON readInt32Def:[RootMap objectForKey:@"iTotalAmount"] required:false def:self.iTotalAmount];
     self.iNumber = [BaseJSON readInt32Def:[RootMap objectForKey:@"iNumber"] required:false def:self.iNumber];
+    self.sDesc = [BaseJSON readStringDef:[RootMap objectForKey:@"sDesc"] required:false def:self.sDesc];
     self.iStatus = [BaseJSON readInt32Def:[RootMap objectForKey:@"iStatus"] required:false def:self.iStatus];
     return self;
 }

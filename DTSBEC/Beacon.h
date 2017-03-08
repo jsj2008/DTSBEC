@@ -151,6 +151,7 @@ typedef NS_ENUM(NSUInteger, E_SEC_HIS_SUBJECT_TYPE) {
 @property (nonatomic, assign) uint32_t iAccountId;
 @property (nonatomic, strong) NSMutableDictionary* mpDeviceTokens;
 @property (nonatomic, copy) NSString* sTag;
+@property (nonatomic, assign) int32_t iMember;
 
 
 - (void) write: (BaseEncodeStream *)eos;

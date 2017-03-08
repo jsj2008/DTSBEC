@@ -82,7 +82,8 @@ typedef NS_ENUM(NSUInteger, E_FEED_USER_TYPE) {
 
 typedef NS_ENUM(NSUInteger, E_DT_MEMBER_TYPE) {
     E_DT_NO_MEMBER = 0,
-    E_DT_MEMBER = 1
+    E_DT_MEMBER = 1,
+    E_DT_MEMBER_EXPIRED = -1
 };
 
 typedef NS_ENUM(NSUInteger, E_PHONE_REGISTER_COME_FROM) {

@@ -8186,3 +8186,401 @@
 
 @end
 
+//////////////////////////////////////////////////////////////
+@implementation SecBsInfo
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.sDtSecCode = @"";
+        self.sDate = @"";
+        self.iBs = 0;
+        self.fClose = 0;
+        self.fClosePre = 0;
+        self.fBetaValue = 0;
+        self.fBsValue = 0;
+        self.fProbability = 0;
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.sDtSecCode != nil)
+    {
+        [ostream writeString: 0 value: self.sDtSecCode];
+    }
+    if (self.sDate != nil)
+    {
+        [ostream writeString: 1 value: self.sDate];
+    }
+    [ostream writeInt32: 2 value: self.iBs];
+    [ostream writeFloat: 3 value: self.fClose];
+    [ostream writeFloat: 4 value: self.fClosePre];
+    [ostream writeFloat: 5 value: self.fBetaValue];
+    [ostream writeFloat: 6 value: self.fBsValue];
+    [ostream writeFloat: 7 value: self.fProbability];
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (SecBsInfo *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.sDtSecCode = [istream readStringDef: 0 required: false def: self.sDtSecCode];
+    self.sDate = [istream readStringDef: 1 required: false def: self.sDate];
+    self.iBs = [istream readInt32Def: 2 required: false def: self.iBs];
+    self.fClose = [istream readFloatDef: 3 required: false def: self.fClose];
+    self.fClosePre = [istream readFloatDef: 4 required: false def: self.fClosePre];
+    self.fBetaValue = [istream readFloatDef: 5 required: false def: self.fBetaValue];
+    self.fBsValue = [istream readFloatDef: 6 required: false def: self.fBsValue];
+    self.fProbability = [istream readFloatDef: 7 required: false def: self.fProbability];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"sDtSecCode" value : [BaseJSON writeString : self.sDtSecCode]];
+    [JsonRoot append:@"sDate" value : [BaseJSON writeString : self.sDate]];
+    [JsonRoot append:@"iBs" value : [BaseJSON writeInt32 : self.iBs]];
+    [JsonRoot append:@"fClose" value : [BaseJSON writeFloat : self.fClose]];
+    [JsonRoot append:@"fClosePre" value : [BaseJSON writeFloat : self.fClosePre]];
+    [JsonRoot append:@"fBetaValue" value : [BaseJSON writeFloat : self.fBetaValue]];
+    [JsonRoot append:@"fBsValue" value : [BaseJSON writeFloat : self.fBsValue]];
+    [JsonRoot append:@"fProbability" value : [BaseJSON writeFloat : self.fProbability]];
+    return JsonRoot;
+}
+
+- (SecBsInfo *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.sDtSecCode = [BaseJSON readStringDef:[RootMap objectForKey:@"sDtSecCode"] required:false def:self.sDtSecCode];
+    self.sDate = [BaseJSON readStringDef:[RootMap objectForKey:@"sDate"] required:false def:self.sDate];
+    self.iBs = [BaseJSON readInt32Def:[RootMap objectForKey:@"iBs"] required:false def:self.iBs];
+    self.fClose = [BaseJSON readFloatDef:[RootMap objectForKey:@"fClose"] required:false def:self.fClose];
+    self.fClosePre = [BaseJSON readFloatDef:[RootMap objectForKey:@"fClosePre"] required:false def:self.fClosePre];
+    self.fBetaValue = [BaseJSON readFloatDef:[RootMap objectForKey:@"fBetaValue"] required:false def:self.fBetaValue];
+    self.fBsValue = [BaseJSON readFloatDef:[RootMap objectForKey:@"fBsValue"] required:false def:self.fBsValue];
+    self.fProbability = [BaseJSON readFloatDef:[RootMap objectForKey:@"fProbability"] required:false def:self.fProbability];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation GetSecBsInfoReq
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.stUserInfo = [[UserInfo alloc] init];
+        self.sDtSecCode = @"";
+        self.sDate = @"";
+        self.iSize = 0;
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.stUserInfo != nil)
+    {
+        [ostream writeMessage: 0 value: self.stUserInfo];
+    }
+    if (self.sDtSecCode != nil)
+    {
+        [ostream writeString: 1 value: self.sDtSecCode];
+    }
+    if (self.sDate != nil)
+    {
+        [ostream writeString: 2 value: self.sDate];
+    }
+    [ostream writeInt32: 3 value: self.iSize];
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (GetSecBsInfoReq *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.stUserInfo = (UserInfo*)[istream readMessageDef: 0 required: false def: self.stUserInfo VAR_TYPE: [UserInfo class]];
+    self.sDtSecCode = [istream readStringDef: 1 required: false def: self.sDtSecCode];
+    self.sDate = [istream readStringDef: 2 required: false def: self.sDate];
+    self.iSize = [istream readInt32Def: 3 required: false def: self.iSize];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"stUserInfo" value : [BaseJSON writeMessage : self.stUserInfo]];
+    [JsonRoot append:@"sDtSecCode" value : [BaseJSON writeString : self.sDtSecCode]];
+    [JsonRoot append:@"sDate" value : [BaseJSON writeString : self.sDate]];
+    [JsonRoot append:@"iSize" value : [BaseJSON writeInt32 : self.iSize]];
+    return JsonRoot;
+}
+
+- (GetSecBsInfoReq *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.stUserInfo = [BaseJSON readMessageDef:[RootMap objectForKey:@"stUserInfo"] required:false def:self.stUserInfo VAR_TYPE: [UserInfo class]];
+    self.sDtSecCode = [BaseJSON readStringDef:[RootMap objectForKey:@"sDtSecCode"] required:false def:self.sDtSecCode];
+    self.sDate = [BaseJSON readStringDef:[RootMap objectForKey:@"sDate"] required:false def:self.sDate];
+    self.iSize = [BaseJSON readInt32Def:[RootMap objectForKey:@"iSize"] required:false def:self.iSize];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation GetSecBsInfoRsp
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.vSecBsInfo = [NSMutableArray arrayWithCapacity:0];
+        self.fValue = 0;
+        self.sTypeText = @"";
+        self.sDescText = @"";
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.vSecBsInfo != nil)
+    {
+        [ostream writeList: 0 value: self.vSecBsInfo VAR_TYPE: [THOTH_LIST CREATE: [SecBsInfo class]]];
+    }
+    [ostream writeFloat: 1 value: self.fValue];
+    if (self.sTypeText != nil)
+    {
+        [ostream writeString: 2 value: self.sTypeText];
+    }
+    if (self.sDescText != nil)
+    {
+        [ostream writeString: 3 value: self.sDescText];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (GetSecBsInfoRsp *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.vSecBsInfo = [istream readListDef: 0 required: false def: self.vSecBsInfo VAR_TYPE: [THOTH_LIST CREATE: [SecBsInfo class]]];
+    self.fValue = [istream readFloatDef: 1 required: false def: self.fValue];
+    self.sTypeText = [istream readStringDef: 2 required: false def: self.sTypeText];
+    self.sDescText = [istream readStringDef: 3 required: false def: self.sDescText];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"vSecBsInfo" value : [BaseJSON writeList : self.vSecBsInfo VAR_TYPE: [THOTH_LIST CREATE: [SecBsInfo class]]]];
+    [JsonRoot append:@"fValue" value : [BaseJSON writeFloat : self.fValue]];
+    [JsonRoot append:@"sTypeText" value : [BaseJSON writeString : self.sTypeText]];
+    [JsonRoot append:@"sDescText" value : [BaseJSON writeString : self.sDescText]];
+    return JsonRoot;
+}
+
+- (GetSecBsInfoRsp *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.vSecBsInfo = [BaseJSON readListDef:[RootMap objectForKey:@"vSecBsInfo"] required:false def:self.vSecBsInfo VAR_TYPE: [THOTH_LIST CREATE: [SecBsInfo class]]];
+    self.fValue = [BaseJSON readFloatDef:[RootMap objectForKey:@"fValue"] required:false def:self.fValue];
+    self.sTypeText = [BaseJSON readStringDef:[RootMap objectForKey:@"sTypeText"] required:false def:self.sTypeText];
+    self.sDescText = [BaseJSON readStringDef:[RootMap objectForKey:@"sDescText"] required:false def:self.sDescText];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation GetSecBsTopReq
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.stUserInfo = [[UserInfo alloc] init];
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.stUserInfo != nil)
+    {
+        [ostream writeMessage: 0 value: self.stUserInfo];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (GetSecBsTopReq *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.stUserInfo = (UserInfo*)[istream readMessageDef: 0 required: false def: self.stUserInfo VAR_TYPE: [UserInfo class]];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"stUserInfo" value : [BaseJSON writeMessage : self.stUserInfo]];
+    return JsonRoot;
+}
+
+- (GetSecBsTopReq *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.stUserInfo = [BaseJSON readMessageDef:[RootMap objectForKey:@"stUserInfo"] required:false def:self.stUserInfo VAR_TYPE: [UserInfo class]];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation GetSecBsTopRsp
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.vSecBsInfoBuy = [NSMutableArray arrayWithCapacity:0];
+        self.vSecBsInfoSell = [NSMutableArray arrayWithCapacity:0];
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.vSecBsInfoBuy != nil)
+    {
+        [ostream writeList: 0 value: self.vSecBsInfoBuy VAR_TYPE: [THOTH_LIST CREATE: [SecBsInfo class]]];
+    }
+    if (self.vSecBsInfoSell != nil)
+    {
+        [ostream writeList: 1 value: self.vSecBsInfoSell VAR_TYPE: [THOTH_LIST CREATE: [SecBsInfo class]]];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (GetSecBsTopRsp *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.vSecBsInfoBuy = [istream readListDef: 0 required: false def: self.vSecBsInfoBuy VAR_TYPE: [THOTH_LIST CREATE: [SecBsInfo class]]];
+    self.vSecBsInfoSell = [istream readListDef: 1 required: false def: self.vSecBsInfoSell VAR_TYPE: [THOTH_LIST CREATE: [SecBsInfo class]]];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"vSecBsInfoBuy" value : [BaseJSON writeList : self.vSecBsInfoBuy VAR_TYPE: [THOTH_LIST CREATE: [SecBsInfo class]]]];
+    [JsonRoot append:@"vSecBsInfoSell" value : [BaseJSON writeList : self.vSecBsInfoSell VAR_TYPE: [THOTH_LIST CREATE: [SecBsInfo class]]]];
+    return JsonRoot;
+}
+
+- (GetSecBsTopRsp *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.vSecBsInfoBuy = [BaseJSON readListDef:[RootMap objectForKey:@"vSecBsInfoBuy"] required:false def:self.vSecBsInfoBuy VAR_TYPE: [THOTH_LIST CREATE: [SecBsInfo class]]];
+    self.vSecBsInfoSell = [BaseJSON readListDef:[RootMap objectForKey:@"vSecBsInfoSell"] required:false def:self.vSecBsInfoSell VAR_TYPE: [THOTH_LIST CREATE: [SecBsInfo class]]];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
