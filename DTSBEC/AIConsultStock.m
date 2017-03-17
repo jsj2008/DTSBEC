@@ -78,6 +78,7 @@
         self.sDate = @"";
         self.vtClose = [NSMutableArray arrayWithCapacity:0];
         self.fScore = 0;
+        self.sDesc = @"";
     }
 
     return self;
@@ -101,6 +102,10 @@
         [ostream writeList: 2 value: self.vtClose VAR_TYPE: [THOTH_LIST CREATE: [THOTH_FLOAT class]]];
     }
     [ostream writeFloat: 3 value: self.fScore];
+    if (self.sDesc != nil)
+    {
+        [ostream writeString: 4 value: self.sDesc];
+    }
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -114,6 +119,7 @@
     self.sDate = [istream readStringDef: 1 required: false def: self.sDate];
     self.vtClose = [istream readListDef: 2 required: false def: self.vtClose VAR_TYPE: [THOTH_LIST CREATE: [THOTH_FLOAT class]]];
     self.fScore = [istream readFloatDef: 3 required: false def: self.fScore];
+    self.sDesc = [istream readStringDef: 4 required: false def: self.sDesc];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -131,6 +137,7 @@
     [JsonRoot append:@"sDate" value : [BaseJSON writeString : self.sDate]];
     [JsonRoot append:@"vtClose" value : [BaseJSON writeList : self.vtClose VAR_TYPE: [THOTH_LIST CREATE: [THOTH_FLOAT class]]]];
     [JsonRoot append:@"fScore" value : [BaseJSON writeFloat : self.fScore]];
+    [JsonRoot append:@"sDesc" value : [BaseJSON writeString : self.sDesc]];
     return JsonRoot;
 }
 
@@ -140,6 +147,7 @@
     self.sDate = [BaseJSON readStringDef:[RootMap objectForKey:@"sDate"] required:false def:self.sDate];
     self.vtClose = [BaseJSON readListDef:[RootMap objectForKey:@"vtClose"] required:false def:self.vtClose VAR_TYPE: [THOTH_LIST CREATE: [THOTH_FLOAT class]]];
     self.fScore = [BaseJSON readFloatDef:[RootMap objectForKey:@"fScore"] required:false def:self.fScore];
+    self.sDesc = [BaseJSON readStringDef:[RootMap objectForKey:@"sDesc"] required:false def:self.sDesc];
     return self;
 }
 
@@ -1056,6 +1064,7 @@
         self.stIndSTRank = [[STRank alloc] init];
         self.stAllDtSTRank = [[STRank alloc] init];
         self.sConsultDesc = @"";
+        self.mpDateNum = [NSMutableDictionary dictionaryWithCapacity: 0];
     }
 
     return self;
@@ -1083,6 +1092,10 @@
     {
         [ostream writeString: 4 value: self.sConsultDesc];
     }
+    if (self.mpDateNum != nil)
+    {
+        [ostream writeMap: 5 value: self.mpDateNum VAR_TYPE: [THOTH_MAP CREATE: [THOTH_STRING class] VT: [THOTH_INT32 class]]];
+    }
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -1097,6 +1110,7 @@
     self.stIndSTRank = (STRank*)[istream readMessageDef: 2 required: false def: self.stIndSTRank VAR_TYPE: [STRank class]];
     self.stAllDtSTRank = (STRank*)[istream readMessageDef: 3 required: false def: self.stAllDtSTRank VAR_TYPE: [STRank class]];
     self.sConsultDesc = [istream readStringDef: 4 required: false def: self.sConsultDesc];
+    self.mpDateNum = [istream readMapDef: 5 required: false def: self.mpDateNum VAR_TYPE: [THOTH_MAP CREATE: [THOTH_STRING class] VT: [THOTH_INT32 class]]];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -1115,6 +1129,7 @@
     [JsonRoot append:@"stIndSTRank" value : [BaseJSON writeMessage : self.stIndSTRank]];
     [JsonRoot append:@"stAllDtSTRank" value : [BaseJSON writeMessage : self.stAllDtSTRank]];
     [JsonRoot append:@"sConsultDesc" value : [BaseJSON writeString : self.sConsultDesc]];
+    [JsonRoot append:@"mpDateNum" value : [BaseJSON writeMap : self.mpDateNum VAR_TYPE: [THOTH_MAP CREATE: [THOTH_STRING class] VT: [THOTH_INT32 class]]]];
     return JsonRoot;
 }
 
@@ -1125,6 +1140,7 @@
     self.stIndSTRank = [BaseJSON readMessageDef:[RootMap objectForKey:@"stIndSTRank"] required:false def:self.stIndSTRank VAR_TYPE: [STRank class]];
     self.stAllDtSTRank = [BaseJSON readMessageDef:[RootMap objectForKey:@"stAllDtSTRank"] required:false def:self.stAllDtSTRank VAR_TYPE: [STRank class]];
     self.sConsultDesc = [BaseJSON readStringDef:[RootMap objectForKey:@"sConsultDesc"] required:false def:self.sConsultDesc];
+    self.mpDateNum = [BaseJSON readMapDef:[RootMap objectForKey:@"mpDateNum"] required:false def:self.mpDateNum VAR_TYPE: [THOTH_MAP CREATE: [THOTH_STRING class] VT: [THOTH_INT32 class]]];
     return self;
 }
 
@@ -1969,18 +1985,85 @@
 @end
 
 //////////////////////////////////////////////////////////////
+@implementation ScoreDesc
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.iScore = 0;
+        self.sScoreDesc = @"";
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    [ostream writeInt32: 0 value: self.iScore];
+    if (self.sScoreDesc != nil)
+    {
+        [ostream writeString: 1 value: self.sScoreDesc];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (ScoreDesc *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.iScore = [istream readInt32Def: 0 required: false def: self.iScore];
+    self.sScoreDesc = [istream readStringDef: 1 required: false def: self.sScoreDesc];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"iScore" value : [BaseJSON writeInt32 : self.iScore]];
+    [JsonRoot append:@"sScoreDesc" value : [BaseJSON writeString : self.sScoreDesc]];
+    return JsonRoot;
+}
+
+- (ScoreDesc *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.iScore = [BaseJSON readInt32Def:[RootMap objectForKey:@"iScore"] required:false def:self.iScore];
+    self.sScoreDesc = [BaseJSON readStringDef:[RootMap objectForKey:@"sScoreDesc"] required:false def:self.sScoreDesc];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
 @implementation ConsultScore
 - (id) init
 {
     if (self = [super init])
     {
         self.sDtSecCode = @"";
-        self.iRiseScore = 30;
-        self.iMktHotScore = 30;
-        self.iMainScore = 30;
-        self.iTrendScore = 30;
-        self.iValueScore = 30;
-        self.iConsultScore = 30;
+        self.stRiseScoreDesc = [[ScoreDesc alloc] init];
+        self.stMktHotScoreDesc = [[ScoreDesc alloc] init];
+        self.stMainScoreDesc = [[ScoreDesc alloc] init];
+        self.stTrendScoreDesc = [[ScoreDesc alloc] init];
+        self.stValueScoreDesc = [[ScoreDesc alloc] init];
+        self.stConsultScoreDesc = [[ScoreDesc alloc] init];
         self.fVal = 0;
         self.sScoreDesc = @"";
     }
@@ -1997,12 +2080,30 @@
     {
         [ostream writeString: 0 value: self.sDtSecCode];
     }
-    [ostream writeInt32: 1 value: self.iRiseScore];
-    [ostream writeInt32: 2 value: self.iMktHotScore];
-    [ostream writeInt32: 3 value: self.iMainScore];
-    [ostream writeInt32: 4 value: self.iTrendScore];
-    [ostream writeInt32: 5 value: self.iValueScore];
-    [ostream writeInt32: 6 value: self.iConsultScore];
+    if (self.stRiseScoreDesc != nil)
+    {
+        [ostream writeMessage: 1 value: self.stRiseScoreDesc];
+    }
+    if (self.stMktHotScoreDesc != nil)
+    {
+        [ostream writeMessage: 2 value: self.stMktHotScoreDesc];
+    }
+    if (self.stMainScoreDesc != nil)
+    {
+        [ostream writeMessage: 3 value: self.stMainScoreDesc];
+    }
+    if (self.stTrendScoreDesc != nil)
+    {
+        [ostream writeMessage: 4 value: self.stTrendScoreDesc];
+    }
+    if (self.stValueScoreDesc != nil)
+    {
+        [ostream writeMessage: 5 value: self.stValueScoreDesc];
+    }
+    if (self.stConsultScoreDesc != nil)
+    {
+        [ostream writeMessage: 6 value: self.stConsultScoreDesc];
+    }
     [ostream writeFloat: 7 value: self.fVal];
     if (self.sScoreDesc != nil)
     {
@@ -2018,12 +2119,12 @@
     istream.lastid = 0;
 
     self.sDtSecCode = [istream readStringDef: 0 required: false def: self.sDtSecCode];
-    self.iRiseScore = [istream readInt32Def: 1 required: false def: self.iRiseScore];
-    self.iMktHotScore = [istream readInt32Def: 2 required: false def: self.iMktHotScore];
-    self.iMainScore = [istream readInt32Def: 3 required: false def: self.iMainScore];
-    self.iTrendScore = [istream readInt32Def: 4 required: false def: self.iTrendScore];
-    self.iValueScore = [istream readInt32Def: 5 required: false def: self.iValueScore];
-    self.iConsultScore = [istream readInt32Def: 6 required: false def: self.iConsultScore];
+    self.stRiseScoreDesc = (ScoreDesc*)[istream readMessageDef: 1 required: false def: self.stRiseScoreDesc VAR_TYPE: [ScoreDesc class]];
+    self.stMktHotScoreDesc = (ScoreDesc*)[istream readMessageDef: 2 required: false def: self.stMktHotScoreDesc VAR_TYPE: [ScoreDesc class]];
+    self.stMainScoreDesc = (ScoreDesc*)[istream readMessageDef: 3 required: false def: self.stMainScoreDesc VAR_TYPE: [ScoreDesc class]];
+    self.stTrendScoreDesc = (ScoreDesc*)[istream readMessageDef: 4 required: false def: self.stTrendScoreDesc VAR_TYPE: [ScoreDesc class]];
+    self.stValueScoreDesc = (ScoreDesc*)[istream readMessageDef: 5 required: false def: self.stValueScoreDesc VAR_TYPE: [ScoreDesc class]];
+    self.stConsultScoreDesc = (ScoreDesc*)[istream readMessageDef: 6 required: false def: self.stConsultScoreDesc VAR_TYPE: [ScoreDesc class]];
     self.fVal = [istream readFloatDef: 7 required: false def: self.fVal];
     self.sScoreDesc = [istream readStringDef: 8 required: false def: self.sScoreDesc];
     
@@ -2040,12 +2141,12 @@
 {
     JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
     [JsonRoot append:@"sDtSecCode" value : [BaseJSON writeString : self.sDtSecCode]];
-    [JsonRoot append:@"iRiseScore" value : [BaseJSON writeInt32 : self.iRiseScore]];
-    [JsonRoot append:@"iMktHotScore" value : [BaseJSON writeInt32 : self.iMktHotScore]];
-    [JsonRoot append:@"iMainScore" value : [BaseJSON writeInt32 : self.iMainScore]];
-    [JsonRoot append:@"iTrendScore" value : [BaseJSON writeInt32 : self.iTrendScore]];
-    [JsonRoot append:@"iValueScore" value : [BaseJSON writeInt32 : self.iValueScore]];
-    [JsonRoot append:@"iConsultScore" value : [BaseJSON writeInt32 : self.iConsultScore]];
+    [JsonRoot append:@"stRiseScoreDesc" value : [BaseJSON writeMessage : self.stRiseScoreDesc]];
+    [JsonRoot append:@"stMktHotScoreDesc" value : [BaseJSON writeMessage : self.stMktHotScoreDesc]];
+    [JsonRoot append:@"stMainScoreDesc" value : [BaseJSON writeMessage : self.stMainScoreDesc]];
+    [JsonRoot append:@"stTrendScoreDesc" value : [BaseJSON writeMessage : self.stTrendScoreDesc]];
+    [JsonRoot append:@"stValueScoreDesc" value : [BaseJSON writeMessage : self.stValueScoreDesc]];
+    [JsonRoot append:@"stConsultScoreDesc" value : [BaseJSON writeMessage : self.stConsultScoreDesc]];
     [JsonRoot append:@"fVal" value : [BaseJSON writeFloat : self.fVal]];
     [JsonRoot append:@"sScoreDesc" value : [BaseJSON writeString : self.sScoreDesc]];
     return JsonRoot;
@@ -2054,12 +2155,12 @@
 - (ConsultScore *) readFromMap : (NSMutableDictionary *) RootMap
 {
     self.sDtSecCode = [BaseJSON readStringDef:[RootMap objectForKey:@"sDtSecCode"] required:false def:self.sDtSecCode];
-    self.iRiseScore = [BaseJSON readInt32Def:[RootMap objectForKey:@"iRiseScore"] required:false def:self.iRiseScore];
-    self.iMktHotScore = [BaseJSON readInt32Def:[RootMap objectForKey:@"iMktHotScore"] required:false def:self.iMktHotScore];
-    self.iMainScore = [BaseJSON readInt32Def:[RootMap objectForKey:@"iMainScore"] required:false def:self.iMainScore];
-    self.iTrendScore = [BaseJSON readInt32Def:[RootMap objectForKey:@"iTrendScore"] required:false def:self.iTrendScore];
-    self.iValueScore = [BaseJSON readInt32Def:[RootMap objectForKey:@"iValueScore"] required:false def:self.iValueScore];
-    self.iConsultScore = [BaseJSON readInt32Def:[RootMap objectForKey:@"iConsultScore"] required:false def:self.iConsultScore];
+    self.stRiseScoreDesc = [BaseJSON readMessageDef:[RootMap objectForKey:@"stRiseScoreDesc"] required:false def:self.stRiseScoreDesc VAR_TYPE: [ScoreDesc class]];
+    self.stMktHotScoreDesc = [BaseJSON readMessageDef:[RootMap objectForKey:@"stMktHotScoreDesc"] required:false def:self.stMktHotScoreDesc VAR_TYPE: [ScoreDesc class]];
+    self.stMainScoreDesc = [BaseJSON readMessageDef:[RootMap objectForKey:@"stMainScoreDesc"] required:false def:self.stMainScoreDesc VAR_TYPE: [ScoreDesc class]];
+    self.stTrendScoreDesc = [BaseJSON readMessageDef:[RootMap objectForKey:@"stTrendScoreDesc"] required:false def:self.stTrendScoreDesc VAR_TYPE: [ScoreDesc class]];
+    self.stValueScoreDesc = [BaseJSON readMessageDef:[RootMap objectForKey:@"stValueScoreDesc"] required:false def:self.stValueScoreDesc VAR_TYPE: [ScoreDesc class]];
+    self.stConsultScoreDesc = [BaseJSON readMessageDef:[RootMap objectForKey:@"stConsultScoreDesc"] required:false def:self.stConsultScoreDesc VAR_TYPE: [ScoreDesc class]];
     self.fVal = [BaseJSON readFloatDef:[RootMap objectForKey:@"fVal"] required:false def:self.fVal];
     self.sScoreDesc = [BaseJSON readStringDef:[RootMap objectForKey:@"sScoreDesc"] required:false def:self.sScoreDesc];
     return self;

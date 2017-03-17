@@ -11,7 +11,9 @@ typedef NS_ENUM(NSUInteger, E_FIN_TYPE) {
     E_FIN_BEPS = 4,
     E_FIN_TOTAL_ASS = 5,
     E_FIN_ASS_DEBT = 6,
-    E_FIN_OPER_CASH = 7
+    E_FIN_OPER_CASH = 7,
+    E_FIN_PE = 8,
+    E_FIN_PB = 9
 };
 
 /////////////////////////////////////////////////////////////////
@@ -40,6 +42,7 @@ typedef NS_ENUM(NSUInteger, E_FIN_TYPE) {
 @property (nonatomic, copy) NSString* sDate;
 @property (nonatomic, strong) NSMutableArray* vtClose;
 @property (nonatomic, assign) float fScore;
+@property (nonatomic, copy) NSString* sDesc;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -294,6 +297,7 @@ typedef NS_ENUM(NSUInteger, E_FIN_TYPE) {
 @property (nonatomic, strong) STRank* stIndSTRank;
 @property (nonatomic, strong) STRank* stAllDtSTRank;
 @property (nonatomic, copy) NSString* sConsultDesc;
+@property (nonatomic, strong) NSMutableDictionary* mpDateNum;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -547,15 +551,34 @@ typedef NS_ENUM(NSUInteger, E_FIN_TYPE) {
 @end
 
 /////////////////////////////////////////////////////////////////
+@interface ScoreDesc : Message
+
+@property (nonatomic, assign) int32_t iScore;
+@property (nonatomic, copy) NSString* sScoreDesc;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (ScoreDesc *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
 @interface ConsultScore : Message
 
 @property (nonatomic, copy) NSString* sDtSecCode;
-@property (nonatomic, assign) int32_t iRiseScore;
-@property (nonatomic, assign) int32_t iMktHotScore;
-@property (nonatomic, assign) int32_t iMainScore;
-@property (nonatomic, assign) int32_t iTrendScore;
-@property (nonatomic, assign) int32_t iValueScore;
-@property (nonatomic, assign) int32_t iConsultScore;
+@property (nonatomic, strong) ScoreDesc* stRiseScoreDesc;
+@property (nonatomic, strong) ScoreDesc* stMktHotScoreDesc;
+@property (nonatomic, strong) ScoreDesc* stMainScoreDesc;
+@property (nonatomic, strong) ScoreDesc* stTrendScoreDesc;
+@property (nonatomic, strong) ScoreDesc* stValueScoreDesc;
+@property (nonatomic, strong) ScoreDesc* stConsultScoreDesc;
 @property (nonatomic, assign) float fVal;
 @property (nonatomic, copy) NSString* sScoreDesc;
 

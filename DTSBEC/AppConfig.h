@@ -5,12 +5,12 @@
 #import "BaseDecodeStream.h"
 #import "Beacon.h"
 
-typedef NS_ENUM(NSInteger, E_IP_TYPE) {
+typedef NS_ENUM(NSUInteger, E_IP_TYPE) {
     E_THOTH_PROXY = 1,
     E_THOTH_SOCKET_PROXY = 2
 };
 
-typedef NS_ENUM(NSInteger, E_APN_TYPE) {
+typedef NS_ENUM(NSUInteger, E_APN_TYPE) {
     E_APN_UNKNOWN = 0,
     E_APN_WIFI = 1,
     E_APN_CMWAP = 2,
@@ -24,7 +24,7 @@ typedef NS_ENUM(NSInteger, E_APN_TYPE) {
     E_APN_777 = 10
 };
 
-typedef NS_ENUM(NSInteger, E_CONFIG_TYPE) {
+typedef NS_ENUM(NSUInteger, E_CONFIG_TYPE) {
     E_CONFIG_OPTIONAL_INDEX = 0,
     E_CONFIG_HS_INDEX = 1,
     E_CONFIG_HK_INDEX = 2,
@@ -46,12 +46,12 @@ typedef NS_ENUM(NSInteger, E_CONFIG_TYPE) {
     E_CONFIG_DENGTA_PAY_SWITCH = 18
 };
 
-typedef NS_ENUM(NSInteger, E_CONFIG_PUSH_TYPE) {
+typedef NS_ENUM(NSUInteger, E_CONFIG_PUSH_TYPE) {
     E_CONFIG_PUSH_UMENG = 1,
     E_CONFIG_PUSH_HUAWEI = 2
 };
 
-typedef NS_ENUM(NSInteger, E_SHARE_TYPE) {
+typedef NS_ENUM(NSUInteger, E_SHARE_TYPE) {
     E_STOCK_DETAIL = 1,
     E_STOCK_PORTRAIT = 2,
     E_CONC_DETAIL = 3,
@@ -127,16 +127,20 @@ typedef NS_ENUM(NSInteger, E_SHARE_TYPE) {
     E_VIDEO_LIST = 73,
     E_DT_PRIVI_DETAIL_NEW = 74,
     E_DT_INTEGRAL_DETAIL = 75,
-    E_DT_FAQ_SERVICE_PROTOCOL = 76
+    E_DT_FAQ_SERVICE_PROTOCOL = 76,
+    E_DT_BS_SINGAL = 77,
+    E_SMART_DIAGNOSIS_SEARCH = 78,
+    E_SMART_DISGNOSIS_DETAIL = 79,
+    E_MSG_LIST = 80
 };
 
-typedef NS_ENUM(NSInteger, T_CHARGE_POINT) {
+typedef NS_ENUM(NSUInteger, T_CHARGE_POINT) {
     T_CHIP_DISTRIBUTION = 1,
     T_SIMILAR_K_LINE = 2,
     T_HISTORY_QUOTE = 3
 };
 
-typedef NS_ENUM(NSInteger, T_CHARGE_SWITCH) {
+typedef NS_ENUM(NSUInteger, T_CHARGE_SWITCH) {
     T_CHARGE_CLOSE = 0,
     T_CHARGE_OPEN = 1
 };
