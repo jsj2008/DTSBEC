@@ -26,6 +26,7 @@
 #import "KLine.h"
 #import "LogQuery.h"
 #import "LogReport.h"
+#import "MarginTrade.h"
 #import "MarketAlert.h"
 #import "News.h"
 #import "NewsInfo.h"

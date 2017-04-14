@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BB05B0F01EA07A5C0084EA1D /* AIConsultStock.h in Headers */ = {isa = PBXBuildFile; fileRef = BB05B0EE1EA07A5C0084EA1D /* AIConsultStock.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BB05B0F11EA07A5C0084EA1D /* AIConsultStock.m in Sources */ = {isa = PBXBuildFile; fileRef = BB05B0EF1EA07A5C0084EA1D /* AIConsultStock.m */; };
+		BB05B0F41EA07A860084EA1D /* MarginTrade.h in Headers */ = {isa = PBXBuildFile; fileRef = BB05B0F21EA07A860084EA1D /* MarginTrade.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BB05B0F51EA07A860084EA1D /* MarginTrade.m in Sources */ = {isa = PBXBuildFile; fileRef = BB05B0F31EA07A860084EA1D /* MarginTrade.m */; };
 		BB3DCD261E66CC8B008BDFA4 /* DTSBEC.h in Headers */ = {isa = PBXBuildFile; fileRef = BB3DCD241E66CC8B008BDFA4 /* DTSBEC.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BB3DCD841E66CCCC008BDFA4 /* Account.h in Headers */ = {isa = PBXBuildFile; fileRef = BB3DCD2C1E66CCCC008BDFA4 /* Account.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BB3DCD851E66CCCC008BDFA4 /* Account.m in Sources */ = {isa = PBXBuildFile; fileRef = BB3DCD2D1E66CCCC008BDFA4 /* Account.m */; };
@@ -103,6 +107,10 @@
 		9328DB1D686A5FD7B9E5B1EC /* Pods-DTSBEC.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DTSBEC.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DTSBEC/Pods-DTSBEC.debug.xcconfig"; sourceTree = "<group>"; };
 		AEE6D60DCB56572EF72B3323 /* Pods_DTSBEC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DTSBEC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA09EB6867A7470B57778619 /* Pods-DTSBEC.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DTSBEC.release.xcconfig"; path = "Pods/Target Support Files/Pods-DTSBEC/Pods-DTSBEC.release.xcconfig"; sourceTree = "<group>"; };
+		BB05B0EE1EA07A5C0084EA1D /* AIConsultStock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIConsultStock.h; sourceTree = "<group>"; };
+		BB05B0EF1EA07A5C0084EA1D /* AIConsultStock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIConsultStock.m; sourceTree = "<group>"; };
+		BB05B0F21EA07A860084EA1D /* MarginTrade.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MarginTrade.h; sourceTree = "<group>"; };
+		BB05B0F31EA07A860084EA1D /* MarginTrade.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MarginTrade.m; sourceTree = "<group>"; };
 		BB3DCD211E66CC8B008BDFA4 /* DTSBEC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DTSBEC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB3DCD241E66CC8B008BDFA4 /* DTSBEC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DTSBEC.h; sourceTree = "<group>"; };
 		BB3DCD251E66CC8B008BDFA4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -238,6 +246,10 @@
 		BB3DCD231E66CC8B008BDFA4 /* DTSBEC */ = {
 			isa = PBXGroup;
 			children = (
+				BB05B0F21EA07A860084EA1D /* MarginTrade.h */,
+				BB05B0F31EA07A860084EA1D /* MarginTrade.m */,
+				BB05B0EE1EA07A5C0084EA1D /* AIConsultStock.h */,
+				BB05B0EF1EA07A5C0084EA1D /* AIConsultStock.m */,
 				BB3DCD2C1E66CCCC008BDFA4 /* Account.h */,
 				BB3DCD2D1E66CCCC008BDFA4 /* Account.m */,
 				BB3DCD2E1E66CCCC008BDFA4 /* AccountCache.h */,
@@ -390,6 +402,8 @@
 				BB3DCD9B1E66CCCC008BDFA4 /* DtGoldenStock.h in Headers */,
 				BB3DCD921E66CCCC008BDFA4 /* Beacon.h in Headers */,
 				BB3DCDBA1E66CCCC008BDFA4 /* OssAccess.h in Headers */,
+				BB05B0F01EA07A5C0084EA1D /* AIConsultStock.h in Headers */,
+				BB05B0F41EA07A860084EA1D /* MarginTrade.h in Headers */,
 				BB3DCD9F1E66CCCC008BDFA4 /* DtPay.h in Headers */,
 				BB3DCDD01E66CCCC008BDFA4 /* Upgrade.h in Headers */,
 			);
@@ -530,6 +544,7 @@
 				BB3DCD9C1E66CCCC008BDFA4 /* DtGoldenStock.m in Sources */,
 				BB3DCDAB1E66CCCC008BDFA4 /* JsonResult.m in Sources */,
 				BB3DCDCB1E66CCCC008BDFA4 /* Singal.m in Sources */,
+				BB05B0F11EA07A5C0084EA1D /* AIConsultStock.m in Sources */,
 				BB3DCDCF1E66CCCC008BDFA4 /* TextProcess.m in Sources */,
 				BB3DCDA61E66CCCC008BDFA4 /* FileAccess.m in Sources */,
 				BB3DCDC31E66CCCC008BDFA4 /* PushStatus.m in Sources */,
@@ -541,6 +556,7 @@
 				BB3DCDB31E66CCCC008BDFA4 /* MarketAlert.m in Sources */,
 				BB3DCDA81E66CCCC008BDFA4 /* FreqLimit.m in Sources */,
 				BB3DCDB51E66CCCC008BDFA4 /* News.m in Sources */,
+				BB05B0F51EA07A860084EA1D /* MarginTrade.m in Sources */,
 				BB3DCDAF1E66CCCC008BDFA4 /* LogQuery.m in Sources */,
 				BB3DCDB11E66CCCC008BDFA4 /* LogReport.m in Sources */,
 				BB3DCDD91E66CCCC008BDFA4 /* YunWeb.m in Sources */,

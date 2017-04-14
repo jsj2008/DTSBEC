@@ -8200,6 +8200,7 @@
         self.fBetaValue = 0;
         self.fBsValue = 0;
         self.fProbability = 0;
+        self.sName = @"";
     }
 
     return self;
@@ -8224,6 +8225,10 @@
     [ostream writeFloat: 5 value: self.fBetaValue];
     [ostream writeFloat: 6 value: self.fBsValue];
     [ostream writeFloat: 7 value: self.fProbability];
+    if (self.sName != nil)
+    {
+        [ostream writeString: 8 value: self.sName];
+    }
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -8241,6 +8246,7 @@
     self.fBetaValue = [istream readFloatDef: 5 required: false def: self.fBetaValue];
     self.fBsValue = [istream readFloatDef: 6 required: false def: self.fBsValue];
     self.fProbability = [istream readFloatDef: 7 required: false def: self.fProbability];
+    self.sName = [istream readStringDef: 8 required: false def: self.sName];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -8262,6 +8268,7 @@
     [JsonRoot append:@"fBetaValue" value : [BaseJSON writeFloat : self.fBetaValue]];
     [JsonRoot append:@"fBsValue" value : [BaseJSON writeFloat : self.fBsValue]];
     [JsonRoot append:@"fProbability" value : [BaseJSON writeFloat : self.fProbability]];
+    [JsonRoot append:@"sName" value : [BaseJSON writeString : self.sName]];
     return JsonRoot;
 }
 
@@ -8275,6 +8282,7 @@
     self.fBetaValue = [BaseJSON readFloatDef:[RootMap objectForKey:@"fBetaValue"] required:false def:self.fBetaValue];
     self.fBsValue = [BaseJSON readFloatDef:[RootMap objectForKey:@"fBsValue"] required:false def:self.fBsValue];
     self.fProbability = [BaseJSON readFloatDef:[RootMap objectForKey:@"fProbability"] required:false def:self.fProbability];
+    self.sName = [BaseJSON readStringDef:[RootMap objectForKey:@"sName"] required:false def:self.sName];
     return self;
 }
 
@@ -8379,6 +8387,7 @@
         self.fValue = 0;
         self.sTypeText = @"";
         self.sDescText = @"";
+        self.sShortDescText = @"";
     }
 
     return self;
@@ -8402,6 +8411,10 @@
     {
         [ostream writeString: 3 value: self.sDescText];
     }
+    if (self.sShortDescText != nil)
+    {
+        [ostream writeString: 4 value: self.sShortDescText];
+    }
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -8415,6 +8428,7 @@
     self.fValue = [istream readFloatDef: 1 required: false def: self.fValue];
     self.sTypeText = [istream readStringDef: 2 required: false def: self.sTypeText];
     self.sDescText = [istream readStringDef: 3 required: false def: self.sDescText];
+    self.sShortDescText = [istream readStringDef: 4 required: false def: self.sShortDescText];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -8432,6 +8446,7 @@
     [JsonRoot append:@"fValue" value : [BaseJSON writeFloat : self.fValue]];
     [JsonRoot append:@"sTypeText" value : [BaseJSON writeString : self.sTypeText]];
     [JsonRoot append:@"sDescText" value : [BaseJSON writeString : self.sDescText]];
+    [JsonRoot append:@"sShortDescText" value : [BaseJSON writeString : self.sShortDescText]];
     return JsonRoot;
 }
 
@@ -8441,6 +8456,7 @@
     self.fValue = [BaseJSON readFloatDef:[RootMap objectForKey:@"fValue"] required:false def:self.fValue];
     self.sTypeText = [BaseJSON readStringDef:[RootMap objectForKey:@"sTypeText"] required:false def:self.sTypeText];
     self.sDescText = [BaseJSON readStringDef:[RootMap objectForKey:@"sDescText"] required:false def:self.sDescText];
+    self.sShortDescText = [BaseJSON readStringDef:[RootMap objectForKey:@"sShortDescText"] required:false def:self.sShortDescText];
     return self;
 }
 

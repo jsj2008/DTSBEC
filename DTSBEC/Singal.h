@@ -62,7 +62,11 @@ typedef NS_ENUM(NSUInteger, E_IPO_STATUS) {
 typedef NS_ENUM(NSUInteger, DT_ACTIVITY_TYPE) {
     T_ACTIVITY_LIST = 0,
     T_ACTIVITY_OPEN_ACCOUNT = 1,
-    T_ACTIVITY_OPEN_MEMBER = 2
+    T_ACTIVITY_OPEN_MEMBER = 2,
+    T_ACTIVITY_FULL_SCREEN_ADS = 3,
+    T_ACTIVITY_MEMBER_AD = 4,
+    T_ACTIVITY_JCTJ_AD = 5,
+    T_ACTIVITY_SMART_PICK_AD = 6
 };
 
 typedef NS_ENUM(NSUInteger, E_SEC_ACT_TYPE) {
@@ -2232,6 +2236,7 @@ typedef NS_ENUM(NSUInteger, E_SCENE_TYPE) {
 @property (nonatomic, assign) float fBetaValue;
 @property (nonatomic, assign) float fBsValue;
 @property (nonatomic, assign) float fProbability;
+@property (nonatomic, copy) NSString* sName;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -2274,6 +2279,7 @@ typedef NS_ENUM(NSUInteger, E_SCENE_TYPE) {
 @property (nonatomic, assign) float fValue;
 @property (nonatomic, copy) NSString* sTypeText;
 @property (nonatomic, copy) NSString* sDescText;
+@property (nonatomic, copy) NSString* sShortDescText;
 
 
 - (void) write: (BaseEncodeStream *)eos;

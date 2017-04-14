@@ -380,6 +380,7 @@
         self.sNotifyMsg = @"";
         self.bVerify = true;
         self.iFeedType = 0;
+        self.iMemberType = 0;
     }
 
     return self;
@@ -409,6 +410,7 @@
     }
     [ostream writeBoolean: 5 value: self.bVerify];
     [ostream writeInt32: 6 value: self.iFeedType];
+    [ostream writeInt32: 7 value: self.iMemberType];
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -425,6 +427,7 @@
     self.sNotifyMsg = [istream readStringDef: 4 required: false def: self.sNotifyMsg];
     self.bVerify = [istream readBooleanDef: 5 required: false def: self.bVerify];
     self.iFeedType = [istream readInt32Def: 6 required: false def: self.iFeedType];
+    self.iMemberType = [istream readInt32Def: 7 required: false def: self.iMemberType];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -445,6 +448,7 @@
     [JsonRoot append:@"sNotifyMsg" value : [BaseJSON writeString : self.sNotifyMsg]];
     [JsonRoot append:@"bVerify" value : [BaseJSON writeBoolean : self.bVerify]];
     [JsonRoot append:@"iFeedType" value : [BaseJSON writeInt32 : self.iFeedType]];
+    [JsonRoot append:@"iMemberType" value : [BaseJSON writeInt32 : self.iMemberType]];
     return JsonRoot;
 }
 
@@ -457,6 +461,7 @@
     self.sNotifyMsg = [BaseJSON readStringDef:[RootMap objectForKey:@"sNotifyMsg"] required:false def:self.sNotifyMsg];
     self.bVerify = [BaseJSON readBooleanDef:[RootMap objectForKey:@"bVerify"] required:false def:self.bVerify];
     self.iFeedType = [BaseJSON readInt32Def:[RootMap objectForKey:@"iFeedType"] required:false def:self.iFeedType];
+    self.iMemberType = [BaseJSON readInt32Def:[RootMap objectForKey:@"iMemberType"] required:false def:self.iMemberType];
     return self;
 }
 
@@ -482,6 +487,7 @@
         self.sFeedId = @"";
         self.bVerify = true;
         self.iFeedType = 0;
+        self.iMemberType = 0;
     }
 
     return self;
@@ -515,6 +521,7 @@
     }
     [ostream writeBoolean: 6 value: self.bVerify];
     [ostream writeInt32: 7 value: self.iFeedType];
+    [ostream writeInt32: 8 value: self.iMemberType];
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -532,6 +539,7 @@
     self.sFeedId = [istream readStringDef: 5 required: false def: self.sFeedId];
     self.bVerify = [istream readBooleanDef: 6 required: false def: self.bVerify];
     self.iFeedType = [istream readInt32Def: 7 required: false def: self.iFeedType];
+    self.iMemberType = [istream readInt32Def: 8 required: false def: self.iMemberType];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -553,6 +561,7 @@
     [JsonRoot append:@"sFeedId" value : [BaseJSON writeString : self.sFeedId]];
     [JsonRoot append:@"bVerify" value : [BaseJSON writeBoolean : self.bVerify]];
     [JsonRoot append:@"iFeedType" value : [BaseJSON writeInt32 : self.iFeedType]];
+    [JsonRoot append:@"iMemberType" value : [BaseJSON writeInt32 : self.iMemberType]];
     return JsonRoot;
 }
 
@@ -566,6 +575,7 @@
     self.sFeedId = [BaseJSON readStringDef:[RootMap objectForKey:@"sFeedId"] required:false def:self.sFeedId];
     self.bVerify = [BaseJSON readBooleanDef:[RootMap objectForKey:@"bVerify"] required:false def:self.bVerify];
     self.iFeedType = [BaseJSON readInt32Def:[RootMap objectForKey:@"iFeedType"] required:false def:self.iFeedType];
+    self.iMemberType = [BaseJSON readInt32Def:[RootMap objectForKey:@"iMemberType"] required:false def:self.iMemberType];
     return self;
 }
 

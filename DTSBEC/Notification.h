@@ -32,7 +32,8 @@ typedef NS_ENUM(NSUInteger, E_MSG_CLASS) {
     E_MC_TG = 5,
     E_MC_INTERACTION = 6,
     E_MC_NEW_STOCK = 7,
-    E_MC_ACTIVITY = 8
+    E_MC_ACTIVITY = 8,
+    E_MC_VALUE_ADDED_SERVICE = 9
 };
 
 typedef NS_ENUM(NSUInteger, E_PUSH_DATA_TYPE) {
@@ -43,7 +44,8 @@ typedef NS_ENUM(NSUInteger, E_PUSH_DATA_TYPE) {
     E_PDT_DAILY_REPORT = 5,
     E_PDT_PC_START_PAGE = 6,
     E_TG_ATTITUDE = 7,
-    E_USER_INTERACTION = 8
+    E_USER_INTERACTION = 8,
+    E_VALUE_ADDED_SERVICE = 9
 };
 
 typedef NS_ENUM(NSUInteger, E_NOTIFY_NEW_TYPE) {
@@ -165,6 +167,7 @@ typedef NS_ENUM(NSUInteger, E_FREQUENT_CONTROY_TYPE) {
 @property (nonatomic, copy) NSString* sNotifyMsg;
 @property (nonatomic, assign) BOOL bVerify;
 @property (nonatomic, assign) int32_t iFeedType;
+@property (nonatomic, assign) int32_t iMemberType;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -190,6 +193,7 @@ typedef NS_ENUM(NSUInteger, E_FREQUENT_CONTROY_TYPE) {
 @property (nonatomic, copy) NSString* sFeedId;
 @property (nonatomic, assign) BOOL bVerify;
 @property (nonatomic, assign) int32_t iFeedType;
+@property (nonatomic, assign) int32_t iMemberType;
 
 
 - (void) write: (BaseEncodeStream *)eos;
