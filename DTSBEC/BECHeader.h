@@ -48,6 +48,7 @@
 #import "Video.h"
 #import "YunWeb.h"
 #import "ZipStore.h"
+#import "MarginTrade.h"
 
 
 #endif

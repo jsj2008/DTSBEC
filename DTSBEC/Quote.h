@@ -34,7 +34,8 @@ typedef NS_ENUM(NSUInteger, E_PLATE_QUOTE_REQ_TYPE) {
     E_PQT_AH = 9,
     E_PQT_US_CHINA = 10,
     E_PQT_SPX = 11,
-    E_PQT_HK_SH = 12
+    E_PQT_HK_SH = 12,
+    E_PQT_GLOBAL = 13
 };
 
 typedef NS_ENUM(NSUInteger, E_PLATE_QUOTE_SORT_TYPE) {
@@ -88,16 +89,50 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
     E_SKLT_CLOSE = 0
 };
 
+typedef NS_ENUM(NSUInteger, E_PAN_KOU_TYPE) {
+    E_PKT_SUPER_BUY = 0,
+    E_PKT_SUPER_SELL = 1,
+    E_PKT_UP_TO_STOP = 2,
+    E_PKT_DOWN_TO_STOP = 3,
+    E_PKT_OPEN_UP_TO_STOP = 4,
+    E_PKT_OPEN_DOWN_TO_STOP = 5,
+    E_PKT_POST_LARGE_BUY = 6,
+    E_PKT_POST_LARGE_SELL = 7,
+    E_PKT_SUPER_LARGE_BUY = 8,
+    E_PKT_SUPER_LARGE_SELL = 9,
+    E_PKT_LARGE_BUY_IN = 14,
+    E_PKT_LARGE_SELL_OUT = 15,
+    E_PKT_BUY_FEN_DAN = 16,
+    E_PKT_SELL_FEN_DAN = 17,
+    E_PKT_QUICK_UP = 22,
+    E_PKT_QUICK_BACKUP = 23,
+    E_PKT_HIGH_DIVING = 24,
+    E_PKT_QUICK_DOWN = 25,
+    E_PKT_CANCEL_BUY = 26,
+    E_PKT_CANCEL_SELL = 27
+};
+
+typedef NS_ENUM(NSUInteger, E_TRAN_STAT_TYPE) {
+    E_FST_BUY = 0,
+    E_FST_SELL = 1
+};
+
 /////////////////////////////////////////////////////////////////
 @interface QuoteReq : Message
 
-@property (nonatomic, strong) NSArray* vDtSecCode;
+@property (nonatomic, strong) NSMutableArray* vDtSecCode;
 @property (nonatomic, strong) NSData* vGuid;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (QuoteReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -121,10 +156,10 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, assign) float fTickdiff;
 @property (nonatomic, assign) float fVolinstock;
 @property (nonatomic, assign) float fFhsl;
-@property (nonatomic, strong) NSArray* vBuyp;
-@property (nonatomic, strong) NSArray* vBuyv;
-@property (nonatomic, strong) NSArray* vSellp;
-@property (nonatomic, strong) NSArray* vSellv;
+@property (nonatomic, strong) NSMutableArray* vBuyp;
+@property (nonatomic, strong) NSMutableArray* vBuyv;
+@property (nonatomic, strong) NSMutableArray* vSellp;
+@property (nonatomic, strong) NSMutableArray* vSellv;
 @property (nonatomic, assign) int8_t cInoutflag;
 @property (nonatomic, assign) int64_t lRestvol;
 @property (nonatomic, assign) int32_t iTpFlag;
@@ -144,23 +179,37 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, assign) int32_t iTime;
 @property (nonatomic, assign) E_SEC_STATUS eSecStatus;
 @property (nonatomic, assign) float fFundNetValue;
+@property (nonatomic, assign) float fMaxLimit;
+@property (nonatomic, assign) float fMinLimit;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (SecQuote *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
 /////////////////////////////////////////////////////////////////
 @interface QuoteRsp : Message
 
-@property (nonatomic, strong) NSArray* vSecQuote;
+@property (nonatomic, strong) NSMutableArray* vSecQuote;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (QuoteRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -183,21 +232,33 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, strong) SecAttr* stSecAttr;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (SecSimpleQuote *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
 /////////////////////////////////////////////////////////////////
 @interface QuoteSimpleRsp : Message
 
-@property (nonatomic, strong) NSArray* vSecSimpleQuote;
+@property (nonatomic, strong) NSMutableArray* vSecSimpleQuote;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (QuoteSimpleRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -207,9 +268,15 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, copy) NSString* sDtSecCode;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (QuoteCacheKey *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -220,9 +287,15 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, assign) int32_t iFlushTime;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (QuoteCacheValue *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -241,9 +314,15 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, assign) int64_t fTotalAmount;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (TrendDesc *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -254,21 +333,34 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, strong) NSData* vGuid;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (TrendReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
 /////////////////////////////////////////////////////////////////
 @interface TrendRsp : Message
 
-@property (nonatomic, strong) NSArray* vTrendDesc;
+@property (nonatomic, strong) NSMutableArray* vTrendDesc;
+@property (nonatomic, assign) BOOL bSupport;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (TrendRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -278,22 +370,34 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, copy) NSString* sDtSecCode;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (TrendCacheKey *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
 /////////////////////////////////////////////////////////////////
 @interface TrendCacheValue : Message
 
-@property (nonatomic, strong) NSArray* vTrendDesc;
+@property (nonatomic, strong) NSMutableArray* vTrendDesc;
 @property (nonatomic, assign) int32_t iFlushTime;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (TrendCacheValue *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -311,9 +415,15 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, assign) float fSmallout;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (CapitalFlow *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -327,21 +437,33 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, strong) NSData* vGuid;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (CapitalFlowReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
 /////////////////////////////////////////////////////////////////
 @interface CapitalFlowRsp : Message
 
-@property (nonatomic, strong) NSArray* vCapitalFlow;
+@property (nonatomic, strong) NSMutableArray* vCapitalFlow;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (CapitalFlowRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -363,9 +485,15 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, assign) int64_t fTotalAmount;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (KLineDesc *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -381,22 +509,34 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, strong) NSData* vGuid;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (KLineReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
 /////////////////////////////////////////////////////////////////
 @interface KLineRsp : Message
 
-@property (nonatomic, strong) NSArray* vKLineDesc;
+@property (nonatomic, strong) NSMutableArray* vKLineDesc;
 @property (nonatomic, assign) E_K_LINE_TYPE eKLineType;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (KLineRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -416,11 +556,18 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, assign) float fYclose;
 @property (nonatomic, assign) int32_t iTpFlag;
 @property (nonatomic, strong) SecAttr* stSecAttr;
+@property (nonatomic, assign) E_SEC_STATUS eSecStatus;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (PlateQuoteDesc *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -436,21 +583,33 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, strong) NSData* vGuid;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (PlateQuoteReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
 /////////////////////////////////////////////////////////////////
 @interface PlateQuoteRsp : Message
 
-@property (nonatomic, strong) NSArray* vPlateQuoteDesc;
+@property (nonatomic, strong) NSMutableArray* vPlateQuoteDesc;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (PlateQuoteRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -467,11 +626,20 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, assign) int64_t lNowVolume;
 @property (nonatomic, assign) float fAmout;
 @property (nonatomic, assign) float fHot;
+@property (nonatomic, copy) NSString* sHeadName;
+@property (nonatomic, assign) float fHeadNow;
+@property (nonatomic, assign) float fHeadClose;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (ConcQuoteDesc *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -483,21 +651,33 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, strong) NSData* vGuid;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (ConcQuoteReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
 /////////////////////////////////////////////////////////////////
 @interface ConcQuoteRsp : Message
 
-@property (nonatomic, strong) NSArray* vConcQuoteDesc;
+@property (nonatomic, strong) NSMutableArray* vConcQuoteDesc;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (ConcQuoteRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -525,9 +705,15 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, strong) SecAttr* stSecAttr;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (CapitalDetailDesc *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -543,21 +729,33 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, strong) NSData* vGuid;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (CapitalDetailReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
 /////////////////////////////////////////////////////////////////
 @interface CapitalDetailRsp : Message
 
-@property (nonatomic, strong) NSArray* vCapitalDetailDesc;
+@property (nonatomic, strong) NSMutableArray* vCapitalDetailDesc;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (CapitalDetailRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -569,11 +767,18 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, assign) int64_t lNowVolume;
 @property (nonatomic, assign) int32_t iInOut;
 @property (nonatomic, assign) int32_t iTradeIndex;
+@property (nonatomic, assign) int32_t iTime;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (TickDesc *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -586,21 +791,33 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, strong) NSData* vGuid;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (TickReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
 /////////////////////////////////////////////////////////////////
 @interface TickRsp : Message
 
-@property (nonatomic, strong) NSArray* vTickDesc;
+@property (nonatomic, strong) NSMutableArray* vTickDesc;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (TickRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -618,36 +835,54 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, strong) SecAttr* stSecAttr;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (CapitalMainFlowDesc *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
 /////////////////////////////////////////////////////////////////
 @interface CapitalMainFlowReq : Message
 
-@property (nonatomic, strong) NSArray* vDtSecCode;
+@property (nonatomic, strong) NSMutableArray* vDtSecCode;
 @property (nonatomic, assign) int32_t iStartxh;
 @property (nonatomic, assign) int32_t iWantnum;
 @property (nonatomic, strong) NSData* vGuid;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (CapitalMainFlowReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
 /////////////////////////////////////////////////////////////////
 @interface CapitalMainFlowRsp : Message
 
-@property (nonatomic, strong) NSArray* vCapitalMainFlowDesc;
+@property (nonatomic, strong) NSMutableArray* vCapitalMainFlowDesc;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (CapitalMainFlowRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -658,9 +893,15 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, assign) float fHotIndex;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (ConcIndexDesc *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -673,21 +914,33 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, strong) NSData* vGuid;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (ConcIndexReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
 /////////////////////////////////////////////////////////////////
 @interface ConcIndexRsp : Message
 
-@property (nonatomic, strong) NSArray* vConcIndexDesc;
+@property (nonatomic, strong) NSMutableArray* vConcIndexDesc;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (ConcIndexRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -701,9 +954,15 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, assign) E_TRADING_DEAL_TYPE eTradingDealType;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (TradingTimeDesc *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -714,9 +973,15 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, strong) NSData* vGuid;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (TradingTimeReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -724,12 +989,18 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @interface TradingTimeRsp : Message
 
 @property (nonatomic, assign) int32_t iNow;
-@property (nonatomic, strong) NSArray* vTradingTimeDesc;
+@property (nonatomic, strong) NSMutableArray* vTradingTimeDesc;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (TradingTimeRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -743,9 +1014,15 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, strong) NSData* vGuid;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (AHPlateReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -767,21 +1044,33 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, assign) float fHKFhsl;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (AHPlateDesc *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
 /////////////////////////////////////////////////////////////////
 @interface AHPlateRsp : Message
 
-@property (nonatomic, strong) NSArray* vAHPlateDesc;
+@property (nonatomic, strong) NSMutableArray* vAHPlateDesc;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (AHPlateRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -795,9 +1084,15 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, assign) float fHKSHQuota;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (AHExtendInfo *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -807,9 +1102,15 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, strong) NSData* vGuid;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (AHExtendReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -819,9 +1120,15 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, strong) AHExtendInfo* stAHExtendInfo;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (AHExtendRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -832,21 +1139,33 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, copy) NSString* sDtSecCode;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (PlateStockListReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
 /////////////////////////////////////////////////////////////////
 @interface PlateStockListRsp : Message
 
-@property (nonatomic, strong) NSArray* vSecSimpleQuote;
+@property (nonatomic, strong) NSMutableArray* vSecSimpleQuote;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (PlateStockListRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -858,9 +1177,15 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, assign) float fSellBalance;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (MarginTradeInfo *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -871,21 +1196,33 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, copy) NSString* sDtSecCode;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (MarginTradeReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
 /////////////////////////////////////////////////////////////////
 @interface MarginTradeRsp : Message
 
-@property (nonatomic, strong) NSArray* vMarginTradeInfo;
+@property (nonatomic, strong) NSMutableArray* vMarginTradeInfo;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (MarginTradeRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -903,9 +1240,15 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, assign) float fSmallOutAmt;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (CapitalDDZDesc *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -919,21 +1262,33 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, assign) E_CAPITAL_DDZ_TYPE eCapitalDDZType;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (CapitalDDZReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
 /////////////////////////////////////////////////////////////////
 @interface CapitalDDZRsp : Message
 
-@property (nonatomic, strong) NSArray* vCapitalDDZDesc;
+@property (nonatomic, strong) NSMutableArray* vCapitalDDZDesc;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (CapitalDDZRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -947,12 +1302,18 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, copy) NSString* sLeftValue1;
 @property (nonatomic, copy) NSString* sLeftValue2;
 @property (nonatomic, copy) NSString* sRightBanner;
-@property (nonatomic, strong) NSArray* vKLineDesc;
+@property (nonatomic, strong) NSMutableArray* vKLineDesc;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (SimilarKLineBase *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -961,12 +1322,44 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 
 @property (nonatomic, strong) UserInfo* stUserInfo;
 @property (nonatomic, assign) E_SIMILAR_K_LINE_TYPE eSimilarKLineType;
-@property (nonatomic, strong) NSArray* vDtSecCode;
+@property (nonatomic, strong) NSMutableArray* vDtSecCode;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (SimilarKLineReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface SimilarKLineDaysRst : Message
+
+@property (nonatomic, copy) NSString* sSecName;
+@property (nonatomic, copy) NSString* sDtSecCode;
+@property (nonatomic, copy) NSString* sUpBan;
+@property (nonatomic, copy) NSString* sUpVal;
+@property (nonatomic, copy) NSString* sValue1;
+@property (nonatomic, copy) NSString* sValue2;
+@property (nonatomic, assign) E_SIMILAR_K_LINE_TYPE eSimilarKLineType;
+@property (nonatomic, strong) NSMutableArray* vKLineDesc;
+@property (nonatomic, strong) NSMutableArray* vSimilarKLine;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (SimilarKLineDaysRst *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -980,25 +1373,85 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, copy) NSString* sValue1;
 @property (nonatomic, copy) NSString* sValue2;
 @property (nonatomic, assign) E_SIMILAR_K_LINE_TYPE eSimilarKLineType;
-@property (nonatomic, strong) NSArray* vKLineDesc;
-@property (nonatomic, strong) NSArray* vSimilarKLine;
+@property (nonatomic, strong) NSMutableArray* vKLineDesc;
+@property (nonatomic, strong) NSMutableArray* vSimilarKLine;
+@property (nonatomic, strong) NSMutableArray* vSimilarKLineSelf;
+@property (nonatomic, copy) NSString* sUpValDay60;
+@property (nonatomic, copy) NSString* sValue1Day60;
+@property (nonatomic, copy) NSString* sValue2Day60;
+@property (nonatomic, strong) NSMutableArray* vKLineDescDay60;
+@property (nonatomic, strong) NSMutableArray* vSimilarKLineDay60;
+@property (nonatomic, strong) NSMutableArray* vSimilarKLineDay60Self;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (SimilarKLineRst *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
 /////////////////////////////////////////////////////////////////
 @interface SimilarKLineRsp : Message
 
-@property (nonatomic, strong) NSArray* vRst;
+@property (nonatomic, strong) NSMutableArray* vRst;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (SimilarKLineRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface ShortLineStrategy : Message
+
+@property (nonatomic, copy) NSString* sDtSecCode;
+@property (nonatomic, assign) int32_t iTime;
+@property (nonatomic, assign) E_PAN_KOU_TYPE ePanKouType;
+@property (nonatomic, copy) NSString* sInfo;
+@property (nonatomic, assign) float fNow;
+@property (nonatomic, assign) float fClose;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (ShortLineStrategy *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface ShortLineStrategyList : Message
+
+@property (nonatomic, strong) NSMutableArray* vShortLineStrategy;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (ShortLineStrategyList *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -1019,11 +1472,20 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, assign) int64_t lCancelSell;
 @property (nonatomic, assign) int64_t lPostLargeBuy;
 @property (nonatomic, assign) int64_t lPostLargeSell;
+@property (nonatomic, assign) float fClose;
+@property (nonatomic, assign) E_PAN_KOU_TYPE ePanKouType;
+@property (nonatomic, assign) int64_t lFenDan;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (LargeUnitDesc *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -1033,21 +1495,33 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, assign) int32_t iTime;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (LargeUnitDescListReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
 /////////////////////////////////////////////////////////////////
 @interface LargeUnitDescListRsp : Message
 
-@property (nonatomic, strong) NSArray* vLargeUnitDesc;
+@property (nonatomic, strong) NSMutableArray* vLargeUnitDesc;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (LargeUnitDescListRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -1057,23 +1531,93 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, strong) UserInfo* stUserInfo;
 @property (nonatomic, copy) NSString* sDtSecCode;
 @property (nonatomic, assign) int32_t iNum;
+@property (nonatomic, assign) int32_t iTimeStamp;
+@property (nonatomic, assign) int32_t iSort;
+@property (nonatomic, assign) int32_t iDirection;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (LargeUnitReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
 /////////////////////////////////////////////////////////////////
 @interface LargeUnitRsp : Message
 
-@property (nonatomic, strong) NSArray* vLargeUnitDesc;
+@property (nonatomic, strong) NSMutableArray* vLargeUnitDesc;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (LargeUnitRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface RecentLargeUnitReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (RecentLargeUnitReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface RecentLargeUnit : Message
+
+@property (nonatomic, strong) LargeUnitDesc* stDesc;
+@property (nonatomic, assign) int32_t iTotalNum;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (RecentLargeUnit *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface RecentLargeUnitRsp : Message
+
+@property (nonatomic, strong) NSMutableDictionary* mLargeUnitDesc;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (RecentLargeUnitRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -1089,9 +1633,15 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, assign) int32_t iChangeMin;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (MarketStatDesc *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -1103,33 +1653,51 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, assign) int32_t iWantnum;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (MarketStatReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
 /////////////////////////////////////////////////////////////////
 @interface MarketStatMap : Message
 
-@property (nonatomic, strong) NSDictionary* mMarketStatDesc;
+@property (nonatomic, strong) NSMutableDictionary* mMarketStatDesc;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (MarketStatMap *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
 /////////////////////////////////////////////////////////////////
 @interface MarketStatList : Message
 
-@property (nonatomic, strong) NSArray* vMarketStatDesc;
+@property (nonatomic, strong) NSMutableArray* vMarketStatDesc;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (MarketStatList *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
@@ -1139,9 +1707,102 @@ typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
 @property (nonatomic, strong) MarketStatList* stMarketStatList;
 
 
-- (void)write: (BaseEncodeStream *)eos;
+- (void) write: (BaseEncodeStream *)eos;
 
 - (MarketStatRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface TransStatDesc : Message
+
+@property (nonatomic, copy) NSString* sDtSecCode;
+@property (nonatomic, assign) E_TRAN_STAT_TYPE eTranStatType;
+@property (nonatomic, assign) int32_t iNo;
+@property (nonatomic, assign) int64_t lTotalAmt;
+@property (nonatomic, assign) float fPriceAvg;
+@property (nonatomic, assign) int64_t lTotalVol;
+@property (nonatomic, assign) int32_t iLastTime;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (TransStatDesc *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface TransStat : Message
+
+@property (nonatomic, strong) NSMutableArray* vTransStatDesc;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (TransStat *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface TransStatReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+@property (nonatomic, copy) NSString* sDtSecCode;
+@property (nonatomic, assign) int32_t iStartxh;
+@property (nonatomic, assign) int32_t iWantnum;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (TransStatReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface TransStatRsp : Message
+
+@property (nonatomic, strong) TransStat* stTransStatBuy;
+@property (nonatomic, strong) TransStat* stTransStatSell;
+@property (nonatomic, assign) int64_t lTotalBuyAmt;
+@property (nonatomic, assign) int64_t lTotalSellAmt;
+@property (nonatomic, assign) float fPriceAvg;
+@property (nonatomic, assign) int64_t lTotalBuyVol;
+@property (nonatomic, assign) int64_t lTotalSellVol;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (TransStatRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
 
 @end
 
