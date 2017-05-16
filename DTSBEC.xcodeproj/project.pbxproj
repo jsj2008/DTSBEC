@@ -102,6 +102,8 @@
 		BB3DCDDB1E66CCCC008BDFA4 /* ZipStore.m in Sources */ = {isa = PBXBuildFile; fileRef = BB3DCD831E66CCCC008BDFA4 /* ZipStore.m */; };
 		BB78E6821ECA9422007BD7C7 /* DtTemp.h in Headers */ = {isa = PBXBuildFile; fileRef = BB78E6801ECA9422007BD7C7 /* DtTemp.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BB78E6831ECA9422007BD7C7 /* DtTemp.m in Sources */ = {isa = PBXBuildFile; fileRef = BB78E6811ECA9422007BD7C7 /* DtTemp.m */; };
+		BB78E6851ECAF642007BD7C7 /* InvestSuggestionComm.h in Headers */ = {isa = PBXBuildFile; fileRef = BB78E6841ECAF642007BD7C7 /* InvestSuggestionComm.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BB78E6871ECAF652007BD7C7 /* InvestSuggestionComm.m in Sources */ = {isa = PBXBuildFile; fileRef = BB78E6861ECAF652007BD7C7 /* InvestSuggestionComm.m */; };
 		D77608CB6813954B8CEC8980 /* Pods_DTSBEC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE6D60DCB56572EF72B3323 /* Pods_DTSBEC.framework */; };
 /* End PBXBuildFile section */
 
@@ -206,6 +208,8 @@
 		BB3DCD831E66CCCC008BDFA4 /* ZipStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZipStore.m; sourceTree = "<group>"; };
 		BB78E6801ECA9422007BD7C7 /* DtTemp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DtTemp.h; sourceTree = "<group>"; };
 		BB78E6811ECA9422007BD7C7 /* DtTemp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DtTemp.m; sourceTree = "<group>"; };
+		BB78E6841ECAF642007BD7C7 /* InvestSuggestionComm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InvestSuggestionComm.h; sourceTree = "<group>"; };
+		BB78E6861ECAF652007BD7C7 /* InvestSuggestionComm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InvestSuggestionComm.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -265,6 +269,8 @@
 				BB3DCD361E66CCCC008BDFA4 /* Alert.h */,
 				BB3DCD371E66CCCC008BDFA4 /* Alert.m */,
 				BB3DCD381E66CCCC008BDFA4 /* AppConfig.h */,
+				BB78E6861ECAF652007BD7C7 /* InvestSuggestionComm.m */,
+				BB78E6841ECAF642007BD7C7 /* InvestSuggestionComm.h */,
 				BB3DCD391E66CCCC008BDFA4 /* AppConfig.m */,
 				BB3DCD3A1E66CCCC008BDFA4 /* Beacon.h */,
 				BB3DCD3B1E66CCCC008BDFA4 /* Beacon.m */,
@@ -409,6 +415,7 @@
 				BB3DCD921E66CCCC008BDFA4 /* Beacon.h in Headers */,
 				BB78E6821ECA9422007BD7C7 /* DtTemp.h in Headers */,
 				BB3DCDBA1E66CCCC008BDFA4 /* OssAccess.h in Headers */,
+				BB78E6851ECAF642007BD7C7 /* InvestSuggestionComm.h in Headers */,
 				BB05B0F01EA07A5C0084EA1D /* AIConsultStock.h in Headers */,
 				BB05B0F41EA07A860084EA1D /* MarginTrade.h in Headers */,
 				BB3DCD9F1E66CCCC008BDFA4 /* DtPay.h in Headers */,
@@ -549,6 +556,7 @@
 				BB3DCDD11E66CCCC008BDFA4 /* Upgrade.m in Sources */,
 				BB3DCDBF1E66CCCC008BDFA4 /* Portfolio.m in Sources */,
 				BB3DCDA41E66CCCC008BDFA4 /* Feed.m in Sources */,
+				BB78E6871ECAF652007BD7C7 /* InvestSuggestionComm.m in Sources */,
 				BB3DCD9C1E66CCCC008BDFA4 /* DtGoldenStock.m in Sources */,
 				BB3DCDAB1E66CCCC008BDFA4 /* JsonResult.m in Sources */,
 				BB3DCDCB1E66CCCC008BDFA4 /* Singal.m in Sources */,

@@ -23,6 +23,7 @@
 #import "Feed.h"
 #import "FileAccess.h"
 #import "FreqLimit.h"
+#import "InvestSuggestionComm.h"
 #import "JsonResult.h"
 #import "KLine.h"
 #import "LogQuery.h"
