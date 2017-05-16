@@ -18,6 +18,7 @@
 #import "DtGoldenStock.h"
 #import "DtLive.h"
 #import "DtPay.h"
+#import "DtTemp.h"
 #import "Favor.h"
 #import "Feed.h"
 #import "FileAccess.h"
@@ -48,7 +49,6 @@
 #import "Video.h"
 #import "YunWeb.h"
 #import "ZipStore.h"
-#import "MarginTrade.h"
 
 
 #endif

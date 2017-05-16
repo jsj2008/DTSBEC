@@ -100,6 +100,8 @@
 		BB3DCDD91E66CCCC008BDFA4 /* YunWeb.m in Sources */ = {isa = PBXBuildFile; fileRef = BB3DCD811E66CCCC008BDFA4 /* YunWeb.m */; };
 		BB3DCDDA1E66CCCC008BDFA4 /* ZipStore.h in Headers */ = {isa = PBXBuildFile; fileRef = BB3DCD821E66CCCC008BDFA4 /* ZipStore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BB3DCDDB1E66CCCC008BDFA4 /* ZipStore.m in Sources */ = {isa = PBXBuildFile; fileRef = BB3DCD831E66CCCC008BDFA4 /* ZipStore.m */; };
+		BB78E6821ECA9422007BD7C7 /* DtTemp.h in Headers */ = {isa = PBXBuildFile; fileRef = BB78E6801ECA9422007BD7C7 /* DtTemp.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BB78E6831ECA9422007BD7C7 /* DtTemp.m in Sources */ = {isa = PBXBuildFile; fileRef = BB78E6811ECA9422007BD7C7 /* DtTemp.m */; };
 		D77608CB6813954B8CEC8980 /* Pods_DTSBEC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE6D60DCB56572EF72B3323 /* Pods_DTSBEC.framework */; };
 /* End PBXBuildFile section */
 
@@ -202,6 +204,8 @@
 		BB3DCD811E66CCCC008BDFA4 /* YunWeb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YunWeb.m; sourceTree = "<group>"; };
 		BB3DCD821E66CCCC008BDFA4 /* ZipStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZipStore.h; sourceTree = "<group>"; };
 		BB3DCD831E66CCCC008BDFA4 /* ZipStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZipStore.m; sourceTree = "<group>"; };
+		BB78E6801ECA9422007BD7C7 /* DtTemp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DtTemp.h; sourceTree = "<group>"; };
+		BB78E6811ECA9422007BD7C7 /* DtTemp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DtTemp.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -246,10 +250,6 @@
 		BB3DCD231E66CC8B008BDFA4 /* DTSBEC */ = {
 			isa = PBXGroup;
 			children = (
-				BB05B0F21EA07A860084EA1D /* MarginTrade.h */,
-				BB05B0F31EA07A860084EA1D /* MarginTrade.m */,
-				BB05B0EE1EA07A5C0084EA1D /* AIConsultStock.h */,
-				BB05B0EF1EA07A5C0084EA1D /* AIConsultStock.m */,
 				BB3DCD2C1E66CCCC008BDFA4 /* Account.h */,
 				BB3DCD2D1E66CCCC008BDFA4 /* Account.m */,
 				BB3DCD2E1E66CCCC008BDFA4 /* AccountCache.h */,
@@ -260,6 +260,8 @@
 				BB3DCD331E66CCCC008BDFA4 /* AccuPoint.m */,
 				BB3DCD341E66CCCC008BDFA4 /* AdminReg.h */,
 				BB3DCD351E66CCCC008BDFA4 /* AdminReg.m */,
+				BB05B0EE1EA07A5C0084EA1D /* AIConsultStock.h */,
+				BB05B0EF1EA07A5C0084EA1D /* AIConsultStock.m */,
 				BB3DCD361E66CCCC008BDFA4 /* Alert.h */,
 				BB3DCD371E66CCCC008BDFA4 /* Alert.m */,
 				BB3DCD381E66CCCC008BDFA4 /* AppConfig.h */,
@@ -279,6 +281,9 @@
 				BB3DCD461E66CCCC008BDFA4 /* DtLive.m */,
 				BB3DCD471E66CCCC008BDFA4 /* DtPay.h */,
 				BB3DCD481E66CCCC008BDFA4 /* DtPay.m */,
+				BB3DCD241E66CC8B008BDFA4 /* DTSBEC.h */,
+				BB78E6801ECA9422007BD7C7 /* DtTemp.h */,
+				BB78E6811ECA9422007BD7C7 /* DtTemp.m */,
 				BB3DCD491E66CCCC008BDFA4 /* Favor.h */,
 				BB3DCD4A1E66CCCC008BDFA4 /* Favor.m */,
 				BB3DCD4B1E66CCCC008BDFA4 /* Feed.h */,
@@ -288,6 +293,7 @@
 				BB3DCD4F1E66CCCC008BDFA4 /* FreqLimit.h */,
 				BB3DCD501E66CCCC008BDFA4 /* FreqLimit.m */,
 				BB3DCD511E66CCCC008BDFA4 /* ImportHeader.sh */,
+				BB3DCD251E66CC8B008BDFA4 /* Info.plist */,
 				BB3DCD521E66CCCC008BDFA4 /* JsonResult.h */,
 				BB3DCD531E66CCCC008BDFA4 /* JsonResult.m */,
 				BB3DCD541E66CCCC008BDFA4 /* KLine.h */,
@@ -296,6 +302,8 @@
 				BB3DCD571E66CCCC008BDFA4 /* LogQuery.m */,
 				BB3DCD581E66CCCC008BDFA4 /* LogReport.h */,
 				BB3DCD591E66CCCC008BDFA4 /* LogReport.m */,
+				BB05B0F21EA07A860084EA1D /* MarginTrade.h */,
+				BB05B0F31EA07A860084EA1D /* MarginTrade.m */,
 				BB3DCD5A1E66CCCC008BDFA4 /* MarketAlert.h */,
 				BB3DCD5B1E66CCCC008BDFA4 /* MarketAlert.m */,
 				BB3DCD5C1E66CCCC008BDFA4 /* News.h */,
@@ -320,11 +328,11 @@
 				BB3DCD6F1E66CCCC008BDFA4 /* Search.m */,
 				BB3DCD701E66CCCC008BDFA4 /* SecBase.h */,
 				BB3DCD711E66CCCC008BDFA4 /* SecBase.m */,
+				BB3DCD721E66CCCC008BDFA4 /* Singal.h */,
 				BB3DCD731E66CCCC008BDFA4 /* Singal.m */,
 				BB3DCD741E66CCCC008BDFA4 /* Stat.h */,
 				BB3DCD751E66CCCC008BDFA4 /* Stat.m */,
 				BB3DCD761E66CCCC008BDFA4 /* TextProcess.h */,
-				BB3DCD721E66CCCC008BDFA4 /* Singal.h */,
 				BB3DCD771E66CCCC008BDFA4 /* TextProcess.m */,
 				BB3DCD781E66CCCC008BDFA4 /* Upgrade.h */,
 				BB3DCD791E66CCCC008BDFA4 /* Upgrade.m */,
@@ -338,8 +346,6 @@
 				BB3DCD811E66CCCC008BDFA4 /* YunWeb.m */,
 				BB3DCD821E66CCCC008BDFA4 /* ZipStore.h */,
 				BB3DCD831E66CCCC008BDFA4 /* ZipStore.m */,
-				BB3DCD241E66CC8B008BDFA4 /* DTSBEC.h */,
-				BB3DCD251E66CC8B008BDFA4 /* Info.plist */,
 			);
 			path = DTSBEC;
 			sourceTree = "<group>";
@@ -401,6 +407,7 @@
 				BB3DCDB21E66CCCC008BDFA4 /* MarketAlert.h in Headers */,
 				BB3DCD9B1E66CCCC008BDFA4 /* DtGoldenStock.h in Headers */,
 				BB3DCD921E66CCCC008BDFA4 /* Beacon.h in Headers */,
+				BB78E6821ECA9422007BD7C7 /* DtTemp.h in Headers */,
 				BB3DCDBA1E66CCCC008BDFA4 /* OssAccess.h in Headers */,
 				BB05B0F01EA07A5C0084EA1D /* AIConsultStock.h in Headers */,
 				BB05B0F41EA07A860084EA1D /* MarginTrade.h in Headers */,
@@ -536,6 +543,7 @@
 				BB3DCD8F1E66CCCC008BDFA4 /* Alert.m in Sources */,
 				BB3DCDA21E66CCCC008BDFA4 /* Favor.m in Sources */,
 				BB3DCDBD1E66CCCC008BDFA4 /* PePb.m in Sources */,
+				BB78E6831ECA9422007BD7C7 /* DtTemp.m in Sources */,
 				BB3DCDD51E66CCCC008BDFA4 /* UserPortfolio.m in Sources */,
 				BB3DCD911E66CCCC008BDFA4 /* AppConfig.m in Sources */,
 				BB3DCDD11E66CCCC008BDFA4 /* Upgrade.m in Sources */,
