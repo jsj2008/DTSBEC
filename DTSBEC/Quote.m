@@ -123,6 +123,7 @@
         self.fFundNetValue = 0;
         self.fMaxLimit = 0;
         self.fMinLimit = 0;
+        self.lVolinstock = 0;
     }
 
     return self;
@@ -193,6 +194,7 @@
     [ostream writeFloat: 39 value: self.fFundNetValue];
     [ostream writeFloat: 40 value: self.fMaxLimit];
     [ostream writeFloat: 41 value: self.fMinLimit];
+    [ostream writeInt64: 42 value: self.lVolinstock];
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -244,6 +246,7 @@
     self.fFundNetValue = [istream readFloatDef: 39 required: false def: self.fFundNetValue];
     self.fMaxLimit = [istream readFloatDef: 40 required: false def: self.fMaxLimit];
     self.fMinLimit = [istream readFloatDef: 41 required: false def: self.fMinLimit];
+    self.lVolinstock = [istream readInt64Def: 42 required: false def: self.lVolinstock];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -299,6 +302,7 @@
     [JsonRoot append:@"fFundNetValue" value : [BaseJSON writeFloat : self.fFundNetValue]];
     [JsonRoot append:@"fMaxLimit" value : [BaseJSON writeFloat : self.fMaxLimit]];
     [JsonRoot append:@"fMinLimit" value : [BaseJSON writeFloat : self.fMinLimit]];
+    [JsonRoot append:@"lVolinstock" value : [BaseJSON writeInt64 : self.lVolinstock]];
     return JsonRoot;
 }
 
@@ -346,6 +350,7 @@
     self.fFundNetValue = [BaseJSON readFloatDef:[RootMap objectForKey:@"fFundNetValue"] required:false def:self.fFundNetValue];
     self.fMaxLimit = [BaseJSON readFloatDef:[RootMap objectForKey:@"fMaxLimit"] required:false def:self.fMaxLimit];
     self.fMinLimit = [BaseJSON readFloatDef:[RootMap objectForKey:@"fMinLimit"] required:false def:self.fMinLimit];
+    self.lVolinstock = [BaseJSON readInt64Def:[RootMap objectForKey:@"lVolinstock"] required:false def:self.lVolinstock];
     return self;
 }
 
@@ -855,6 +860,11 @@
     {
         self.sDtSecCode = @"";
         self.vGuid = [NSData data];
+        self.eTrendReqType = E_TRT_NORMAL;
+        self.iStartxh = 0;
+        self.iMinute = 0;
+        self.iWantnum = 0;
+        self.iReqDataMinute = 0;
     }
 
     return self;
@@ -873,6 +883,11 @@
     {
         [ostream writeBytes: 1 value: self.vGuid];
     }
+    [ostream writeInt32: 2 value: (int32_t)self.eTrendReqType];
+    [ostream writeInt32: 3 value: self.iStartxh];
+    [ostream writeInt32: 4 value: self.iMinute];
+    [ostream writeInt32: 5 value: self.iWantnum];
+    [ostream writeInt32: 6 value: self.iReqDataMinute];
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -884,6 +899,11 @@
 
     self.sDtSecCode = [istream readStringDef: 0 required: false def: self.sDtSecCode];
     self.vGuid = [istream readBytesDef: 1 required: false def: self.vGuid];
+    self.eTrendReqType = [istream readInt32Def: 2 required: false def: (int32_t)self.eTrendReqType];
+    self.iStartxh = [istream readInt32Def: 3 required: false def: self.iStartxh];
+    self.iMinute = [istream readInt32Def: 4 required: false def: self.iMinute];
+    self.iWantnum = [istream readInt32Def: 5 required: false def: self.iWantnum];
+    self.iReqDataMinute = [istream readInt32Def: 6 required: false def: self.iReqDataMinute];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -899,6 +919,11 @@
     JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
     [JsonRoot append:@"sDtSecCode" value : [BaseJSON writeString : self.sDtSecCode]];
     [JsonRoot append:@"vGuid" value : [BaseJSON writeBytes : self.vGuid]];
+    [JsonRoot append:@"eTrendReqType" value : [BaseJSON writeInt32 : (int32_t)self.eTrendReqType]];
+    [JsonRoot append:@"iStartxh" value : [BaseJSON writeInt32 : self.iStartxh]];
+    [JsonRoot append:@"iMinute" value : [BaseJSON writeInt32 : self.iMinute]];
+    [JsonRoot append:@"iWantnum" value : [BaseJSON writeInt32 : self.iWantnum]];
+    [JsonRoot append:@"iReqDataMinute" value : [BaseJSON writeInt32 : self.iReqDataMinute]];
     return JsonRoot;
 }
 
@@ -906,6 +931,11 @@
 {
     self.sDtSecCode = [BaseJSON readStringDef:[RootMap objectForKey:@"sDtSecCode"] required:false def:self.sDtSecCode];
     self.vGuid = [BaseJSON readBytesDef:[RootMap objectForKey:@"vGuid"] required:false def:self.vGuid];
+    self.eTrendReqType = [BaseJSON readInt32Def:[RootMap objectForKey:@"eTrendReqType"] required:false def:(int32_t)self.eTrendReqType];
+    self.iStartxh = [BaseJSON readInt32Def:[RootMap objectForKey:@"iStartxh"] required:false def:self.iStartxh];
+    self.iMinute = [BaseJSON readInt32Def:[RootMap objectForKey:@"iMinute"] required:false def:self.iMinute];
+    self.iWantnum = [BaseJSON readInt32Def:[RootMap objectForKey:@"iWantnum"] required:false def:self.iWantnum];
+    self.iReqDataMinute = [BaseJSON readInt32Def:[RootMap objectForKey:@"iReqDataMinute"] required:false def:self.iReqDataMinute];
     return self;
 }
 
@@ -925,6 +955,8 @@
     {
         self.vTrendDesc = [NSMutableArray arrayWithCapacity:0];
         self.bSupport = true;
+        self.iStartTime = 0;
+        self.iEndTime = 0;
     }
 
     return self;
@@ -940,6 +972,8 @@
         [ostream writeList: 0 value: self.vTrendDesc VAR_TYPE: [THOTH_LIST CREATE: [TrendDesc class]]];
     }
     [ostream writeBoolean: 1 value: self.bSupport];
+    [ostream writeInt32: 2 value: self.iStartTime];
+    [ostream writeInt32: 3 value: self.iEndTime];
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -951,6 +985,8 @@
 
     self.vTrendDesc = [istream readListDef: 0 required: false def: self.vTrendDesc VAR_TYPE: [THOTH_LIST CREATE: [TrendDesc class]]];
     self.bSupport = [istream readBooleanDef: 1 required: false def: self.bSupport];
+    self.iStartTime = [istream readInt32Def: 2 required: false def: self.iStartTime];
+    self.iEndTime = [istream readInt32Def: 3 required: false def: self.iEndTime];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -966,6 +1002,8 @@
     JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
     [JsonRoot append:@"vTrendDesc" value : [BaseJSON writeList : self.vTrendDesc VAR_TYPE: [THOTH_LIST CREATE: [TrendDesc class]]]];
     [JsonRoot append:@"bSupport" value : [BaseJSON writeBoolean : self.bSupport]];
+    [JsonRoot append:@"iStartTime" value : [BaseJSON writeInt32 : self.iStartTime]];
+    [JsonRoot append:@"iEndTime" value : [BaseJSON writeInt32 : self.iEndTime]];
     return JsonRoot;
 }
 
@@ -973,6 +1011,8 @@
 {
     self.vTrendDesc = [BaseJSON readListDef:[RootMap objectForKey:@"vTrendDesc"] required:false def:self.vTrendDesc VAR_TYPE: [THOTH_LIST CREATE: [TrendDesc class]]];
     self.bSupport = [BaseJSON readBooleanDef:[RootMap objectForKey:@"bSupport"] required:false def:self.bSupport];
+    self.iStartTime = [BaseJSON readInt32Def:[RootMap objectForKey:@"iStartTime"] required:false def:self.iStartTime];
+    self.iEndTime = [BaseJSON readInt32Def:[RootMap objectForKey:@"iEndTime"] required:false def:self.iEndTime];
     return self;
 }
 

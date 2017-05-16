@@ -1861,6 +1861,277 @@
 @end
 
 //////////////////////////////////////////////////////////////
+@implementation PayUserAgreementDesc
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.iTextType = 0;
+        self.sText = @"";
+        self.sTextUrl = @"";
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    [ostream writeInt32: 0 value: self.iTextType];
+    if (self.sText != nil)
+    {
+        [ostream writeString: 1 value: self.sText];
+    }
+    if (self.sTextUrl != nil)
+    {
+        [ostream writeString: 2 value: self.sTextUrl];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (PayUserAgreementDesc *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.iTextType = [istream readInt32Def: 0 required: false def: self.iTextType];
+    self.sText = [istream readStringDef: 1 required: false def: self.sText];
+    self.sTextUrl = [istream readStringDef: 2 required: false def: self.sTextUrl];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"iTextType" value : [BaseJSON writeInt32 : self.iTextType]];
+    [JsonRoot append:@"sText" value : [BaseJSON writeString : self.sText]];
+    [JsonRoot append:@"sTextUrl" value : [BaseJSON writeString : self.sTextUrl]];
+    return JsonRoot;
+}
+
+- (PayUserAgreementDesc *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.iTextType = [BaseJSON readInt32Def:[RootMap objectForKey:@"iTextType"] required:false def:self.iTextType];
+    self.sText = [BaseJSON readStringDef:[RootMap objectForKey:@"sText"] required:false def:self.sText];
+    self.sTextUrl = [BaseJSON readStringDef:[RootMap objectForKey:@"sTextUrl"] required:false def:self.sTextUrl];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation PayUserAgreementItem
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.bCheckBox = false;
+        self.bDefaultCheck = true;
+        self.vDesc = [NSMutableArray arrayWithCapacity:0];
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    [ostream writeBoolean: 0 value: self.bCheckBox];
+    [ostream writeBoolean: 1 value: self.bDefaultCheck];
+    if (self.vDesc != nil)
+    {
+        [ostream writeList: 2 value: self.vDesc VAR_TYPE: [THOTH_LIST CREATE: [PayUserAgreementDesc class]]];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (PayUserAgreementItem *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.bCheckBox = [istream readBooleanDef: 0 required: false def: self.bCheckBox];
+    self.bDefaultCheck = [istream readBooleanDef: 1 required: false def: self.bDefaultCheck];
+    self.vDesc = [istream readListDef: 2 required: false def: self.vDesc VAR_TYPE: [THOTH_LIST CREATE: [PayUserAgreementDesc class]]];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"bCheckBox" value : [BaseJSON writeBoolean : self.bCheckBox]];
+    [JsonRoot append:@"bDefaultCheck" value : [BaseJSON writeBoolean : self.bDefaultCheck]];
+    [JsonRoot append:@"vDesc" value : [BaseJSON writeList : self.vDesc VAR_TYPE: [THOTH_LIST CREATE: [PayUserAgreementDesc class]]]];
+    return JsonRoot;
+}
+
+- (PayUserAgreementItem *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.bCheckBox = [BaseJSON readBooleanDef:[RootMap objectForKey:@"bCheckBox"] required:false def:self.bCheckBox];
+    self.bDefaultCheck = [BaseJSON readBooleanDef:[RootMap objectForKey:@"bDefaultCheck"] required:false def:self.bDefaultCheck];
+    self.vDesc = [BaseJSON readListDef:[RootMap objectForKey:@"vDesc"] required:false def:self.vDesc VAR_TYPE: [THOTH_LIST CREATE: [PayUserAgreementDesc class]]];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation PayUserAgreement
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.vItem = [NSMutableArray arrayWithCapacity:0];
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.vItem != nil)
+    {
+        [ostream writeList: 0 value: self.vItem VAR_TYPE: [THOTH_LIST CREATE: [PayUserAgreementItem class]]];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (PayUserAgreement *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.vItem = [istream readListDef: 0 required: false def: self.vItem VAR_TYPE: [THOTH_LIST CREATE: [PayUserAgreementItem class]]];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"vItem" value : [BaseJSON writeList : self.vItem VAR_TYPE: [THOTH_LIST CREATE: [PayUserAgreementItem class]]]];
+    return JsonRoot;
+}
+
+- (PayUserAgreement *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.vItem = [BaseJSON readListDef:[RootMap objectForKey:@"vItem"] required:false def:self.vItem VAR_TYPE: [THOTH_LIST CREATE: [PayUserAgreementItem class]]];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation PayUserAgreementList
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.mSubjectUserAgreement = [NSMutableDictionary dictionaryWithCapacity: 0];
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.mSubjectUserAgreement != nil)
+    {
+        [ostream writeMap: 0 value: self.mSubjectUserAgreement VAR_TYPE: [THOTH_MAP CREATE: [THOTH_INT32 class] VT: [PayUserAgreement class]]];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (PayUserAgreementList *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.mSubjectUserAgreement = [istream readMapDef: 0 required: false def: self.mSubjectUserAgreement VAR_TYPE: [THOTH_MAP CREATE: [THOTH_INT32 class] VT: [PayUserAgreement class]]];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"mSubjectUserAgreement" value : [BaseJSON writeMap : self.mSubjectUserAgreement VAR_TYPE: [THOTH_MAP CREATE: [THOTH_INT32 class] VT: [PayUserAgreement class]]]];
+    return JsonRoot;
+}
+
+- (PayUserAgreementList *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.mSubjectUserAgreement = [BaseJSON readMapDef:[RootMap objectForKey:@"mSubjectUserAgreement"] required:false def:self.mSubjectUserAgreement VAR_TYPE: [THOTH_MAP CREATE: [THOTH_INT32 class] VT: [PayUserAgreement class]]];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
 @implementation GetConfigReq
 - (id) init
 {

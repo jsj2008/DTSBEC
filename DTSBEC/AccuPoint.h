@@ -20,6 +20,9 @@ typedef NS_ENUM(NSUInteger, AccuPointErrCode) {
     E_ACCU_POINT_OLD_USER_COMMIT_CODE = -10,
     E_ACCU_POINT_EXPIRED_CODE = -11,
     E_ACCU_POINT_USER_NOT_EXIST = -12,
+    E_ACCU_POINT_COMMIT_TOO_FREQ = -13,
+    E_ACCU_POINT_INVALID_COUPON_TYPE = -14,
+    E_ACCU_POINT_REPEAT_RECEIVE_COUPON = -15,
     E_ACCU_POINT_SVR_ERR = -99,
     E_ACCU_POINT_BIND_PHONE = 1
 };
@@ -34,7 +37,8 @@ typedef NS_ENUM(NSUInteger, AccuPointTaskType) {
     E_ACCU_POINT_TASK_COMMENT_FEED = 6,
     E_ACCU_POINT_TASK_PO_FEED = 7,
     E_ACCU_POINT_TASK_REGISTER = 8,
-    E_ACCU_POINT_TASK_EXCHANGE_PRIVI = 9
+    E_ACCU_POINT_TASK_EXCHANGE_PRIVI = 9,
+    E_ACCU_POINT_TASK_ACTIVITY = 10
 };
 
 typedef NS_ENUM(NSUInteger, AccuPointCodeType) {
@@ -47,7 +51,12 @@ typedef NS_ENUM(NSUInteger, AccuPointPriviType) {
     E_ACCU_POINT_PRIVI_CHIP = 1,
     E_ACCU_POINT_PRIVI_KLINE = 2,
     E_ACCU_POINT_PRIVI_HISTORY = 3,
-    E_ACCU_POINT_PRIVI_BSSIGNAL = 4
+    E_ACCU_POINT_PRIVI_BSSIGNAL = 4,
+    E_ACCU_POINT_SECRET_DECISION = 5,
+    E_ACCU_POINT_KLINE_SELECT = 6,
+    E_ACCU_POINT_FINANCE_TRACK = 7,
+    E_ACCU_POINT_YXT_ADVANCED_COURSE = 8,
+    E_ACCU_POINT_YP_PRIVATE_STOCK_TACTICS = 9
 };
 
 typedef NS_ENUM(NSUInteger, AccuPointOpenType) {
@@ -60,9 +69,10 @@ typedef NS_ENUM(NSUInteger, AccuPointUseType) {
     E_ACCU_POINT_USE_OPEN_BLESS_PACK = 1
 };
 
-typedef NS_ENUM(NSUInteger, AccuPointConverCodeType) {
-    E_ACCU_POINT_CONVER_CODE_PRIVI = 0,
-    E_ACCU_POINT_CONVER_CODE_MEMBER = 1
+typedef NS_ENUM(NSUInteger, AccuPointTimeUnit) {
+    E_ACCU_POINT_TIME_UNIT_DAY = 0,
+    E_ACCU_POINT_TIME_UNIT_MONTH = 1,
+    E_ACCU_POINT_TIME_UNIT_YEAR = 2
 };
 
 /////////////////////////////////////////////////////////////////
@@ -116,6 +126,8 @@ typedef NS_ENUM(NSUInteger, AccuPointConverCodeType) {
 @property (nonatomic, assign) int32_t iInviteUserNum;
 @property (nonatomic, assign) int32_t iInviteGetPoints;
 @property (nonatomic, assign) int32_t iWebRetCode;
+@property (nonatomic, strong) NSMutableArray* vYXTCourseId;
+@property (nonatomic, copy) NSString* sMemberEndDay;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -333,6 +345,7 @@ typedef NS_ENUM(NSUInteger, AccuPointConverCodeType) {
 @property (nonatomic, strong) UserInfo* stUserInfo;
 @property (nonatomic, strong) AccountTicket* stAccountTicket;
 @property (nonatomic, assign) int32_t iTaskType;
+@property (nonatomic, assign) int32_t iTaskPoints;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -537,11 +550,13 @@ typedef NS_ENUM(NSUInteger, AccuPointConverCodeType) {
 @interface GetAccuPointConverCodeReq : Message
 
 @property (nonatomic, strong) UserInfo* stUserInfo;
-@property (nonatomic, assign) int32_t iOpenPriviDays;
+@property (nonatomic, assign) int32_t iOpenNumber;
 @property (nonatomic, copy) NSString* sDesc;
 @property (nonatomic, assign) int32_t iSize;
 @property (nonatomic, assign) int64_t lInvalidTimeStamp;
 @property (nonatomic, assign) int32_t iCodeType;
+@property (nonatomic, assign) int32_t iSubjectType;
+@property (nonatomic, assign) int32_t iOpenUnit;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -606,6 +621,345 @@ typedef NS_ENUM(NSUInteger, AccuPointConverCodeType) {
 - (void) write: (BaseEncodeStream *)eos;
 
 - (UseAccuPointRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface ValueAddedPackageDesc : Message
+
+@property (nonatomic, copy) NSString* sId;
+@property (nonatomic, copy) NSString* sName;
+@property (nonatomic, copy) NSString* sDesc;
+@property (nonatomic, assign) int32_t iFee;
+@property (nonatomic, assign) int32_t iNumber;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (ValueAddedPackageDesc *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface ValueAddedDesc : Message
+
+@property (nonatomic, assign) int32_t iType;
+@property (nonatomic, copy) NSString* sName;
+@property (nonatomic, copy) NSString* sDesc;
+@property (nonatomic, copy) NSString* sFeeDesc;
+@property (nonatomic, copy) NSString* sIcon;
+@property (nonatomic, assign) float fFee;
+@property (nonatomic, assign) int32_t iNumber;
+@property (nonatomic, assign) int32_t iOnlineState;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (ValueAddedDesc *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetValueAddedListReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetValueAddedListReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetValueAddedListRsp : Message
+
+@property (nonatomic, strong) NSMutableArray* vList;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetValueAddedListRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetValueAddedPackageListReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+@property (nonatomic, assign) int32_t iType;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetValueAddedPackageListReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetValueAddedPackageListRsp : Message
+
+@property (nonatomic, strong) NSMutableArray* vList;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetValueAddedPackageListRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetPreSaleLeftNumReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetPreSaleLeftNumReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetPreSaleLeftNumRsp : Message
+
+@property (nonatomic, assign) int32_t iLeftNum;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetPreSaleLeftNumRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface OpenDtPrivi4YXTReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+@property (nonatomic, strong) AccountTicket* stAccountTicket;
+@property (nonatomic, copy) NSString* sClassId;
+@property (nonatomic, copy) NSString* sOpenPhoneNum;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (OpenDtPrivi4YXTReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface OpenDtPrivi4YXTRsp : Message
+
+@property (nonatomic, assign) int32_t iRetCode;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (OpenDtPrivi4YXTRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetUserCouponNumReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+@property (nonatomic, strong) AccountTicket* stAccountTicket;
+@property (nonatomic, assign) int32_t iCouponStatus;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetUserCouponNumReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetUserCouponNumRsp : Message
+
+@property (nonatomic, assign) int32_t iCouponNum;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetUserCouponNumRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetUserCouponListReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+@property (nonatomic, strong) AccountTicket* stAccountTicket;
+@property (nonatomic, assign) int32_t iCouponStatus;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetUserCouponListReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface AccuPointCoupon : Message
+
+@property (nonatomic, copy) NSString* sCouponCode;
+@property (nonatomic, assign) int32_t iValueMoney;
+@property (nonatomic, assign) int32_t iUseCondMoney;
+@property (nonatomic, assign) int32_t iSubjectType;
+@property (nonatomic, assign) int32_t iStatus;
+@property (nonatomic, assign) int64_t lGenTimeStamp;
+@property (nonatomic, assign) int64_t lStartTimeStamp;
+@property (nonatomic, assign) int64_t lInvalidTimeStamp;
+@property (nonatomic, assign) int64_t lUseTimeStamp;
+@property (nonatomic, copy) NSString* iUseCondDesc;
+@property (nonatomic, copy) NSString* sCouponName;
+@property (nonatomic, copy) NSString* sAppScope;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (AccuPointCoupon *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetUserCouponListRsp : Message
+
+@property (nonatomic, strong) NSMutableArray* vList;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetUserCouponListRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface ReceiveCouponReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+@property (nonatomic, strong) AccountTicket* stAccountTicket;
+@property (nonatomic, assign) int32_t iCouponType;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (ReceiveCouponReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface ReceiveCouponRsp : Message
+
+@property (nonatomic, assign) int32_t iReturnCode;
+@property (nonatomic, strong) AccuPointCoupon* stCoupon;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (ReceiveCouponRsp *) read: (BaseDecodeStream *)dos;
 
 - (NSString *) writeToJsonString;
 

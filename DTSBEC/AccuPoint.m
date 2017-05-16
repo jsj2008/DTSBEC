@@ -163,6 +163,8 @@
         self.iInviteUserNum = 0;
         self.iInviteGetPoints = 0;
         self.iWebRetCode = 0;
+        self.vYXTCourseId = [NSMutableArray arrayWithCapacity:0];
+        self.sMemberEndDay = @"";
     }
 
     return self;
@@ -191,6 +193,14 @@
     [ostream writeInt32: 6 value: self.iInviteUserNum];
     [ostream writeInt32: 7 value: self.iInviteGetPoints];
     [ostream writeInt32: 8 value: self.iWebRetCode];
+    if (self.vYXTCourseId != nil)
+    {
+        [ostream writeList: 9 value: self.vYXTCourseId VAR_TYPE: [THOTH_LIST CREATE: [THOTH_STRING class]]];
+    }
+    if (self.sMemberEndDay != nil)
+    {
+        [ostream writeString: 10 value: self.sMemberEndDay];
+    }
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -209,6 +219,8 @@
     self.iInviteUserNum = [istream readInt32Def: 6 required: false def: self.iInviteUserNum];
     self.iInviteGetPoints = [istream readInt32Def: 7 required: false def: self.iInviteGetPoints];
     self.iWebRetCode = [istream readInt32Def: 8 required: false def: self.iWebRetCode];
+    self.vYXTCourseId = [istream readListDef: 9 required: false def: self.vYXTCourseId VAR_TYPE: [THOTH_LIST CREATE: [THOTH_STRING class]]];
+    self.sMemberEndDay = [istream readStringDef: 10 required: false def: self.sMemberEndDay];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -231,6 +243,8 @@
     [JsonRoot append:@"iInviteUserNum" value : [BaseJSON writeInt32 : self.iInviteUserNum]];
     [JsonRoot append:@"iInviteGetPoints" value : [BaseJSON writeInt32 : self.iInviteGetPoints]];
     [JsonRoot append:@"iWebRetCode" value : [BaseJSON writeInt32 : self.iWebRetCode]];
+    [JsonRoot append:@"vYXTCourseId" value : [BaseJSON writeList : self.vYXTCourseId VAR_TYPE: [THOTH_LIST CREATE: [THOTH_STRING class]]]];
+    [JsonRoot append:@"sMemberEndDay" value : [BaseJSON writeString : self.sMemberEndDay]];
     return JsonRoot;
 }
 
@@ -245,6 +259,8 @@
     self.iInviteUserNum = [BaseJSON readInt32Def:[RootMap objectForKey:@"iInviteUserNum"] required:false def:self.iInviteUserNum];
     self.iInviteGetPoints = [BaseJSON readInt32Def:[RootMap objectForKey:@"iInviteGetPoints"] required:false def:self.iInviteGetPoints];
     self.iWebRetCode = [BaseJSON readInt32Def:[RootMap objectForKey:@"iWebRetCode"] required:false def:self.iWebRetCode];
+    self.vYXTCourseId = [BaseJSON readListDef:[RootMap objectForKey:@"vYXTCourseId"] required:false def:self.vYXTCourseId VAR_TYPE: [THOTH_LIST CREATE: [THOTH_STRING class]]];
+    self.sMemberEndDay = [BaseJSON readStringDef:[RootMap objectForKey:@"sMemberEndDay"] required:false def:self.sMemberEndDay];
     return self;
 }
 
@@ -991,6 +1007,7 @@
         self.stUserInfo = [[UserInfo alloc] init];
         self.stAccountTicket = [[AccountTicket alloc] init];
         self.iTaskType = 0;
+        self.iTaskPoints = 0;
     }
 
     return self;
@@ -1010,6 +1027,7 @@
         [ostream writeMessage: 1 value: self.stAccountTicket];
     }
     [ostream writeInt32: 2 value: self.iTaskType];
+    [ostream writeInt32: 3 value: self.iTaskPoints];
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -1022,6 +1040,7 @@
     self.stUserInfo = (UserInfo*)[istream readMessageDef: 0 required: false def: self.stUserInfo VAR_TYPE: [UserInfo class]];
     self.stAccountTicket = (AccountTicket*)[istream readMessageDef: 1 required: false def: self.stAccountTicket VAR_TYPE: [AccountTicket class]];
     self.iTaskType = [istream readInt32Def: 2 required: false def: self.iTaskType];
+    self.iTaskPoints = [istream readInt32Def: 3 required: false def: self.iTaskPoints];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -1038,6 +1057,7 @@
     [JsonRoot append:@"stUserInfo" value : [BaseJSON writeMessage : self.stUserInfo]];
     [JsonRoot append:@"stAccountTicket" value : [BaseJSON writeMessage : self.stAccountTicket]];
     [JsonRoot append:@"iTaskType" value : [BaseJSON writeInt32 : self.iTaskType]];
+    [JsonRoot append:@"iTaskPoints" value : [BaseJSON writeInt32 : self.iTaskPoints]];
     return JsonRoot;
 }
 
@@ -1046,6 +1066,7 @@
     self.stUserInfo = [BaseJSON readMessageDef:[RootMap objectForKey:@"stUserInfo"] required:false def:self.stUserInfo VAR_TYPE: [UserInfo class]];
     self.stAccountTicket = [BaseJSON readMessageDef:[RootMap objectForKey:@"stAccountTicket"] required:false def:self.stAccountTicket VAR_TYPE: [AccountTicket class]];
     self.iTaskType = [BaseJSON readInt32Def:[RootMap objectForKey:@"iTaskType"] required:false def:self.iTaskType];
+    self.iTaskPoints = [BaseJSON readInt32Def:[RootMap objectForKey:@"iTaskPoints"] required:false def:self.iTaskPoints];
     return self;
 }
 
@@ -1760,11 +1781,13 @@
     if (self = [super init])
     {
         self.stUserInfo = [[UserInfo alloc] init];
-        self.iOpenPriviDays = 60;
+        self.iOpenNumber = 0;
         self.sDesc = @"";
         self.iSize = 20;
         self.lInvalidTimeStamp = 0;
         self.iCodeType = 0;
+        self.iSubjectType = 0;
+        self.iOpenUnit = 0;
     }
 
     return self;
@@ -1779,7 +1802,7 @@
     {
         [ostream writeMessage: 0 value: self.stUserInfo];
     }
-    [ostream writeInt32: 1 value: self.iOpenPriviDays];
+    [ostream writeInt32: 1 value: self.iOpenNumber];
     if (self.sDesc != nil)
     {
         [ostream writeString: 2 value: self.sDesc];
@@ -1787,6 +1810,8 @@
     [ostream writeInt32: 3 value: self.iSize];
     [ostream writeInt64: 4 value: self.lInvalidTimeStamp];
     [ostream writeInt32: 5 value: self.iCodeType];
+    [ostream writeInt32: 6 value: self.iSubjectType];
+    [ostream writeInt32: 7 value: self.iOpenUnit];
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -1797,11 +1822,13 @@
     istream.lastid = 0;
 
     self.stUserInfo = (UserInfo*)[istream readMessageDef: 0 required: false def: self.stUserInfo VAR_TYPE: [UserInfo class]];
-    self.iOpenPriviDays = [istream readInt32Def: 1 required: false def: self.iOpenPriviDays];
+    self.iOpenNumber = [istream readInt32Def: 1 required: false def: self.iOpenNumber];
     self.sDesc = [istream readStringDef: 2 required: false def: self.sDesc];
     self.iSize = [istream readInt32Def: 3 required: false def: self.iSize];
     self.lInvalidTimeStamp = [istream readInt64Def: 4 required: false def: self.lInvalidTimeStamp];
     self.iCodeType = [istream readInt32Def: 5 required: false def: self.iCodeType];
+    self.iSubjectType = [istream readInt32Def: 6 required: false def: self.iSubjectType];
+    self.iOpenUnit = [istream readInt32Def: 7 required: false def: self.iOpenUnit];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -1816,22 +1843,26 @@
 {
     JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
     [JsonRoot append:@"stUserInfo" value : [BaseJSON writeMessage : self.stUserInfo]];
-    [JsonRoot append:@"iOpenPriviDays" value : [BaseJSON writeInt32 : self.iOpenPriviDays]];
+    [JsonRoot append:@"iOpenNumber" value : [BaseJSON writeInt32 : self.iOpenNumber]];
     [JsonRoot append:@"sDesc" value : [BaseJSON writeString : self.sDesc]];
     [JsonRoot append:@"iSize" value : [BaseJSON writeInt32 : self.iSize]];
     [JsonRoot append:@"lInvalidTimeStamp" value : [BaseJSON writeInt64 : self.lInvalidTimeStamp]];
     [JsonRoot append:@"iCodeType" value : [BaseJSON writeInt32 : self.iCodeType]];
+    [JsonRoot append:@"iSubjectType" value : [BaseJSON writeInt32 : self.iSubjectType]];
+    [JsonRoot append:@"iOpenUnit" value : [BaseJSON writeInt32 : self.iOpenUnit]];
     return JsonRoot;
 }
 
 - (GetAccuPointConverCodeReq *) readFromMap : (NSMutableDictionary *) RootMap
 {
     self.stUserInfo = [BaseJSON readMessageDef:[RootMap objectForKey:@"stUserInfo"] required:false def:self.stUserInfo VAR_TYPE: [UserInfo class]];
-    self.iOpenPriviDays = [BaseJSON readInt32Def:[RootMap objectForKey:@"iOpenPriviDays"] required:false def:self.iOpenPriviDays];
+    self.iOpenNumber = [BaseJSON readInt32Def:[RootMap objectForKey:@"iOpenNumber"] required:false def:self.iOpenNumber];
     self.sDesc = [BaseJSON readStringDef:[RootMap objectForKey:@"sDesc"] required:false def:self.sDesc];
     self.iSize = [BaseJSON readInt32Def:[RootMap objectForKey:@"iSize"] required:false def:self.iSize];
     self.lInvalidTimeStamp = [BaseJSON readInt64Def:[RootMap objectForKey:@"lInvalidTimeStamp"] required:false def:self.lInvalidTimeStamp];
     self.iCodeType = [BaseJSON readInt32Def:[RootMap objectForKey:@"iCodeType"] required:false def:self.iCodeType];
+    self.iSubjectType = [BaseJSON readInt32Def:[RootMap objectForKey:@"iSubjectType"] required:false def:self.iSubjectType];
+    self.iOpenUnit = [BaseJSON readInt32Def:[RootMap objectForKey:@"iOpenUnit"] required:false def:self.iOpenUnit];
     return self;
 }
 
@@ -2043,6 +2074,1258 @@
 - (UseAccuPointRsp *) readFromMap : (NSMutableDictionary *) RootMap
 {
     self.iLeftAccuPoint = [BaseJSON readInt32Def:[RootMap objectForKey:@"iLeftAccuPoint"] required:false def:self.iLeftAccuPoint];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation ValueAddedPackageDesc
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.sId = @"";
+        self.sName = @"";
+        self.sDesc = @"";
+        self.iFee = 0;
+        self.iNumber = 0;
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.sId != nil)
+    {
+        [ostream writeString: 0 value: self.sId];
+    }
+    if (self.sName != nil)
+    {
+        [ostream writeString: 1 value: self.sName];
+    }
+    if (self.sDesc != nil)
+    {
+        [ostream writeString: 2 value: self.sDesc];
+    }
+    [ostream writeInt32: 3 value: self.iFee];
+    [ostream writeInt32: 4 value: self.iNumber];
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (ValueAddedPackageDesc *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.sId = [istream readStringDef: 0 required: false def: self.sId];
+    self.sName = [istream readStringDef: 1 required: false def: self.sName];
+    self.sDesc = [istream readStringDef: 2 required: false def: self.sDesc];
+    self.iFee = [istream readInt32Def: 3 required: false def: self.iFee];
+    self.iNumber = [istream readInt32Def: 4 required: false def: self.iNumber];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"sId" value : [BaseJSON writeString : self.sId]];
+    [JsonRoot append:@"sName" value : [BaseJSON writeString : self.sName]];
+    [JsonRoot append:@"sDesc" value : [BaseJSON writeString : self.sDesc]];
+    [JsonRoot append:@"iFee" value : [BaseJSON writeInt32 : self.iFee]];
+    [JsonRoot append:@"iNumber" value : [BaseJSON writeInt32 : self.iNumber]];
+    return JsonRoot;
+}
+
+- (ValueAddedPackageDesc *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.sId = [BaseJSON readStringDef:[RootMap objectForKey:@"sId"] required:false def:self.sId];
+    self.sName = [BaseJSON readStringDef:[RootMap objectForKey:@"sName"] required:false def:self.sName];
+    self.sDesc = [BaseJSON readStringDef:[RootMap objectForKey:@"sDesc"] required:false def:self.sDesc];
+    self.iFee = [BaseJSON readInt32Def:[RootMap objectForKey:@"iFee"] required:false def:self.iFee];
+    self.iNumber = [BaseJSON readInt32Def:[RootMap objectForKey:@"iNumber"] required:false def:self.iNumber];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation ValueAddedDesc
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.iType = 0;
+        self.sName = @"";
+        self.sDesc = @"";
+        self.sFeeDesc = @"";
+        self.sIcon = @"";
+        self.fFee = 0;
+        self.iNumber = 0;
+        self.iOnlineState = 0;
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    [ostream writeInt32: 0 value: self.iType];
+    if (self.sName != nil)
+    {
+        [ostream writeString: 1 value: self.sName];
+    }
+    if (self.sDesc != nil)
+    {
+        [ostream writeString: 2 value: self.sDesc];
+    }
+    if (self.sFeeDesc != nil)
+    {
+        [ostream writeString: 3 value: self.sFeeDesc];
+    }
+    if (self.sIcon != nil)
+    {
+        [ostream writeString: 4 value: self.sIcon];
+    }
+    [ostream writeFloat: 5 value: self.fFee];
+    [ostream writeInt32: 6 value: self.iNumber];
+    [ostream writeInt32: 7 value: self.iOnlineState];
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (ValueAddedDesc *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.iType = [istream readInt32Def: 0 required: false def: self.iType];
+    self.sName = [istream readStringDef: 1 required: false def: self.sName];
+    self.sDesc = [istream readStringDef: 2 required: false def: self.sDesc];
+    self.sFeeDesc = [istream readStringDef: 3 required: false def: self.sFeeDesc];
+    self.sIcon = [istream readStringDef: 4 required: false def: self.sIcon];
+    self.fFee = [istream readFloatDef: 5 required: false def: self.fFee];
+    self.iNumber = [istream readInt32Def: 6 required: false def: self.iNumber];
+    self.iOnlineState = [istream readInt32Def: 7 required: false def: self.iOnlineState];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"iType" value : [BaseJSON writeInt32 : self.iType]];
+    [JsonRoot append:@"sName" value : [BaseJSON writeString : self.sName]];
+    [JsonRoot append:@"sDesc" value : [BaseJSON writeString : self.sDesc]];
+    [JsonRoot append:@"sFeeDesc" value : [BaseJSON writeString : self.sFeeDesc]];
+    [JsonRoot append:@"sIcon" value : [BaseJSON writeString : self.sIcon]];
+    [JsonRoot append:@"fFee" value : [BaseJSON writeFloat : self.fFee]];
+    [JsonRoot append:@"iNumber" value : [BaseJSON writeInt32 : self.iNumber]];
+    [JsonRoot append:@"iOnlineState" value : [BaseJSON writeInt32 : self.iOnlineState]];
+    return JsonRoot;
+}
+
+- (ValueAddedDesc *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.iType = [BaseJSON readInt32Def:[RootMap objectForKey:@"iType"] required:false def:self.iType];
+    self.sName = [BaseJSON readStringDef:[RootMap objectForKey:@"sName"] required:false def:self.sName];
+    self.sDesc = [BaseJSON readStringDef:[RootMap objectForKey:@"sDesc"] required:false def:self.sDesc];
+    self.sFeeDesc = [BaseJSON readStringDef:[RootMap objectForKey:@"sFeeDesc"] required:false def:self.sFeeDesc];
+    self.sIcon = [BaseJSON readStringDef:[RootMap objectForKey:@"sIcon"] required:false def:self.sIcon];
+    self.fFee = [BaseJSON readFloatDef:[RootMap objectForKey:@"fFee"] required:false def:self.fFee];
+    self.iNumber = [BaseJSON readInt32Def:[RootMap objectForKey:@"iNumber"] required:false def:self.iNumber];
+    self.iOnlineState = [BaseJSON readInt32Def:[RootMap objectForKey:@"iOnlineState"] required:false def:self.iOnlineState];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation GetValueAddedListReq
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.stUserInfo = [[UserInfo alloc] init];
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.stUserInfo != nil)
+    {
+        [ostream writeMessage: 0 value: self.stUserInfo];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (GetValueAddedListReq *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.stUserInfo = (UserInfo*)[istream readMessageDef: 0 required: false def: self.stUserInfo VAR_TYPE: [UserInfo class]];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"stUserInfo" value : [BaseJSON writeMessage : self.stUserInfo]];
+    return JsonRoot;
+}
+
+- (GetValueAddedListReq *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.stUserInfo = [BaseJSON readMessageDef:[RootMap objectForKey:@"stUserInfo"] required:false def:self.stUserInfo VAR_TYPE: [UserInfo class]];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation GetValueAddedListRsp
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.vList = [NSMutableArray arrayWithCapacity:0];
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.vList != nil)
+    {
+        [ostream writeList: 0 value: self.vList VAR_TYPE: [THOTH_LIST CREATE: [ValueAddedDesc class]]];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (GetValueAddedListRsp *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.vList = [istream readListDef: 0 required: false def: self.vList VAR_TYPE: [THOTH_LIST CREATE: [ValueAddedDesc class]]];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"vList" value : [BaseJSON writeList : self.vList VAR_TYPE: [THOTH_LIST CREATE: [ValueAddedDesc class]]]];
+    return JsonRoot;
+}
+
+- (GetValueAddedListRsp *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.vList = [BaseJSON readListDef:[RootMap objectForKey:@"vList"] required:false def:self.vList VAR_TYPE: [THOTH_LIST CREATE: [ValueAddedDesc class]]];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation GetValueAddedPackageListReq
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.stUserInfo = [[UserInfo alloc] init];
+        self.iType = 0;
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.stUserInfo != nil)
+    {
+        [ostream writeMessage: 0 value: self.stUserInfo];
+    }
+    [ostream writeInt32: 1 value: self.iType];
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (GetValueAddedPackageListReq *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.stUserInfo = (UserInfo*)[istream readMessageDef: 0 required: false def: self.stUserInfo VAR_TYPE: [UserInfo class]];
+    self.iType = [istream readInt32Def: 1 required: false def: self.iType];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"stUserInfo" value : [BaseJSON writeMessage : self.stUserInfo]];
+    [JsonRoot append:@"iType" value : [BaseJSON writeInt32 : self.iType]];
+    return JsonRoot;
+}
+
+- (GetValueAddedPackageListReq *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.stUserInfo = [BaseJSON readMessageDef:[RootMap objectForKey:@"stUserInfo"] required:false def:self.stUserInfo VAR_TYPE: [UserInfo class]];
+    self.iType = [BaseJSON readInt32Def:[RootMap objectForKey:@"iType"] required:false def:self.iType];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation GetValueAddedPackageListRsp
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.vList = [NSMutableArray arrayWithCapacity:0];
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.vList != nil)
+    {
+        [ostream writeList: 0 value: self.vList VAR_TYPE: [THOTH_LIST CREATE: [ValueAddedPackageDesc class]]];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (GetValueAddedPackageListRsp *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.vList = [istream readListDef: 0 required: false def: self.vList VAR_TYPE: [THOTH_LIST CREATE: [ValueAddedPackageDesc class]]];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"vList" value : [BaseJSON writeList : self.vList VAR_TYPE: [THOTH_LIST CREATE: [ValueAddedPackageDesc class]]]];
+    return JsonRoot;
+}
+
+- (GetValueAddedPackageListRsp *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.vList = [BaseJSON readListDef:[RootMap objectForKey:@"vList"] required:false def:self.vList VAR_TYPE: [THOTH_LIST CREATE: [ValueAddedPackageDesc class]]];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation GetPreSaleLeftNumReq
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.stUserInfo = [[UserInfo alloc] init];
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.stUserInfo != nil)
+    {
+        [ostream writeMessage: 0 value: self.stUserInfo];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (GetPreSaleLeftNumReq *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.stUserInfo = (UserInfo*)[istream readMessageDef: 0 required: false def: self.stUserInfo VAR_TYPE: [UserInfo class]];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"stUserInfo" value : [BaseJSON writeMessage : self.stUserInfo]];
+    return JsonRoot;
+}
+
+- (GetPreSaleLeftNumReq *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.stUserInfo = [BaseJSON readMessageDef:[RootMap objectForKey:@"stUserInfo"] required:false def:self.stUserInfo VAR_TYPE: [UserInfo class]];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation GetPreSaleLeftNumRsp
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.iLeftNum = 0;
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    [ostream writeInt32: 0 value: self.iLeftNum];
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (GetPreSaleLeftNumRsp *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.iLeftNum = [istream readInt32Def: 0 required: false def: self.iLeftNum];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"iLeftNum" value : [BaseJSON writeInt32 : self.iLeftNum]];
+    return JsonRoot;
+}
+
+- (GetPreSaleLeftNumRsp *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.iLeftNum = [BaseJSON readInt32Def:[RootMap objectForKey:@"iLeftNum"] required:false def:self.iLeftNum];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation OpenDtPrivi4YXTReq
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.stUserInfo = [[UserInfo alloc] init];
+        self.stAccountTicket = [[AccountTicket alloc] init];
+        self.sClassId = @"";
+        self.sOpenPhoneNum = @"";
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.stUserInfo != nil)
+    {
+        [ostream writeMessage: 0 value: self.stUserInfo];
+    }
+    if (self.stAccountTicket != nil)
+    {
+        [ostream writeMessage: 1 value: self.stAccountTicket];
+    }
+    if (self.sClassId != nil)
+    {
+        [ostream writeString: 2 value: self.sClassId];
+    }
+    if (self.sOpenPhoneNum != nil)
+    {
+        [ostream writeString: 3 value: self.sOpenPhoneNum];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (OpenDtPrivi4YXTReq *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.stUserInfo = (UserInfo*)[istream readMessageDef: 0 required: false def: self.stUserInfo VAR_TYPE: [UserInfo class]];
+    self.stAccountTicket = (AccountTicket*)[istream readMessageDef: 1 required: false def: self.stAccountTicket VAR_TYPE: [AccountTicket class]];
+    self.sClassId = [istream readStringDef: 2 required: false def: self.sClassId];
+    self.sOpenPhoneNum = [istream readStringDef: 3 required: false def: self.sOpenPhoneNum];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"stUserInfo" value : [BaseJSON writeMessage : self.stUserInfo]];
+    [JsonRoot append:@"stAccountTicket" value : [BaseJSON writeMessage : self.stAccountTicket]];
+    [JsonRoot append:@"sClassId" value : [BaseJSON writeString : self.sClassId]];
+    [JsonRoot append:@"sOpenPhoneNum" value : [BaseJSON writeString : self.sOpenPhoneNum]];
+    return JsonRoot;
+}
+
+- (OpenDtPrivi4YXTReq *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.stUserInfo = [BaseJSON readMessageDef:[RootMap objectForKey:@"stUserInfo"] required:false def:self.stUserInfo VAR_TYPE: [UserInfo class]];
+    self.stAccountTicket = [BaseJSON readMessageDef:[RootMap objectForKey:@"stAccountTicket"] required:false def:self.stAccountTicket VAR_TYPE: [AccountTicket class]];
+    self.sClassId = [BaseJSON readStringDef:[RootMap objectForKey:@"sClassId"] required:false def:self.sClassId];
+    self.sOpenPhoneNum = [BaseJSON readStringDef:[RootMap objectForKey:@"sOpenPhoneNum"] required:false def:self.sOpenPhoneNum];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation OpenDtPrivi4YXTRsp
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.iRetCode = 0;
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    [ostream writeInt32: 0 value: self.iRetCode];
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (OpenDtPrivi4YXTRsp *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.iRetCode = [istream readInt32Def: 0 required: false def: self.iRetCode];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"iRetCode" value : [BaseJSON writeInt32 : self.iRetCode]];
+    return JsonRoot;
+}
+
+- (OpenDtPrivi4YXTRsp *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.iRetCode = [BaseJSON readInt32Def:[RootMap objectForKey:@"iRetCode"] required:false def:self.iRetCode];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation GetUserCouponNumReq
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.stUserInfo = [[UserInfo alloc] init];
+        self.stAccountTicket = [[AccountTicket alloc] init];
+        self.iCouponStatus = 2;
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.stUserInfo != nil)
+    {
+        [ostream writeMessage: 0 value: self.stUserInfo];
+    }
+    if (self.stAccountTicket != nil)
+    {
+        [ostream writeMessage: 1 value: self.stAccountTicket];
+    }
+    [ostream writeInt32: 2 value: self.iCouponStatus];
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (GetUserCouponNumReq *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.stUserInfo = (UserInfo*)[istream readMessageDef: 0 required: false def: self.stUserInfo VAR_TYPE: [UserInfo class]];
+    self.stAccountTicket = (AccountTicket*)[istream readMessageDef: 1 required: false def: self.stAccountTicket VAR_TYPE: [AccountTicket class]];
+    self.iCouponStatus = [istream readInt32Def: 2 required: false def: self.iCouponStatus];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"stUserInfo" value : [BaseJSON writeMessage : self.stUserInfo]];
+    [JsonRoot append:@"stAccountTicket" value : [BaseJSON writeMessage : self.stAccountTicket]];
+    [JsonRoot append:@"iCouponStatus" value : [BaseJSON writeInt32 : self.iCouponStatus]];
+    return JsonRoot;
+}
+
+- (GetUserCouponNumReq *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.stUserInfo = [BaseJSON readMessageDef:[RootMap objectForKey:@"stUserInfo"] required:false def:self.stUserInfo VAR_TYPE: [UserInfo class]];
+    self.stAccountTicket = [BaseJSON readMessageDef:[RootMap objectForKey:@"stAccountTicket"] required:false def:self.stAccountTicket VAR_TYPE: [AccountTicket class]];
+    self.iCouponStatus = [BaseJSON readInt32Def:[RootMap objectForKey:@"iCouponStatus"] required:false def:self.iCouponStatus];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation GetUserCouponNumRsp
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.iCouponNum = 0;
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    [ostream writeInt32: 0 value: self.iCouponNum];
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (GetUserCouponNumRsp *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.iCouponNum = [istream readInt32Def: 0 required: false def: self.iCouponNum];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"iCouponNum" value : [BaseJSON writeInt32 : self.iCouponNum]];
+    return JsonRoot;
+}
+
+- (GetUserCouponNumRsp *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.iCouponNum = [BaseJSON readInt32Def:[RootMap objectForKey:@"iCouponNum"] required:false def:self.iCouponNum];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation GetUserCouponListReq
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.stUserInfo = [[UserInfo alloc] init];
+        self.stAccountTicket = [[AccountTicket alloc] init];
+        self.iCouponStatus = 0;
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.stUserInfo != nil)
+    {
+        [ostream writeMessage: 0 value: self.stUserInfo];
+    }
+    if (self.stAccountTicket != nil)
+    {
+        [ostream writeMessage: 1 value: self.stAccountTicket];
+    }
+    [ostream writeInt32: 2 value: self.iCouponStatus];
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (GetUserCouponListReq *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.stUserInfo = (UserInfo*)[istream readMessageDef: 0 required: false def: self.stUserInfo VAR_TYPE: [UserInfo class]];
+    self.stAccountTicket = (AccountTicket*)[istream readMessageDef: 1 required: false def: self.stAccountTicket VAR_TYPE: [AccountTicket class]];
+    self.iCouponStatus = [istream readInt32Def: 2 required: false def: self.iCouponStatus];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"stUserInfo" value : [BaseJSON writeMessage : self.stUserInfo]];
+    [JsonRoot append:@"stAccountTicket" value : [BaseJSON writeMessage : self.stAccountTicket]];
+    [JsonRoot append:@"iCouponStatus" value : [BaseJSON writeInt32 : self.iCouponStatus]];
+    return JsonRoot;
+}
+
+- (GetUserCouponListReq *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.stUserInfo = [BaseJSON readMessageDef:[RootMap objectForKey:@"stUserInfo"] required:false def:self.stUserInfo VAR_TYPE: [UserInfo class]];
+    self.stAccountTicket = [BaseJSON readMessageDef:[RootMap objectForKey:@"stAccountTicket"] required:false def:self.stAccountTicket VAR_TYPE: [AccountTicket class]];
+    self.iCouponStatus = [BaseJSON readInt32Def:[RootMap objectForKey:@"iCouponStatus"] required:false def:self.iCouponStatus];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation AccuPointCoupon
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.sCouponCode = @"";
+        self.iValueMoney = 0;
+        self.iUseCondMoney = 0;
+        self.iSubjectType = 0;
+        self.iStatus = 0;
+        self.lGenTimeStamp = 0;
+        self.lStartTimeStamp = 0;
+        self.lInvalidTimeStamp = 0;
+        self.lUseTimeStamp = 0;
+        self.iUseCondDesc = @"";
+        self.sCouponName = @"";
+        self.sAppScope = @"";
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.sCouponCode != nil)
+    {
+        [ostream writeString: 0 value: self.sCouponCode];
+    }
+    [ostream writeInt32: 1 value: self.iValueMoney];
+    [ostream writeInt32: 2 value: self.iUseCondMoney];
+    [ostream writeInt32: 3 value: self.iSubjectType];
+    [ostream writeInt32: 4 value: self.iStatus];
+    [ostream writeInt64: 5 value: self.lGenTimeStamp];
+    [ostream writeInt64: 6 value: self.lStartTimeStamp];
+    [ostream writeInt64: 7 value: self.lInvalidTimeStamp];
+    [ostream writeInt64: 8 value: self.lUseTimeStamp];
+    if (self.iUseCondDesc != nil)
+    {
+        [ostream writeString: 9 value: self.iUseCondDesc];
+    }
+    if (self.sCouponName != nil)
+    {
+        [ostream writeString: 10 value: self.sCouponName];
+    }
+    if (self.sAppScope != nil)
+    {
+        [ostream writeString: 11 value: self.sAppScope];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (AccuPointCoupon *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.sCouponCode = [istream readStringDef: 0 required: false def: self.sCouponCode];
+    self.iValueMoney = [istream readInt32Def: 1 required: false def: self.iValueMoney];
+    self.iUseCondMoney = [istream readInt32Def: 2 required: false def: self.iUseCondMoney];
+    self.iSubjectType = [istream readInt32Def: 3 required: false def: self.iSubjectType];
+    self.iStatus = [istream readInt32Def: 4 required: false def: self.iStatus];
+    self.lGenTimeStamp = [istream readInt64Def: 5 required: false def: self.lGenTimeStamp];
+    self.lStartTimeStamp = [istream readInt64Def: 6 required: false def: self.lStartTimeStamp];
+    self.lInvalidTimeStamp = [istream readInt64Def: 7 required: false def: self.lInvalidTimeStamp];
+    self.lUseTimeStamp = [istream readInt64Def: 8 required: false def: self.lUseTimeStamp];
+    self.iUseCondDesc = [istream readStringDef: 9 required: false def: self.iUseCondDesc];
+    self.sCouponName = [istream readStringDef: 10 required: false def: self.sCouponName];
+    self.sAppScope = [istream readStringDef: 11 required: false def: self.sAppScope];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"sCouponCode" value : [BaseJSON writeString : self.sCouponCode]];
+    [JsonRoot append:@"iValueMoney" value : [BaseJSON writeInt32 : self.iValueMoney]];
+    [JsonRoot append:@"iUseCondMoney" value : [BaseJSON writeInt32 : self.iUseCondMoney]];
+    [JsonRoot append:@"iSubjectType" value : [BaseJSON writeInt32 : self.iSubjectType]];
+    [JsonRoot append:@"iStatus" value : [BaseJSON writeInt32 : self.iStatus]];
+    [JsonRoot append:@"lGenTimeStamp" value : [BaseJSON writeInt64 : self.lGenTimeStamp]];
+    [JsonRoot append:@"lStartTimeStamp" value : [BaseJSON writeInt64 : self.lStartTimeStamp]];
+    [JsonRoot append:@"lInvalidTimeStamp" value : [BaseJSON writeInt64 : self.lInvalidTimeStamp]];
+    [JsonRoot append:@"lUseTimeStamp" value : [BaseJSON writeInt64 : self.lUseTimeStamp]];
+    [JsonRoot append:@"iUseCondDesc" value : [BaseJSON writeString : self.iUseCondDesc]];
+    [JsonRoot append:@"sCouponName" value : [BaseJSON writeString : self.sCouponName]];
+    [JsonRoot append:@"sAppScope" value : [BaseJSON writeString : self.sAppScope]];
+    return JsonRoot;
+}
+
+- (AccuPointCoupon *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.sCouponCode = [BaseJSON readStringDef:[RootMap objectForKey:@"sCouponCode"] required:false def:self.sCouponCode];
+    self.iValueMoney = [BaseJSON readInt32Def:[RootMap objectForKey:@"iValueMoney"] required:false def:self.iValueMoney];
+    self.iUseCondMoney = [BaseJSON readInt32Def:[RootMap objectForKey:@"iUseCondMoney"] required:false def:self.iUseCondMoney];
+    self.iSubjectType = [BaseJSON readInt32Def:[RootMap objectForKey:@"iSubjectType"] required:false def:self.iSubjectType];
+    self.iStatus = [BaseJSON readInt32Def:[RootMap objectForKey:@"iStatus"] required:false def:self.iStatus];
+    self.lGenTimeStamp = [BaseJSON readInt64Def:[RootMap objectForKey:@"lGenTimeStamp"] required:false def:self.lGenTimeStamp];
+    self.lStartTimeStamp = [BaseJSON readInt64Def:[RootMap objectForKey:@"lStartTimeStamp"] required:false def:self.lStartTimeStamp];
+    self.lInvalidTimeStamp = [BaseJSON readInt64Def:[RootMap objectForKey:@"lInvalidTimeStamp"] required:false def:self.lInvalidTimeStamp];
+    self.lUseTimeStamp = [BaseJSON readInt64Def:[RootMap objectForKey:@"lUseTimeStamp"] required:false def:self.lUseTimeStamp];
+    self.iUseCondDesc = [BaseJSON readStringDef:[RootMap objectForKey:@"iUseCondDesc"] required:false def:self.iUseCondDesc];
+    self.sCouponName = [BaseJSON readStringDef:[RootMap objectForKey:@"sCouponName"] required:false def:self.sCouponName];
+    self.sAppScope = [BaseJSON readStringDef:[RootMap objectForKey:@"sAppScope"] required:false def:self.sAppScope];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation GetUserCouponListRsp
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.vList = [NSMutableArray arrayWithCapacity:0];
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.vList != nil)
+    {
+        [ostream writeList: 0 value: self.vList VAR_TYPE: [THOTH_LIST CREATE: [AccuPointCoupon class]]];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (GetUserCouponListRsp *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.vList = [istream readListDef: 0 required: false def: self.vList VAR_TYPE: [THOTH_LIST CREATE: [AccuPointCoupon class]]];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"vList" value : [BaseJSON writeList : self.vList VAR_TYPE: [THOTH_LIST CREATE: [AccuPointCoupon class]]]];
+    return JsonRoot;
+}
+
+- (GetUserCouponListRsp *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.vList = [BaseJSON readListDef:[RootMap objectForKey:@"vList"] required:false def:self.vList VAR_TYPE: [THOTH_LIST CREATE: [AccuPointCoupon class]]];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation ReceiveCouponReq
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.stUserInfo = [[UserInfo alloc] init];
+        self.stAccountTicket = [[AccountTicket alloc] init];
+        self.iCouponType = 0;
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.stUserInfo != nil)
+    {
+        [ostream writeMessage: 0 value: self.stUserInfo];
+    }
+    if (self.stAccountTicket != nil)
+    {
+        [ostream writeMessage: 1 value: self.stAccountTicket];
+    }
+    [ostream writeInt32: 2 value: self.iCouponType];
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (ReceiveCouponReq *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.stUserInfo = (UserInfo*)[istream readMessageDef: 0 required: false def: self.stUserInfo VAR_TYPE: [UserInfo class]];
+    self.stAccountTicket = (AccountTicket*)[istream readMessageDef: 1 required: false def: self.stAccountTicket VAR_TYPE: [AccountTicket class]];
+    self.iCouponType = [istream readInt32Def: 2 required: false def: self.iCouponType];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"stUserInfo" value : [BaseJSON writeMessage : self.stUserInfo]];
+    [JsonRoot append:@"stAccountTicket" value : [BaseJSON writeMessage : self.stAccountTicket]];
+    [JsonRoot append:@"iCouponType" value : [BaseJSON writeInt32 : self.iCouponType]];
+    return JsonRoot;
+}
+
+- (ReceiveCouponReq *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.stUserInfo = [BaseJSON readMessageDef:[RootMap objectForKey:@"stUserInfo"] required:false def:self.stUserInfo VAR_TYPE: [UserInfo class]];
+    self.stAccountTicket = [BaseJSON readMessageDef:[RootMap objectForKey:@"stAccountTicket"] required:false def:self.stAccountTicket VAR_TYPE: [AccountTicket class]];
+    self.iCouponType = [BaseJSON readInt32Def:[RootMap objectForKey:@"iCouponType"] required:false def:self.iCouponType];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation ReceiveCouponRsp
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.iReturnCode = 0;
+        self.stCoupon = [[AccuPointCoupon alloc] init];
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    [ostream writeInt32: 0 value: self.iReturnCode];
+    if (self.stCoupon != nil)
+    {
+        [ostream writeMessage: 1 value: self.stCoupon];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (ReceiveCouponRsp *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.iReturnCode = [istream readInt32Def: 0 required: false def: self.iReturnCode];
+    self.stCoupon = (AccuPointCoupon*)[istream readMessageDef: 1 required: false def: self.stCoupon VAR_TYPE: [AccuPointCoupon class]];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"iReturnCode" value : [BaseJSON writeInt32 : self.iReturnCode]];
+    [JsonRoot append:@"stCoupon" value : [BaseJSON writeMessage : self.stCoupon]];
+    return JsonRoot;
+}
+
+- (ReceiveCouponRsp *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.iReturnCode = [BaseJSON readInt32Def:[RootMap objectForKey:@"iReturnCode"] required:false def:self.iReturnCode];
+    self.stCoupon = [BaseJSON readMessageDef:[RootMap objectForKey:@"stCoupon"] required:false def:self.stCoupon VAR_TYPE: [AccuPointCoupon class]];
     return self;
 }
 

@@ -22,11 +22,16 @@ typedef NS_ENUM(NSUInteger, E_DT_PAY_ERROR_CODE) {
     E_DT_PAY_WX_RESULT_ERR = -13,
     E_DT_PAY_ORDER_PAYING = -14,
     E_DT_PAY_NO_TRADE_ID = 15,
+    E_DT_PAY_INVALID_SUBJECT_TYPE = -16,
+    E_DT_PAY_NOT_BIND_PHONE = -17,
     E_DT_PAY_SVR_ERR = -99
 };
 
 typedef NS_ENUM(NSUInteger, E_DT_SUBJECT_TYPE) {
-    E_DT_SUBJECT_MEMBER = 0
+    E_DT_SUBJECT_MEMBER = 0,
+    E_DT_SUBJECT_SECRET_DECISION = 1,
+    E_DT_SUBJECT_YXT_ADVANCED_COURSE = 2,
+    E_DT_SUBJECT_YP_PRIVATE_STOCK_TACTICS = 3
 };
 
 typedef NS_ENUM(NSUInteger, E_DT_PAY_TYPE) {
@@ -34,10 +39,28 @@ typedef NS_ENUM(NSUInteger, E_DT_PAY_TYPE) {
     E_DT_PAY_ALI = 1
 };
 
+typedef NS_ENUM(NSUInteger, E_DT_SUBJECT_PAY_CHANNEL) {
+    E_SUBJECT_PAY_DT = 0,
+    E_SUBJECT_PAY_YP = 1,
+    E_SUBJECT_PAY_YXT = 2
+};
+
 typedef NS_ENUM(NSUInteger, E_DT_PAY_STATUS) {
     E_DT_PAY_WATING_PAY = 0,
     E_DT_PAY_SUCCESS = 1,
-    E_DT_PAY_FAIL = 2
+    E_DT_PAY_FAIL = 2,
+    E_DT_PAY_PAYING = 3,
+    E_DT_PAY_PART_PAY = 4
+};
+
+typedef NS_ENUM(NSUInteger, E_DT_PAY_TIME_UNIT) {
+    E_DT_PAY_TIME_MONTH = 0,
+    E_DT_PAY_TIME_DAY = 1
+};
+
+typedef NS_ENUM(NSUInteger, E_DT_PAY_CHANNEL) {
+    E_DT_PAY_CHANNEL_APP = 0,
+    E_DT_PAY_CHANNEL_QQ_BROWSER_H5 = 1
 };
 
 /////////////////////////////////////////////////////////////////
@@ -51,11 +74,30 @@ typedef NS_ENUM(NSUInteger, E_DT_PAY_STATUS) {
 @property (nonatomic, assign) int32_t iNumber;
 @property (nonatomic, copy) NSString* sDesc;
 @property (nonatomic, assign) int32_t iStatus;
+@property (nonatomic, assign) int32_t iNumberUnit;
 
 
 - (void) write: (BaseEncodeStream *)eos;
 
 - (DtPayItem *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface PayOrderExtra : Message
+
+@property (nonatomic, copy) NSString* sClassId;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (PayOrderExtra *) read: (BaseDecodeStream *)dos;
 
 - (NSString *) writeToJsonString;
 
@@ -72,6 +114,10 @@ typedef NS_ENUM(NSUInteger, E_DT_PAY_STATUS) {
 @property (nonatomic, strong) AccountTicket* stAccountTicket;
 @property (nonatomic, assign) int32_t iSubjectType;
 @property (nonatomic, assign) int32_t iNumber;
+@property (nonatomic, strong) PayOrderExtra* stExtra;
+@property (nonatomic, assign) int32_t iNumberUnit;
+@property (nonatomic, assign) int32_t iPayChannel;
+@property (nonatomic, strong) NSMutableArray* vCouponCode;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -216,6 +262,7 @@ typedef NS_ENUM(NSUInteger, E_DT_PAY_STATUS) {
 @interface GetMemberFeeListReq : Message
 
 @property (nonatomic, strong) UserInfo* stUserInfo;
+@property (nonatomic, assign) int32_t iSubjectType;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -236,6 +283,7 @@ typedef NS_ENUM(NSUInteger, E_DT_PAY_STATUS) {
 @property (nonatomic, assign) int32_t iMonthNum;
 @property (nonatomic, assign) int32_t iAvgMoney;
 @property (nonatomic, assign) int32_t iTotalMoney;
+@property (nonatomic, assign) int32_t iUnit;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -259,6 +307,65 @@ typedef NS_ENUM(NSUInteger, E_DT_PAY_STATUS) {
 - (void) write: (BaseEncodeStream *)eos;
 
 - (GetMemberFeeListRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetYxtCourseFeeListReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetYxtCourseFeeListReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface YxtCourseFeeItem : Message
+
+@property (nonatomic, copy) NSString* sClassId;
+@property (nonatomic, copy) NSString* sClassName;
+@property (nonatomic, assign) int32_t iTotalMoney;
+@property (nonatomic, assign) int32_t iClassHour;
+@property (nonatomic, copy) NSString* sTeacher;
+@property (nonatomic, copy) NSString* sOpenTime;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (YxtCourseFeeItem *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetYxtCourseFeeListRsp : Message
+
+@property (nonatomic, strong) NSMutableArray* vItem;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetYxtCourseFeeListRsp *) read: (BaseDecodeStream *)dos;
 
 - (NSString *) writeToJsonString;
 
@@ -379,6 +486,47 @@ typedef NS_ENUM(NSUInteger, E_DT_PAY_STATUS) {
 - (void) write: (BaseEncodeStream *)eos;
 
 - (GetOrderPayResultRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface CheckUserCouponReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+@property (nonatomic, strong) AccountTicket* stAccountTicket;
+@property (nonatomic, assign) int32_t iSubjectType;
+@property (nonatomic, assign) int32_t iNumber;
+@property (nonatomic, assign) int32_t iNumberUnit;
+@property (nonatomic, strong) PayOrderExtra* stExtra;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (CheckUserCouponReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface CheckUserCouponRsp : Message
+
+@property (nonatomic, assign) int32_t iCouponNum;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (CheckUserCouponRsp *) read: (BaseDecodeStream *)dos;
 
 - (NSString *) writeToJsonString;
 

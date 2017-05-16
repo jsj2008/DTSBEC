@@ -10,6 +10,13 @@ typedef NS_ENUM(NSUInteger, E_SEC_STATUS) {
     E_SS_SUSPENDED = 1
 };
 
+typedef NS_ENUM(NSUInteger, E_TREND_REQ_TYPE) {
+    E_TRT_NORMAL = 0,
+    E_TRT_INCRE = 1,
+    E_TRT_CALLAUCTION = 2,
+    E_TRT_TRADING = 3
+};
+
 typedef NS_ENUM(NSUInteger, E_K_LINE_TYPE) {
     E_KLT_5_MIN = 0,
     E_KLT_15_MIN = 1,
@@ -181,6 +188,7 @@ typedef NS_ENUM(NSUInteger, E_TRAN_STAT_TYPE) {
 @property (nonatomic, assign) float fFundNetValue;
 @property (nonatomic, assign) float fMaxLimit;
 @property (nonatomic, assign) float fMinLimit;
+@property (nonatomic, assign) int64_t lVolinstock;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -331,6 +339,11 @@ typedef NS_ENUM(NSUInteger, E_TRAN_STAT_TYPE) {
 
 @property (nonatomic, copy) NSString* sDtSecCode;
 @property (nonatomic, strong) NSData* vGuid;
+@property (nonatomic, assign) E_TREND_REQ_TYPE eTrendReqType;
+@property (nonatomic, assign) int32_t iStartxh;
+@property (nonatomic, assign) int32_t iMinute;
+@property (nonatomic, assign) int32_t iWantnum;
+@property (nonatomic, assign) int32_t iReqDataMinute;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -350,6 +363,8 @@ typedef NS_ENUM(NSUInteger, E_TRAN_STAT_TYPE) {
 
 @property (nonatomic, strong) NSMutableArray* vTrendDesc;
 @property (nonatomic, assign) BOOL bSupport;
+@property (nonatomic, assign) int32_t iStartTime;
+@property (nonatomic, assign) int32_t iEndTime;
 
 
 - (void) write: (BaseEncodeStream *)eos;

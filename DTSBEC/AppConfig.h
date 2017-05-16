@@ -43,7 +43,8 @@ typedef NS_ENUM(NSUInteger, E_CONFIG_TYPE) {
     E_PC_CLIENT_CONFIG_FILE = 15,
     E_CONFIG_OPEN_BLESSING_PACK = 16,
     E_CONFIG_ACCU_POINT_DESC = 17,
-    E_CONFIG_DENGTA_PAY_SWITCH = 18
+    E_CONFIG_DENGTA_PAY_SWITCH = 18,
+    E_CONFIG_PAY_USER_AGREEMENT = 19
 };
 
 typedef NS_ENUM(NSUInteger, E_CONFIG_PUSH_TYPE) {
@@ -140,7 +141,12 @@ typedef NS_ENUM(NSUInteger, E_SHARE_TYPE) {
     E_DTBG_FAQ = 86,
     E_DTBG_SCHOOL = 87,
     E_FINANCE_TRACK = 88,
-    E_MARKET_FINANCE = 89
+    E_MARKET_FINANCE = 89,
+    E_YXT_AGREEMENT = 90,
+    E_MY_COUPONS = 91,
+    E_USE_COUPONS = 92,
+    E_HOT_READING = 93,
+    E_EVENT_DETAIL = 94
 };
 
 typedef NS_ENUM(NSUInteger, T_CHARGE_POINT) {
@@ -152,6 +158,11 @@ typedef NS_ENUM(NSUInteger, T_CHARGE_POINT) {
 typedef NS_ENUM(NSUInteger, T_CHARGE_SWITCH) {
     T_CHARGE_CLOSE = 0,
     T_CHARGE_OPEN = 1
+};
+
+typedef NS_ENUM(NSUInteger, E_PAY_USER_AGREEMENT_TEXT_TYPE) {
+    E_PAY_USER_AGREEMENT_TEXT_WORD = 0,
+    E_PAY_USER_AGREEMENT_TEXT_URL = 1
 };
 
 /////////////////////////////////////////////////////////////////
@@ -663,6 +674,82 @@ typedef NS_ENUM(NSUInteger, T_CHARGE_SWITCH) {
 - (void) write: (BaseEncodeStream *)eos;
 
 - (AccuPointDesc *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface PayUserAgreementDesc : Message
+
+@property (nonatomic, assign) int32_t iTextType;
+@property (nonatomic, copy) NSString* sText;
+@property (nonatomic, copy) NSString* sTextUrl;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (PayUserAgreementDesc *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface PayUserAgreementItem : Message
+
+@property (nonatomic, assign) BOOL bCheckBox;
+@property (nonatomic, assign) BOOL bDefaultCheck;
+@property (nonatomic, strong) NSMutableArray* vDesc;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (PayUserAgreementItem *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface PayUserAgreement : Message
+
+@property (nonatomic, strong) NSMutableArray* vItem;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (PayUserAgreement *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface PayUserAgreementList : Message
+
+@property (nonatomic, strong) NSMutableDictionary* mSubjectUserAgreement;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (PayUserAgreementList *) read: (BaseDecodeStream *)dos;
 
 - (NSString *) writeToJsonString;
 
