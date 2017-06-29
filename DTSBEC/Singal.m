@@ -3103,6 +3103,7 @@
     {
         self.stUserInfo = [[UserInfo alloc] init];
         self.eType = T_ACTIVITY_LIST;
+        self.iAdType = E_AD_ACTIVITY;
     }
 
     return self;
@@ -3118,6 +3119,7 @@
         [ostream writeMessage: 0 value: self.stUserInfo];
     }
     [ostream writeInt32: 1 value: (int32_t)self.eType];
+    [ostream writeInt32: 2 value: self.iAdType];
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -3129,6 +3131,7 @@
 
     self.stUserInfo = (UserInfo*)[istream readMessageDef: 0 required: false def: self.stUserInfo VAR_TYPE: [UserInfo class]];
     self.eType = [istream readInt32Def: 1 required: false def: (int32_t)self.eType];
+    self.iAdType = [istream readInt32Def: 2 required: false def: self.iAdType];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -3144,6 +3147,7 @@
     JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
     [JsonRoot append:@"stUserInfo" value : [BaseJSON writeMessage : self.stUserInfo]];
     [JsonRoot append:@"eType" value : [BaseJSON writeInt32 : (int32_t)self.eType]];
+    [JsonRoot append:@"iAdType" value : [BaseJSON writeInt32 : self.iAdType]];
     return JsonRoot;
 }
 
@@ -3151,6 +3155,7 @@
 {
     self.stUserInfo = [BaseJSON readMessageDef:[RootMap objectForKey:@"stUserInfo"] required:false def:self.stUserInfo VAR_TYPE: [UserInfo class]];
     self.eType = [BaseJSON readInt32Def:[RootMap objectForKey:@"eType"] required:false def:(int32_t)self.eType];
+    self.iAdType = [BaseJSON readInt32Def:[RootMap objectForKey:@"iAdType"] required:false def:self.iAdType];
     return self;
 }
 
@@ -8589,6 +8594,218 @@
 {
     self.vSecBsInfoBuy = [BaseJSON readListDef:[RootMap objectForKey:@"vSecBsInfoBuy"] required:false def:self.vSecBsInfoBuy VAR_TYPE: [THOTH_LIST CREATE: [SecBsInfo class]]];
     self.vSecBsInfoSell = [BaseJSON readListDef:[RootMap objectForKey:@"vSecBsInfoSell"] required:false def:self.vSecBsInfoSell VAR_TYPE: [THOTH_LIST CREATE: [SecBsInfo class]]];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation MarketAd
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.sTitle = @"";
+        self.sImgUrl = @"";
+        self.sUrl = @"";
+        self.iPos = 0;
+        self.iStyle = 0;
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.sTitle != nil)
+    {
+        [ostream writeString: 0 value: self.sTitle];
+    }
+    if (self.sImgUrl != nil)
+    {
+        [ostream writeString: 1 value: self.sImgUrl];
+    }
+    if (self.sUrl != nil)
+    {
+        [ostream writeString: 2 value: self.sUrl];
+    }
+    [ostream writeInt32: 3 value: self.iPos];
+    [ostream writeInt32: 4 value: self.iStyle];
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (MarketAd *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.sTitle = [istream readStringDef: 0 required: false def: self.sTitle];
+    self.sImgUrl = [istream readStringDef: 1 required: false def: self.sImgUrl];
+    self.sUrl = [istream readStringDef: 2 required: false def: self.sUrl];
+    self.iPos = [istream readInt32Def: 3 required: false def: self.iPos];
+    self.iStyle = [istream readInt32Def: 4 required: false def: self.iStyle];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"sTitle" value : [BaseJSON writeString : self.sTitle]];
+    [JsonRoot append:@"sImgUrl" value : [BaseJSON writeString : self.sImgUrl]];
+    [JsonRoot append:@"sUrl" value : [BaseJSON writeString : self.sUrl]];
+    [JsonRoot append:@"iPos" value : [BaseJSON writeInt32 : self.iPos]];
+    [JsonRoot append:@"iStyle" value : [BaseJSON writeInt32 : self.iStyle]];
+    return JsonRoot;
+}
+
+- (MarketAd *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.sTitle = [BaseJSON readStringDef:[RootMap objectForKey:@"sTitle"] required:false def:self.sTitle];
+    self.sImgUrl = [BaseJSON readStringDef:[RootMap objectForKey:@"sImgUrl"] required:false def:self.sImgUrl];
+    self.sUrl = [BaseJSON readStringDef:[RootMap objectForKey:@"sUrl"] required:false def:self.sUrl];
+    self.iPos = [BaseJSON readInt32Def:[RootMap objectForKey:@"iPos"] required:false def:self.iPos];
+    self.iStyle = [BaseJSON readInt32Def:[RootMap objectForKey:@"iStyle"] required:false def:self.iStyle];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation MarketAdListReq
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.stUserInfo = [[UserInfo alloc] init];
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.stUserInfo != nil)
+    {
+        [ostream writeMessage: 0 value: self.stUserInfo];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (MarketAdListReq *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.stUserInfo = (UserInfo*)[istream readMessageDef: 0 required: false def: self.stUserInfo VAR_TYPE: [UserInfo class]];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"stUserInfo" value : [BaseJSON writeMessage : self.stUserInfo]];
+    return JsonRoot;
+}
+
+- (MarketAdListReq *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.stUserInfo = [BaseJSON readMessageDef:[RootMap objectForKey:@"stUserInfo"] required:false def:self.stUserInfo VAR_TYPE: [UserInfo class]];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation MarketAdListRsp
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.vMarketAd = [NSMutableArray arrayWithCapacity:0];
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.vMarketAd != nil)
+    {
+        [ostream writeList: 0 value: self.vMarketAd VAR_TYPE: [THOTH_LIST CREATE: [MarketAd class]]];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (MarketAdListRsp *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.vMarketAd = [istream readListDef: 0 required: false def: self.vMarketAd VAR_TYPE: [THOTH_LIST CREATE: [MarketAd class]]];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"vMarketAd" value : [BaseJSON writeList : self.vMarketAd VAR_TYPE: [THOTH_LIST CREATE: [MarketAd class]]]];
+    return JsonRoot;
+}
+
+- (MarketAdListRsp *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.vMarketAd = [BaseJSON readListDef:[RootMap objectForKey:@"vMarketAd"] required:false def:self.vMarketAd VAR_TYPE: [THOTH_LIST CREATE: [MarketAd class]]];
     return self;
 }
 

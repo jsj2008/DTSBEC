@@ -50,6 +50,7 @@
 #import "Video.h"
 #import "YunWeb.h"
 #import "ZipStore.h"
+#import "DtTemp.h"
 
 
 #endif

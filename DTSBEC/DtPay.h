@@ -5,6 +5,8 @@
 #import "BaseDecodeStream.h"
 #import "Beacon.h"
 #import "Account.h"
+#import "AccuPoint.h"
+#import "AppConfig.h"
 
 typedef NS_ENUM(NSUInteger, E_DT_PAY_ERROR_CODE) {
     E_DT_PAY_SUCC = 0,
@@ -31,7 +33,15 @@ typedef NS_ENUM(NSUInteger, E_DT_SUBJECT_TYPE) {
     E_DT_SUBJECT_MEMBER = 0,
     E_DT_SUBJECT_SECRET_DECISION = 1,
     E_DT_SUBJECT_YXT_ADVANCED_COURSE = 2,
-    E_DT_SUBJECT_YP_PRIVATE_STOCK_TACTICS = 3
+    E_DT_SUBJECT_YP_PRIVATE_STOCK_TACTICS = 3,
+    E_DT_SUBJECT_YP_PDJN = 4
+};
+
+typedef NS_ENUM(NSUInteger, E_DT_SUBJECT_RISK_LEVEL) {
+    E_DT_SUBJECT_RISK_NO = 0,
+    E_DT_SUBJECT_RISK_LOW = 1,
+    E_DT_SUBJECT_RISK_MID = 2,
+    E_DT_SUBJECT_RISK_HIGH = 3
 };
 
 typedef NS_ENUM(NSUInteger, E_DT_PAY_TYPE) {
@@ -118,6 +128,7 @@ typedef NS_ENUM(NSUInteger, E_DT_PAY_CHANNEL) {
 @property (nonatomic, assign) int32_t iNumberUnit;
 @property (nonatomic, assign) int32_t iPayChannel;
 @property (nonatomic, strong) NSMutableArray* vCouponCode;
+@property (nonatomic, copy) NSString* sCommExtraJson;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -503,7 +514,7 @@ typedef NS_ENUM(NSUInteger, E_DT_PAY_CHANNEL) {
 @property (nonatomic, assign) int32_t iSubjectType;
 @property (nonatomic, assign) int32_t iNumber;
 @property (nonatomic, assign) int32_t iNumberUnit;
-@property (nonatomic, strong) PayOrderExtra* stExtra;
+@property (nonatomic, copy) NSString* sCommExtraJson;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -519,14 +530,100 @@ typedef NS_ENUM(NSUInteger, E_DT_PAY_CHANNEL) {
 @end
 
 /////////////////////////////////////////////////////////////////
+@interface PayUserAddAgreement : Message
+
+@property (nonatomic, assign) int32_t iType;
+@property (nonatomic, assign) int32_t iIndex;
+@property (nonatomic, strong) PayUserAgreementDesc* stDynamicAgreement;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (PayUserAddAgreement *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface UserRiskEvalResult : Message
+
+@property (nonatomic, assign) int32_t iSubjectRiskLevel;
+@property (nonatomic, copy) NSString* sSubjectRiskDesc;
+@property (nonatomic, assign) int32_t iUserRiskType;
+@property (nonatomic, copy) NSString* sUserRiskType;
+@property (nonatomic, copy) NSString* sEvalResult;
+@property (nonatomic, strong) PayUserAddAgreement* stAddAgreement;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (UserRiskEvalResult *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
 @interface CheckUserCouponRsp : Message
 
 @property (nonatomic, assign) int32_t iCouponNum;
+@property (nonatomic, strong) UserRiskEvalResult* stRiskResult;
 
 
 - (void) write: (BaseEncodeStream *)eos;
 
 - (CheckUserCouponRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetPayCouponReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+@property (nonatomic, strong) AccountTicket* stAccountTicket;
+@property (nonatomic, assign) int32_t iSubjectType;
+@property (nonatomic, assign) int32_t iNumber;
+@property (nonatomic, assign) int32_t iNumberUnit;
+@property (nonatomic, copy) NSString* sCommExtraJson;
+@property (nonatomic, assign) int32_t iStatus;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetPayCouponReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetPayCouponRsp : Message
+
+@property (nonatomic, strong) NSMutableArray* vCoupon;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetPayCouponRsp *) read: (BaseDecodeStream *)dos;
 
 - (NSString *) writeToJsonString;
 

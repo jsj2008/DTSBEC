@@ -89,7 +89,8 @@ typedef NS_ENUM(NSUInteger, E_SEC_ATTR) {
 typedef NS_ENUM(NSUInteger, E_SEC_CHANGE_STATUS) {
     E_STATUS_FIX = 0,
     E_STATUS_SUSPEND = 1,
-    E_STATUS_PRIVATIZE = 2
+    E_STATUS_PRIVATIZE = 2,
+    E_STATUS_LIFTED = 3
 };
 
 typedef NS_ENUM(NSUInteger, E_SEASON_TYPE) {
@@ -137,7 +138,8 @@ typedef NS_ENUM(NSUInteger, E_FIN_UNIT) {
 
 typedef NS_ENUM(NSUInteger, E_SEC_HIS_SUBJECT_TYPE) {
     E_HIS_SUBJECT_LH = 0,
-    E_HIS_SUBJECT_AYH = 1
+    E_HIS_SUBJECT_AYH = 1,
+    E_HIS_SUBJECT_BOAO = 2
 };
 
 /////////////////////////////////////////////////////////////////
@@ -279,11 +281,31 @@ typedef NS_ENUM(NSUInteger, E_SEC_HIS_SUBJECT_TYPE) {
 
 @property (nonatomic, assign) int32_t iStatus;
 @property (nonatomic, copy) NSString* sDesc;
+@property (nonatomic, copy) NSString* sKey;
 
 
 - (void) write: (BaseEncodeStream *)eos;
 
 - (SecStatusInfo *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface SecCoordsInfo : Message
+
+@property (nonatomic, copy) NSString* sLongitude;
+@property (nonatomic, copy) NSString* sLatitude;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (SecCoordsInfo *) read: (BaseDecodeStream *)dos;
 
 - (NSString *) writeToJsonString;
 
@@ -304,6 +326,7 @@ typedef NS_ENUM(NSUInteger, E_SEC_HIS_SUBJECT_TYPE) {
 @property (nonatomic, strong) NSMutableArray* vRelateSecInfo;
 @property (nonatomic, strong) NSMutableArray* vStatusInfo;
 @property (nonatomic, strong) NSMutableArray* vPlateInfo;
+@property (nonatomic, strong) SecCoordsInfo* stSecCoordsInfo;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -1750,6 +1773,86 @@ typedef NS_ENUM(NSUInteger, E_SEC_HIS_SUBJECT_TYPE) {
 - (void) write: (BaseEncodeStream *)eos;
 
 - (GetPlatePeriodTopRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface RelatedNews : Message
+
+@property (nonatomic, copy) NSString* sNewsId;
+@property (nonatomic, copy) NSString* sTitle;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (RelatedNews *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface RelatedSecurity : Message
+
+@property (nonatomic, copy) NSString* sName;
+@property (nonatomic, copy) NSString* sCode;
+@property (nonatomic, copy) NSString* sDtCode;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (RelatedSecurity *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetNewsRelationInfoReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+@property (nonatomic, copy) NSString* sNewsId;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetNewsRelationInfoReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetNewsRelationInfoRsp : Message
+
+@property (nonatomic, copy) NSString* sNewsId;
+@property (nonatomic, strong) NSMutableArray* vRelatedNews;
+@property (nonatomic, strong) NSMutableArray* vRelatedPlates;
+@property (nonatomic, strong) NSMutableArray* vRelatedStocks;
+@property (nonatomic, strong) NSMutableArray* vRelatedTags;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetNewsRelationInfoRsp *) read: (BaseDecodeStream *)dos;
 
 - (NSString *) writeToJsonString;
 

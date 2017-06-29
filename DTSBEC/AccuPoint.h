@@ -23,6 +23,8 @@ typedef NS_ENUM(NSUInteger, AccuPointErrCode) {
     E_ACCU_POINT_COMMIT_TOO_FREQ = -13,
     E_ACCU_POINT_INVALID_COUPON_TYPE = -14,
     E_ACCU_POINT_REPEAT_RECEIVE_COUPON = -15,
+    E_ACCU_POINT_NO_MORE_COUPON = -16,
+    E_ACCU_POINT_NO_BIND_PHONE = -17,
     E_ACCU_POINT_SVR_ERR = -99,
     E_ACCU_POINT_BIND_PHONE = 1
 };
@@ -38,7 +40,8 @@ typedef NS_ENUM(NSUInteger, AccuPointTaskType) {
     E_ACCU_POINT_TASK_PO_FEED = 7,
     E_ACCU_POINT_TASK_REGISTER = 8,
     E_ACCU_POINT_TASK_EXCHANGE_PRIVI = 9,
-    E_ACCU_POINT_TASK_ACTIVITY = 10
+    E_ACCU_POINT_TASK_ACTIVITY = 10,
+    E_ACCU_POINT_TASK_DO_RISK_EVAL = 11
 };
 
 typedef NS_ENUM(NSUInteger, AccuPointCodeType) {
@@ -56,17 +59,29 @@ typedef NS_ENUM(NSUInteger, AccuPointPriviType) {
     E_ACCU_POINT_KLINE_SELECT = 6,
     E_ACCU_POINT_FINANCE_TRACK = 7,
     E_ACCU_POINT_YXT_ADVANCED_COURSE = 8,
-    E_ACCU_POINT_YP_PRIVATE_STOCK_TACTICS = 9
+    E_ACCU_POINT_YP_PRIVATE_STOCK_TACTICS = 9,
+    E_ACCU_POINT_YP_PDJN = 10,
+    E_ACCU_POINT_YP_FPDS = 11
 };
 
 typedef NS_ENUM(NSUInteger, AccuPointOpenType) {
     E_ACCU_POINT_OPEN_BY_POINT = 0,
     E_ACCU_POINT_OPEN_BY_MONEY = 1,
-    E_ACCU_POINT_OPEN_BY_CONVER_CODE = 2
+    E_ACCU_POINT_OPEN_BY_CONVER_CODE = 2,
+    E_ACCU_POINT_OPEN_BY_ACTIVITY = 3
 };
 
 typedef NS_ENUM(NSUInteger, AccuPointUseType) {
     E_ACCU_POINT_USE_OPEN_BLESS_PACK = 1
+};
+
+typedef NS_ENUM(NSUInteger, AccuPointUserRiskType) {
+    E_USER_RISK_NO_EVAL = 0,
+    E_USER_RISK_CONSERVATIVE = 1,
+    E_USER_RISK_CAUTIOUS = 2,
+    E_USER_RISK_STEADY = 3,
+    E_USER_RISK_POSITIVE = 4,
+    E_USER_RISK_RADICAL = 5
 };
 
 typedef NS_ENUM(NSUInteger, AccuPointTimeUnit) {
@@ -206,6 +221,7 @@ typedef NS_ENUM(NSUInteger, AccuPointTimeUnit) {
 @property (nonatomic, strong) AccountTicket* stAccountTicket;
 @property (nonatomic, assign) AccuPointOpenType eOpenType;
 @property (nonatomic, strong) NSMutableArray* vItem;
+@property (nonatomic, strong) NSMutableArray* vCouponId;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -244,6 +260,7 @@ typedef NS_ENUM(NSUInteger, AccuPointTimeUnit) {
 @property (nonatomic, strong) UserInfo* stUserInfo;
 @property (nonatomic, strong) AccountTicket* stAccountTicket;
 @property (nonatomic, assign) int32_t iOpenDays;
+@property (nonatomic, strong) NSMutableArray* vCouponId;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -663,6 +680,8 @@ typedef NS_ENUM(NSUInteger, AccuPointTimeUnit) {
 @property (nonatomic, assign) float fFee;
 @property (nonatomic, assign) int32_t iNumber;
 @property (nonatomic, assign) int32_t iOnlineState;
+@property (nonatomic, copy) NSString* sBeforeSaleIcon;
+@property (nonatomic, copy) NSString* sPreSalingUrl;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -754,6 +773,7 @@ typedef NS_ENUM(NSUInteger, AccuPointTimeUnit) {
 @interface GetPreSaleLeftNumReq : Message
 
 @property (nonatomic, strong) UserInfo* stUserInfo;
+@property (nonatomic, assign) int32_t iSubjectType;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -793,6 +813,7 @@ typedef NS_ENUM(NSUInteger, AccuPointTimeUnit) {
 @property (nonatomic, strong) AccountTicket* stAccountTicket;
 @property (nonatomic, copy) NSString* sClassId;
 @property (nonatomic, copy) NSString* sOpenPhoneNum;
+@property (nonatomic, strong) NSMutableArray* vCouponId;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -898,6 +919,7 @@ typedef NS_ENUM(NSUInteger, AccuPointTimeUnit) {
 @property (nonatomic, copy) NSString* iUseCondDesc;
 @property (nonatomic, copy) NSString* sCouponName;
 @property (nonatomic, copy) NSString* sAppScope;
+@property (nonatomic, copy) NSString* sActName;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -936,6 +958,8 @@ typedef NS_ENUM(NSUInteger, AccuPointTimeUnit) {
 @property (nonatomic, strong) UserInfo* stUserInfo;
 @property (nonatomic, strong) AccountTicket* stAccountTicket;
 @property (nonatomic, assign) int32_t iCouponType;
+@property (nonatomic, assign) int32_t iUseCondMoney;
+@property (nonatomic, copy) NSString* sActName;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -960,6 +984,110 @@ typedef NS_ENUM(NSUInteger, AccuPointTimeUnit) {
 - (void) write: (BaseEncodeStream *)eos;
 
 - (ReceiveCouponRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface UserEvalItem : Message
+
+@property (nonatomic, assign) int32_t iQuestionId;
+@property (nonatomic, assign) int32_t iAnswerId;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (UserEvalItem *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface CommitUserEvalReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+@property (nonatomic, strong) AccountTicket* stAccountTicket;
+@property (nonatomic, assign) int32_t iEvalType;
+@property (nonatomic, strong) NSMutableArray* vItem;
+@property (nonatomic, assign) int32_t iSubjectType;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (CommitUserEvalReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface CommitUserEvalRsp : Message
+
+@property (nonatomic, assign) int32_t iRetCode;
+@property (nonatomic, assign) int32_t iGetScore;
+@property (nonatomic, copy) NSString* sRiskType;
+@property (nonatomic, copy) NSString* sRiskDesc;
+@property (nonatomic, assign) int32_t iRiskType;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (CommitUserEvalRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetUserEvalResultReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+@property (nonatomic, strong) AccountTicket* stAccountTicket;
+@property (nonatomic, assign) int32_t iEvalType;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetUserEvalResultReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetUserEvalResultRsp : Message
+
+@property (nonatomic, assign) int32_t iRiskType;
+@property (nonatomic, copy) NSString* sRiskType;
+@property (nonatomic, copy) NSString* sRiskDesc;
+@property (nonatomic, copy) NSString* sRiskTolerance;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetUserEvalResultRsp *) read: (BaseDecodeStream *)dos;
 
 - (NSString *) writeToJsonString;
 

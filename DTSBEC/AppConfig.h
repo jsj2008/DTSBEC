@@ -146,7 +146,25 @@ typedef NS_ENUM(NSUInteger, E_SHARE_TYPE) {
     E_MY_COUPONS = 91,
     E_USE_COUPONS = 92,
     E_HOT_READING = 93,
-    E_EVENT_DETAIL = 94
+    E_EVENT_DETAIL = 94,
+    E_UP_RISK_WARNING = 95,
+    E_RISK_WARNING_LETTER = 96,
+    E_RISK_CONFIRM_LETTER = 97,
+    E_UP_INVEST_PROTOCOL = 98,
+    E_DT_PRIVI_PROTOCOL = 99,
+    E_YXT_PROTOCOL = 100,
+    E_RISK_EVAL = 101,
+    E_STOCK_MAP_URL = 102,
+    E_INVEST_MAP_INTRO = 103,
+    E_INVEST_MAP_SEC = 104,
+    E_INVEST_DNA = 105,
+    E_DIRECT_ADD_BREAK = 106,
+    E_WUP_FORWARD_URL = 107,
+    E_RISK_WARNING_UP_URL = 108,
+    E_YXT_AGREEMENT_UP_URL = 109,
+    E_RISK_EVAL_UP_URL = 110,
+    E_MY_COUPONS_UP_URL = 111,
+    E_USE_COUPONS_UP_URL = 112
 };
 
 typedef NS_ENUM(NSUInteger, T_CHARGE_POINT) {
@@ -689,6 +707,7 @@ typedef NS_ENUM(NSUInteger, E_PAY_USER_AGREEMENT_TEXT_TYPE) {
 @property (nonatomic, assign) int32_t iTextType;
 @property (nonatomic, copy) NSString* sText;
 @property (nonatomic, copy) NSString* sTextUrl;
+@property (nonatomic, assign) BOOL bLineFeed;
 
 
 - (void) write: (BaseEncodeStream *)eos;

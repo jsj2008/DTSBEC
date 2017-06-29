@@ -67,7 +67,13 @@ typedef NS_ENUM(NSUInteger, DT_ACTIVITY_TYPE) {
     T_ACTIVITY_MEMBER_AD = 4,
     T_ACTIVITY_JCTJ_AD = 5,
     T_ACTIVITY_SMART_PICK_AD = 6,
-    T_ACTIVITY_YXT_ADVANCE_COURSE = 7
+    T_ACTIVITY_YXT_ADVANCE_COURSE = 7,
+    T_ACTIVITY_SMBF_AD = 8
+};
+
+typedef NS_ENUM(NSUInteger, DT_AD_TYPE) {
+    E_AD_ACTIVITY = 0,
+    E_AD_PAY = 1
 };
 
 typedef NS_ENUM(NSUInteger, E_SEC_ACT_TYPE) {
@@ -923,6 +929,7 @@ typedef NS_ENUM(NSUInteger, E_SCENE_TYPE) {
 
 @property (nonatomic, strong) UserInfo* stUserInfo;
 @property (nonatomic, assign) DT_ACTIVITY_TYPE eType;
+@property (nonatomic, assign) int32_t iAdType;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -2323,6 +2330,64 @@ typedef NS_ENUM(NSUInteger, E_SCENE_TYPE) {
 - (void) write: (BaseEncodeStream *)eos;
 
 - (GetSecBsTopRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface MarketAd : Message
+
+@property (nonatomic, copy) NSString* sTitle;
+@property (nonatomic, copy) NSString* sImgUrl;
+@property (nonatomic, copy) NSString* sUrl;
+@property (nonatomic, assign) int32_t iPos;
+@property (nonatomic, assign) int32_t iStyle;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (MarketAd *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface MarketAdListReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (MarketAdListReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface MarketAdListRsp : Message
+
+@property (nonatomic, strong) NSMutableArray* vMarketAd;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (MarketAdListRsp *) read: (BaseDecodeStream *)dos;
 
 - (NSString *) writeToJsonString;
 

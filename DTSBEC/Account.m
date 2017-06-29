@@ -94,6 +94,8 @@
         self.sVerifyDesc = @"";
         self.eUserType = E_FEED_USER_NORMAL;
         self.stMember = [[DtMemberInfo alloc] init];
+        self.sUserRealName = @"";
+        self.sUserIDNumber = @"";
     }
 
     return self;
@@ -151,6 +153,14 @@
     {
         [ostream writeMessage: 13 value: self.stMember];
     }
+    if (self.sUserRealName != nil)
+    {
+        [ostream writeString: 14 value: self.sUserRealName];
+    }
+    if (self.sUserIDNumber != nil)
+    {
+        [ostream writeString: 15 value: self.sUserIDNumber];
+    }
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -174,6 +184,8 @@
     self.sVerifyDesc = [istream readStringDef: 11 required: false def: self.sVerifyDesc];
     self.eUserType = [istream readInt32Def: 12 required: false def: (int32_t)self.eUserType];
     self.stMember = (DtMemberInfo*)[istream readMessageDef: 13 required: false def: self.stMember VAR_TYPE: [DtMemberInfo class]];
+    self.sUserRealName = [istream readStringDef: 14 required: false def: self.sUserRealName];
+    self.sUserIDNumber = [istream readStringDef: 15 required: false def: self.sUserIDNumber];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -201,6 +213,8 @@
     [JsonRoot append:@"sVerifyDesc" value : [BaseJSON writeString : self.sVerifyDesc]];
     [JsonRoot append:@"eUserType" value : [BaseJSON writeInt32 : (int32_t)self.eUserType]];
     [JsonRoot append:@"stMember" value : [BaseJSON writeMessage : self.stMember]];
+    [JsonRoot append:@"sUserRealName" value : [BaseJSON writeString : self.sUserRealName]];
+    [JsonRoot append:@"sUserIDNumber" value : [BaseJSON writeString : self.sUserIDNumber]];
     return JsonRoot;
 }
 
@@ -220,6 +234,8 @@
     self.sVerifyDesc = [BaseJSON readStringDef:[RootMap objectForKey:@"sVerifyDesc"] required:false def:self.sVerifyDesc];
     self.eUserType = [BaseJSON readInt32Def:[RootMap objectForKey:@"eUserType"] required:false def:(int32_t)self.eUserType];
     self.stMember = [BaseJSON readMessageDef:[RootMap objectForKey:@"stMember"] required:false def:self.stMember VAR_TYPE: [DtMemberInfo class]];
+    self.sUserRealName = [BaseJSON readStringDef:[RootMap objectForKey:@"sUserRealName"] required:false def:self.sUserRealName];
+    self.sUserIDNumber = [BaseJSON readStringDef:[RootMap objectForKey:@"sUserIDNumber"] required:false def:self.sUserIDNumber];
     return self;
 }
 
@@ -1816,6 +1832,7 @@
     {
         self.vtPhone = [NSMutableArray arrayWithCapacity:0];
         self.sContent = @"";
+        self.eMsgSendType = MST_SMS;
     }
 
     return self;
@@ -1834,6 +1851,7 @@
     {
         [ostream writeString: 1 value: self.sContent];
     }
+    [ostream writeInt32: 2 value: (int32_t)self.eMsgSendType];
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -1845,6 +1863,7 @@
 
     self.vtPhone = [istream readListDef: 0 required: false def: self.vtPhone VAR_TYPE: [THOTH_LIST CREATE: [THOTH_STRING class]]];
     self.sContent = [istream readStringDef: 1 required: false def: self.sContent];
+    self.eMsgSendType = [istream readInt32Def: 2 required: false def: (int32_t)self.eMsgSendType];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -1860,6 +1879,7 @@
     JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
     [JsonRoot append:@"vtPhone" value : [BaseJSON writeList : self.vtPhone VAR_TYPE: [THOTH_LIST CREATE: [THOTH_STRING class]]]];
     [JsonRoot append:@"sContent" value : [BaseJSON writeString : self.sContent]];
+    [JsonRoot append:@"eMsgSendType" value : [BaseJSON writeInt32 : (int32_t)self.eMsgSendType]];
     return JsonRoot;
 }
 
@@ -1867,6 +1887,7 @@
 {
     self.vtPhone = [BaseJSON readListDef:[RootMap objectForKey:@"vtPhone"] required:false def:self.vtPhone VAR_TYPE: [THOTH_LIST CREATE: [THOTH_STRING class]]];
     self.sContent = [BaseJSON readStringDef:[RootMap objectForKey:@"sContent"] required:false def:self.sContent];
+    self.eMsgSendType = [BaseJSON readInt32Def:[RootMap objectForKey:@"eMsgSendType"] required:false def:(int32_t)self.eMsgSendType];
     return self;
 }
 

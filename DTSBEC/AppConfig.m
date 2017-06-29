@@ -1869,6 +1869,7 @@
         self.iTextType = 0;
         self.sText = @"";
         self.sTextUrl = @"";
+        self.bLineFeed = false;
     }
 
     return self;
@@ -1888,6 +1889,7 @@
     {
         [ostream writeString: 2 value: self.sTextUrl];
     }
+    [ostream writeBoolean: 3 value: self.bLineFeed];
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -1900,6 +1902,7 @@
     self.iTextType = [istream readInt32Def: 0 required: false def: self.iTextType];
     self.sText = [istream readStringDef: 1 required: false def: self.sText];
     self.sTextUrl = [istream readStringDef: 2 required: false def: self.sTextUrl];
+    self.bLineFeed = [istream readBooleanDef: 3 required: false def: self.bLineFeed];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -1916,6 +1919,7 @@
     [JsonRoot append:@"iTextType" value : [BaseJSON writeInt32 : self.iTextType]];
     [JsonRoot append:@"sText" value : [BaseJSON writeString : self.sText]];
     [JsonRoot append:@"sTextUrl" value : [BaseJSON writeString : self.sTextUrl]];
+    [JsonRoot append:@"bLineFeed" value : [BaseJSON writeBoolean : self.bLineFeed]];
     return JsonRoot;
 }
 
@@ -1924,6 +1928,7 @@
     self.iTextType = [BaseJSON readInt32Def:[RootMap objectForKey:@"iTextType"] required:false def:self.iTextType];
     self.sText = [BaseJSON readStringDef:[RootMap objectForKey:@"sText"] required:false def:self.sText];
     self.sTextUrl = [BaseJSON readStringDef:[RootMap objectForKey:@"sTextUrl"] required:false def:self.sTextUrl];
+    self.bLineFeed = [BaseJSON readBooleanDef:[RootMap objectForKey:@"bLineFeed"] required:false def:self.bLineFeed];
     return self;
 }
 

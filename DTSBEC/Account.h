@@ -108,7 +108,13 @@ typedef NS_ENUM(NSUInteger, MODIFY_ACCOUNT_TYPE) {
     E_UNBIND_THIRD,
     E_MODIFY_FACE,
     E_MODIFY_USER_DESC,
-    E_MODIFY_MEMBER
+    E_MODIFY_MEMBER,
+    E_MODIFY_ID
+};
+
+typedef NS_ENUM(NSUInteger, E_MSG_SEND_TYPE) {
+    MST_SMS = 0,
+    MST_WX_ALARM = 1
 };
 
 typedef NS_ENUM(NSUInteger, E_GRAB_CHANNEL_TYPE) {
@@ -153,6 +159,8 @@ typedef NS_ENUM(NSUInteger, E_GRAB_CHANNEL_TYPE) {
 @property (nonatomic, copy) NSString* sVerifyDesc;
 @property (nonatomic, assign) E_FEED_USER_TYPE eUserType;
 @property (nonatomic, strong) DtMemberInfo* stMember;
+@property (nonatomic, copy) NSString* sUserRealName;
+@property (nonatomic, copy) NSString* sUserIDNumber;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -582,6 +590,7 @@ typedef NS_ENUM(NSUInteger, E_GRAB_CHANNEL_TYPE) {
 
 @property (nonatomic, strong) NSMutableArray* vtPhone;
 @property (nonatomic, copy) NSString* sContent;
+@property (nonatomic, assign) E_MSG_SEND_TYPE eMsgSendType;
 
 
 - (void) write: (BaseEncodeStream *)eos;
