@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "DTSBEC"
-  s.version          = "0.1.5"
+  s.version          = "0.1.6"
   s.summary          = "modularization BEC Proxy used on iOS."
   s.description      = <<-DESC
                        It is a modularization BEC proxy used on iOS, which implement by Objective-C.
