@@ -23,6 +23,7 @@
 #import "Feed.h"
 #import "FileAccess.h"
 #import "FreqLimit.h"
+#import "IntelliRecom.h"
 #import "InvestSuggestionComm.h"
 #import "JsonResult.h"
 #import "KLine.h"
@@ -50,7 +51,6 @@
 #import "Video.h"
 #import "YunWeb.h"
 #import "ZipStore.h"
-#import "DtTemp.h"
 
 
 #endif

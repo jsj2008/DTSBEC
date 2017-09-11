@@ -6,7 +6,7 @@
 #import "Beacon.h"
 #import "Account.h"
 
-typedef NS_ENUM(NSUInteger, AccuPointErrCode) {
+typedef NS_ENUM(NSInteger, AccuPointErrCode) {
     E_ACCU_POINT_SUCC = 0,
     E_ACCU_POINT_NOT_LOGIN = -1,
     E_ACCU_POINT_TICKET_EXPIRED = -2,
@@ -25,11 +25,15 @@ typedef NS_ENUM(NSUInteger, AccuPointErrCode) {
     E_ACCU_POINT_REPEAT_RECEIVE_COUPON = -15,
     E_ACCU_POINT_NO_MORE_COUPON = -16,
     E_ACCU_POINT_NO_BIND_PHONE = -17,
+    E_ACCU_POINT_INVALID_RISK_EVAL = -18,
+    E_ACCU_POINT_EVAL_NO_ID = -19,
+    E_ACCU_POINT_EVAL_NOT_EXIST = -20,
+    E_ACCU_POINT_MEMBER_COUPON = -21,
     E_ACCU_POINT_SVR_ERR = -99,
     E_ACCU_POINT_BIND_PHONE = 1
 };
 
-typedef NS_ENUM(NSUInteger, AccuPointTaskType) {
+typedef NS_ENUM(NSInteger, AccuPointTaskType) {
     E_ACCU_POINT_TASK_DAILY_SIGN = 0,
     E_ACCU_POINT_TASK_BIND_PHONE = 1,
     E_ACCU_POINT_TASK_SHARE = 2,
@@ -44,13 +48,13 @@ typedef NS_ENUM(NSUInteger, AccuPointTaskType) {
     E_ACCU_POINT_TASK_DO_RISK_EVAL = 11
 };
 
-typedef NS_ENUM(NSUInteger, AccuPointCodeType) {
+typedef NS_ENUM(NSInteger, AccuPointCodeType) {
     E_ACCU_POINT_CODE_INVITE = 0,
     E_ACCU_POINT_CODE_CONVERT = 1,
     E_ACCU_POINT_CODE_ACTIVATE = 2
 };
 
-typedef NS_ENUM(NSUInteger, AccuPointPriviType) {
+typedef NS_ENUM(NSInteger, AccuPointPriviType) {
     E_ACCU_POINT_PRIVI_CHIP = 1,
     E_ACCU_POINT_PRIVI_KLINE = 2,
     E_ACCU_POINT_PRIVI_HISTORY = 3,
@@ -61,21 +65,27 @@ typedef NS_ENUM(NSUInteger, AccuPointPriviType) {
     E_ACCU_POINT_YXT_ADVANCED_COURSE = 8,
     E_ACCU_POINT_YP_PRIVATE_STOCK_TACTICS = 9,
     E_ACCU_POINT_YP_PDJN = 10,
-    E_ACCU_POINT_YP_FPDS = 11
+    E_ACCU_POINT_YP_FPDS = 11,
+    E_ACCU_POINT_INVEST_MAP = 12,
+    E_ACCU_POINT_DIRECT_ADD_ISS = 13,
+    E_ACCU_POINT_YP_ZLTJ = 14,
+    E_ACCU_POINT_YP_JZTJ = 15
 };
 
-typedef NS_ENUM(NSUInteger, AccuPointOpenType) {
+typedef NS_ENUM(NSInteger, AccuPointOpenType) {
     E_ACCU_POINT_OPEN_BY_POINT = 0,
     E_ACCU_POINT_OPEN_BY_MONEY = 1,
     E_ACCU_POINT_OPEN_BY_CONVER_CODE = 2,
-    E_ACCU_POINT_OPEN_BY_ACTIVITY = 3
+    E_ACCU_POINT_OPEN_BY_ACTIVITY = 3,
+    E_ACCU_POINT_OPEN_BY_DT = 4
 };
 
-typedef NS_ENUM(NSUInteger, AccuPointUseType) {
+typedef NS_ENUM(NSInteger, AccuPointUseType) {
     E_ACCU_POINT_USE_OPEN_BLESS_PACK = 1
 };
 
-typedef NS_ENUM(NSUInteger, AccuPointUserRiskType) {
+typedef NS_ENUM(NSInteger, AccuPointUserRiskType) {
+    E_USER_RISK_EVAL_INVALID = -1,
     E_USER_RISK_NO_EVAL = 0,
     E_USER_RISK_CONSERVATIVE = 1,
     E_USER_RISK_CAUTIOUS = 2,
@@ -84,10 +94,16 @@ typedef NS_ENUM(NSUInteger, AccuPointUserRiskType) {
     E_USER_RISK_RADICAL = 5
 };
 
-typedef NS_ENUM(NSUInteger, AccuPointTimeUnit) {
+typedef NS_ENUM(NSInteger, AccuPointTimeUnit) {
     E_ACCU_POINT_TIME_UNIT_DAY = 0,
     E_ACCU_POINT_TIME_UNIT_MONTH = 1,
     E_ACCU_POINT_TIME_UNIT_YEAR = 2
+};
+
+typedef NS_ENUM(NSInteger, HOT_SEARCH_TYPE) {
+    E_HOT_SEARCH_SHAREHOLDER = 1,
+    E_HOT_SEARCH_SENIOR_EXEC = 2,
+    E_HOT_SEARCH_STOCK = 3
 };
 
 /////////////////////////////////////////////////////////////////
@@ -143,6 +159,7 @@ typedef NS_ENUM(NSUInteger, AccuPointTimeUnit) {
 @property (nonatomic, assign) int32_t iWebRetCode;
 @property (nonatomic, strong) NSMutableArray* vYXTCourseId;
 @property (nonatomic, copy) NSString* sMemberEndDay;
+@property (nonatomic, assign) int32_t iMemberLeftDays;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -261,6 +278,7 @@ typedef NS_ENUM(NSUInteger, AccuPointTimeUnit) {
 @property (nonatomic, strong) AccountTicket* stAccountTicket;
 @property (nonatomic, assign) int32_t iOpenDays;
 @property (nonatomic, strong) NSMutableArray* vCouponId;
+@property (nonatomic, assign) int32_t iOpenType;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -890,6 +908,8 @@ typedef NS_ENUM(NSUInteger, AccuPointTimeUnit) {
 @property (nonatomic, strong) UserInfo* stUserInfo;
 @property (nonatomic, strong) AccountTicket* stAccountTicket;
 @property (nonatomic, assign) int32_t iCouponStatus;
+@property (nonatomic, assign) int32_t iReqType;
+@property (nonatomic, copy) NSString* sActName;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -1020,6 +1040,8 @@ typedef NS_ENUM(NSUInteger, AccuPointTimeUnit) {
 @property (nonatomic, assign) int32_t iEvalType;
 @property (nonatomic, strong) NSMutableArray* vItem;
 @property (nonatomic, assign) int32_t iSubjectType;
+@property (nonatomic, copy) NSString* sEvalVersion;
+@property (nonatomic, copy) NSString* sUserSignStr;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -1083,11 +1105,263 @@ typedef NS_ENUM(NSUInteger, AccuPointTimeUnit) {
 @property (nonatomic, copy) NSString* sRiskType;
 @property (nonatomic, copy) NSString* sRiskDesc;
 @property (nonatomic, copy) NSString* sRiskTolerance;
+@property (nonatomic, copy) NSString* sContractUrl;
+@property (nonatomic, copy) NSString* sRiskAnswer;
+@property (nonatomic, strong) NSMutableArray* vShowText;
 
 
 - (void) write: (BaseEncodeStream *)eos;
 
 - (GetUserEvalResultRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface SaveEvalContractReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+@property (nonatomic, strong) AccountTicket* stAccountTicket;
+@property (nonatomic, assign) int32_t iEvalType;
+@property (nonatomic, copy) NSString* sRiskEvalId;
+@property (nonatomic, copy) NSString* sContractUrl;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (SaveEvalContractReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface SaveEvalContractRsp : Message
+
+@property (nonatomic, assign) int32_t iRetCode;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (SaveEvalContractRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetHotSecReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetHotSecReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface HotSecItem : Message
+
+@property (nonatomic, copy) NSString* sDtSecCode;
+@property (nonatomic, copy) NSString* sSecName;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (HotSecItem *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetHotSecRsp : Message
+
+@property (nonatomic, strong) NSMutableArray* vList;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetHotSecRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetHotSearchReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetHotSearchReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface HotSearchItem : Message
+
+@property (nonatomic, assign) int32_t iType;
+@property (nonatomic, copy) NSString* sName;
+@property (nonatomic, copy) NSString* sDtSecCode;
+@property (nonatomic, copy) NSString* sSrcName;
+@property (nonatomic, copy) NSString* sFlagId;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (HotSearchItem *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetHotSearchRsp : Message
+
+@property (nonatomic, strong) NSMutableArray* vItem;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetHotSearchRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetPriviMatchResultReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+@property (nonatomic, assign) int32_t iPriviType;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetPriviMatchResultReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetPriviMatchResultRsp : Message
+
+@property (nonatomic, assign) int32_t iMatchResult;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetPriviMatchResultRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetExChangePriviListReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetExChangePriviListReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface PriviExchangeDesc : Message
+
+@property (nonatomic, assign) int32_t iPriviType;
+@property (nonatomic, assign) int32_t iPriviPoints;
+@property (nonatomic, assign) int32_t iExchangeDays;
+@property (nonatomic, copy) NSString* sTitleDesc;
+@property (nonatomic, copy) NSString* sPriviDesc;
+@property (nonatomic, copy) NSString* sPriviIcon;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (PriviExchangeDesc *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetExChangePriviListRsp : Message
+
+@property (nonatomic, strong) NSMutableArray* vItem;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetExChangePriviListRsp *) read: (BaseDecodeStream *)dos;
 
 - (NSString *) writeToJsonString;
 

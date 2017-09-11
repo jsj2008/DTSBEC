@@ -5,19 +5,19 @@
 #import "BaseDecodeStream.h"
 #import "Beacon.h"
 
-typedef NS_ENUM(NSUInteger, E_SEC_STATUS) {
+typedef NS_ENUM(NSInteger, E_SEC_STATUS) {
     E_SS_NORMAL = 0,
     E_SS_SUSPENDED = 1
 };
 
-typedef NS_ENUM(NSUInteger, E_TREND_REQ_TYPE) {
+typedef NS_ENUM(NSInteger, E_TREND_REQ_TYPE) {
     E_TRT_NORMAL = 0,
     E_TRT_INCRE = 1,
     E_TRT_CALLAUCTION = 2,
     E_TRT_TRADING = 3
 };
 
-typedef NS_ENUM(NSUInteger, E_K_LINE_TYPE) {
+typedef NS_ENUM(NSInteger, E_K_LINE_TYPE) {
     E_KLT_5_MIN = 0,
     E_KLT_15_MIN = 1,
     E_KLT_30_MIN = 2,
@@ -28,7 +28,7 @@ typedef NS_ENUM(NSUInteger, E_K_LINE_TYPE) {
     E_KLT_1_MIN = 7
 };
 
-typedef NS_ENUM(NSUInteger, E_PLATE_QUOTE_REQ_TYPE) {
+typedef NS_ENUM(NSInteger, E_PLATE_QUOTE_REQ_TYPE) {
     E_PQT_PLATE = 0,
     E_PQT_RANK = 1,
     E_PQT_PLATE_REGION = 2,
@@ -45,46 +45,46 @@ typedef NS_ENUM(NSUInteger, E_PLATE_QUOTE_REQ_TYPE) {
     E_PQT_GLOBAL = 13
 };
 
-typedef NS_ENUM(NSUInteger, E_PLATE_QUOTE_SORT_TYPE) {
+typedef NS_ENUM(NSInteger, E_PLATE_QUOTE_SORT_TYPE) {
     E_PQT_INCEREASE = 1,
     E_PQT_DECRREASE = 2
 };
 
-typedef NS_ENUM(NSUInteger, E_CAPITAL_DETAIL_SET_TYPE) {
+typedef NS_ENUM(NSInteger, E_CAPITAL_DETAIL_SET_TYPE) {
     E_CDST_STOCK = 6,
     E_CDST_BUSS = 32,
     E_CDST_CONC = 33,
     E_CDST_REGION = 31
 };
 
-typedef NS_ENUM(NSUInteger, E_CAPITAL_DETAIL_SORT_TYPE) {
+typedef NS_ENUM(NSInteger, E_CAPITAL_DETAIL_SORT_TYPE) {
     E_CDST_INCEREASE = 1,
     E_CDST_DECRREASE = 2
 };
 
-typedef NS_ENUM(NSUInteger, E_CAPITAL_DETAIL_DATA_TYPE) {
+typedef NS_ENUM(NSInteger, E_CAPITAL_DETAIL_DATA_TYPE) {
     E_CDDT_1_DAY = 1,
     E_CDDT_3_DAY = 3,
     E_CDDT_5_DAY = 5,
     E_CDDT_10_DAY = 10
 };
 
-typedef NS_ENUM(NSUInteger, E_TRADING_TIME_TYPE) {
+typedef NS_ENUM(NSInteger, E_TRADING_TIME_TYPE) {
     E_TTT_TRADING = 0,
     E_TTT_CALLAUCTION = 1
 };
 
-typedef NS_ENUM(NSUInteger, E_TRADING_DEAL_TYPE) {
+typedef NS_ENUM(NSInteger, E_TRADING_DEAL_TYPE) {
     E_TDT_OPEN = 0,
     E_TDT_CLOSE = 1
 };
 
-typedef NS_ENUM(NSUInteger, E_AH_SORT_TYPE) {
+typedef NS_ENUM(NSInteger, E_AH_SORT_TYPE) {
     E_AHST_INCEREASE = 1,
     E_AHST_DECRREASE = 2
 };
 
-typedef NS_ENUM(NSUInteger, E_CAPITAL_DDZ_TYPE) {
+typedef NS_ENUM(NSInteger, E_CAPITAL_DDZ_TYPE) {
     E_CDT_MIN = 1,
     E_CDT_DAY = 2,
     E_CDT_WEEK = 3,
@@ -92,11 +92,11 @@ typedef NS_ENUM(NSUInteger, E_CAPITAL_DDZ_TYPE) {
     E_CDT_YEAR = 5
 };
 
-typedef NS_ENUM(NSUInteger, E_SIMILAR_K_LINE_TYPE) {
+typedef NS_ENUM(NSInteger, E_SIMILAR_K_LINE_TYPE) {
     E_SKLT_CLOSE = 0
 };
 
-typedef NS_ENUM(NSUInteger, E_PAN_KOU_TYPE) {
+typedef NS_ENUM(NSInteger, E_PAN_KOU_TYPE) {
     E_PKT_SUPER_BUY = 0,
     E_PKT_SUPER_SELL = 1,
     E_PKT_UP_TO_STOP = 2,
@@ -119,7 +119,7 @@ typedef NS_ENUM(NSUInteger, E_PAN_KOU_TYPE) {
     E_PKT_CANCEL_SELL = 27
 };
 
-typedef NS_ENUM(NSUInteger, E_TRAN_STAT_TYPE) {
+typedef NS_ENUM(NSInteger, E_TRAN_STAT_TYPE) {
     E_FST_BUY = 0,
     E_FST_SELL = 1
 };
@@ -189,6 +189,7 @@ typedef NS_ENUM(NSUInteger, E_TRAN_STAT_TYPE) {
 @property (nonatomic, assign) float fMaxLimit;
 @property (nonatomic, assign) float fMinLimit;
 @property (nonatomic, assign) int64_t lVolinstock;
+@property (nonatomic, assign) float fVolumeRatio;
 
 
 - (void) write: (BaseEncodeStream *)eos;

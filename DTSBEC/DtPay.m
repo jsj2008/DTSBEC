@@ -525,6 +525,8 @@
         self.sDtPayOrderId = @"";
         self.sPassback = @"";
         self.sAppId = @"";
+        self.iReqType = 0;
+        self.sOpenId = @"";
     }
 
     return self;
@@ -549,6 +551,11 @@
         [ostream writeString: 3 value: self.sPassback];
     }
     [ostream writeString: 4 value: self.sAppId];
+    [ostream writeInt32: 5 value: self.iReqType];
+    if (self.sOpenId != nil)
+    {
+        [ostream writeString: 6 value: self.sOpenId];
+    }
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -563,6 +570,8 @@
     self.sDtPayOrderId = [istream readString: 2 required: true];
     self.sPassback = [istream readStringDef: 3 required: false def: self.sPassback];
     self.sAppId = [istream readString: 4 required: true];
+    self.iReqType = [istream readInt32Def: 5 required: false def: self.iReqType];
+    self.sOpenId = [istream readStringDef: 6 required: false def: self.sOpenId];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -581,6 +590,8 @@
     [JsonRoot append:@"sDtPayOrderId" value : [BaseJSON writeString : self.sDtPayOrderId]];
     [JsonRoot append:@"sPassback" value : [BaseJSON writeString : self.sPassback]];
     [JsonRoot append:@"sAppId" value : [BaseJSON writeString : self.sAppId]];
+    [JsonRoot append:@"iReqType" value : [BaseJSON writeInt32 : self.iReqType]];
+    [JsonRoot append:@"sOpenId" value : [BaseJSON writeString : self.sOpenId]];
     return JsonRoot;
 }
 
@@ -591,6 +602,8 @@
     self.sDtPayOrderId = [BaseJSON readStringDef:[RootMap objectForKey:@"sDtPayOrderId"] required:true def:self.sDtPayOrderId];
     self.sPassback = [BaseJSON readStringDef:[RootMap objectForKey:@"sPassback"] required:false def:self.sPassback];
     self.sAppId = [BaseJSON readStringDef:[RootMap objectForKey:@"sAppId"] required:true def:self.sAppId];
+    self.iReqType = [BaseJSON readInt32Def:[RootMap objectForKey:@"iReqType"] required:false def:self.iReqType];
+    self.sOpenId = [BaseJSON readStringDef:[RootMap objectForKey:@"sOpenId"] required:false def:self.sOpenId];
     return self;
 }
 
@@ -861,6 +874,9 @@
         self.iAvgMoney = 0;
         self.iTotalMoney = 0;
         self.iUnit = E_DT_PAY_TIME_MONTH;
+        self.sDesc = @"";
+        self.sTag = @"";
+        self.bLineCrossed = false;
     }
 
     return self;
@@ -875,6 +891,15 @@
     [ostream writeInt32: 1 value: self.iAvgMoney];
     [ostream writeInt32: 2 value: self.iTotalMoney];
     [ostream writeInt32: 3 value: self.iUnit];
+    if (self.sDesc != nil)
+    {
+        [ostream writeString: 4 value: self.sDesc];
+    }
+    if (self.sTag != nil)
+    {
+        [ostream writeString: 5 value: self.sTag];
+    }
+    [ostream writeBoolean: 6 value: self.bLineCrossed];
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -888,6 +913,9 @@
     self.iAvgMoney = [istream readInt32Def: 1 required: false def: self.iAvgMoney];
     self.iTotalMoney = [istream readInt32Def: 2 required: false def: self.iTotalMoney];
     self.iUnit = [istream readInt32Def: 3 required: false def: self.iUnit];
+    self.sDesc = [istream readStringDef: 4 required: false def: self.sDesc];
+    self.sTag = [istream readStringDef: 5 required: false def: self.sTag];
+    self.bLineCrossed = [istream readBooleanDef: 6 required: false def: self.bLineCrossed];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -905,6 +933,9 @@
     [JsonRoot append:@"iAvgMoney" value : [BaseJSON writeInt32 : self.iAvgMoney]];
     [JsonRoot append:@"iTotalMoney" value : [BaseJSON writeInt32 : self.iTotalMoney]];
     [JsonRoot append:@"iUnit" value : [BaseJSON writeInt32 : self.iUnit]];
+    [JsonRoot append:@"sDesc" value : [BaseJSON writeString : self.sDesc]];
+    [JsonRoot append:@"sTag" value : [BaseJSON writeString : self.sTag]];
+    [JsonRoot append:@"bLineCrossed" value : [BaseJSON writeBoolean : self.bLineCrossed]];
     return JsonRoot;
 }
 
@@ -914,6 +945,9 @@
     self.iAvgMoney = [BaseJSON readInt32Def:[RootMap objectForKey:@"iAvgMoney"] required:false def:self.iAvgMoney];
     self.iTotalMoney = [BaseJSON readInt32Def:[RootMap objectForKey:@"iTotalMoney"] required:false def:self.iTotalMoney];
     self.iUnit = [BaseJSON readInt32Def:[RootMap objectForKey:@"iUnit"] required:false def:self.iUnit];
+    self.sDesc = [BaseJSON readStringDef:[RootMap objectForKey:@"sDesc"] required:false def:self.sDesc];
+    self.sTag = [BaseJSON readStringDef:[RootMap objectForKey:@"sTag"] required:false def:self.sTag];
+    self.bLineCrossed = [BaseJSON readBooleanDef:[RootMap objectForKey:@"bLineCrossed"] required:false def:self.bLineCrossed];
     return self;
 }
 
@@ -1923,6 +1957,7 @@
     {
         self.iCouponNum = 0;
         self.stRiskResult = [[UserRiskEvalResult alloc] init];
+        self.iNeedSign = 1;
     }
 
     return self;
@@ -1938,6 +1973,7 @@
     {
         [ostream writeMessage: 1 value: self.stRiskResult];
     }
+    [ostream writeInt32: 2 value: self.iNeedSign];
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -1949,6 +1985,7 @@
 
     self.iCouponNum = [istream readInt32Def: 0 required: false def: self.iCouponNum];
     self.stRiskResult = (UserRiskEvalResult*)[istream readMessageDef: 1 required: false def: self.stRiskResult VAR_TYPE: [UserRiskEvalResult class]];
+    self.iNeedSign = [istream readInt32Def: 2 required: false def: self.iNeedSign];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -1964,6 +2001,7 @@
     JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
     [JsonRoot append:@"iCouponNum" value : [BaseJSON writeInt32 : self.iCouponNum]];
     [JsonRoot append:@"stRiskResult" value : [BaseJSON writeMessage : self.stRiskResult]];
+    [JsonRoot append:@"iNeedSign" value : [BaseJSON writeInt32 : self.iNeedSign]];
     return JsonRoot;
 }
 
@@ -1971,6 +2009,7 @@
 {
     self.iCouponNum = [BaseJSON readInt32Def:[RootMap objectForKey:@"iCouponNum"] required:false def:self.iCouponNum];
     self.stRiskResult = [BaseJSON readMessageDef:[RootMap objectForKey:@"stRiskResult"] required:false def:self.stRiskResult VAR_TYPE: [UserRiskEvalResult class]];
+    self.iNeedSign = [BaseJSON readInt32Def:[RootMap objectForKey:@"iNeedSign"] required:false def:self.iNeedSign];
     return self;
 }
 
@@ -2131,6 +2170,352 @@
 - (GetPayCouponRsp *) readFromMap : (NSMutableDictionary *) RootMap
 {
     self.vCoupon = [BaseJSON readListDef:[RootMap objectForKey:@"vCoupon"] required:false def:self.vCoupon VAR_TYPE: [THOTH_LIST CREATE: [AccuPointCoupon class]]];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation GetPayOrderReq
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.stUserInfo = [[UserInfo alloc] init];
+        self.stAccountTicket = [[AccountTicket alloc] init];
+        self.sOrderId = @"";
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.stUserInfo != nil)
+    {
+        [ostream writeMessage: 0 value: self.stUserInfo];
+    }
+    if (self.stAccountTicket != nil)
+    {
+        [ostream writeMessage: 1 value: self.stAccountTicket];
+    }
+    if (self.sOrderId != nil)
+    {
+        [ostream writeString: 2 value: self.sOrderId];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (GetPayOrderReq *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.stUserInfo = (UserInfo*)[istream readMessageDef: 0 required: false def: self.stUserInfo VAR_TYPE: [UserInfo class]];
+    self.stAccountTicket = (AccountTicket*)[istream readMessageDef: 1 required: false def: self.stAccountTicket VAR_TYPE: [AccountTicket class]];
+    self.sOrderId = [istream readStringDef: 2 required: false def: self.sOrderId];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"stUserInfo" value : [BaseJSON writeMessage : self.stUserInfo]];
+    [JsonRoot append:@"stAccountTicket" value : [BaseJSON writeMessage : self.stAccountTicket]];
+    [JsonRoot append:@"sOrderId" value : [BaseJSON writeString : self.sOrderId]];
+    return JsonRoot;
+}
+
+- (GetPayOrderReq *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.stUserInfo = [BaseJSON readMessageDef:[RootMap objectForKey:@"stUserInfo"] required:false def:self.stUserInfo VAR_TYPE: [UserInfo class]];
+    self.stAccountTicket = [BaseJSON readMessageDef:[RootMap objectForKey:@"stAccountTicket"] required:false def:self.stAccountTicket VAR_TYPE: [AccountTicket class]];
+    self.sOrderId = [BaseJSON readStringDef:[RootMap objectForKey:@"sOrderId"] required:false def:self.sOrderId];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation GetPayOrderRsp
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.stAccount = [[AccountInfo alloc] init];
+        self.sInnerOrderId = @"";
+        self.lTimeStamp = 0;
+        self.sSubject = @"";
+        self.sPeriod = @"";
+        self.sFee = @"";
+        self.sRiskDesc = @"";
+        self.sUsrRiskLevel = @"";
+        self.sUserRiskAnswer = @"";
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.stAccount != nil)
+    {
+        [ostream writeMessage: 0 value: self.stAccount];
+    }
+    if (self.sInnerOrderId != nil)
+    {
+        [ostream writeString: 1 value: self.sInnerOrderId];
+    }
+    [ostream writeInt64: 2 value: self.lTimeStamp];
+    if (self.sSubject != nil)
+    {
+        [ostream writeString: 3 value: self.sSubject];
+    }
+    if (self.sPeriod != nil)
+    {
+        [ostream writeString: 4 value: self.sPeriod];
+    }
+    if (self.sFee != nil)
+    {
+        [ostream writeString: 5 value: self.sFee];
+    }
+    if (self.sRiskDesc != nil)
+    {
+        [ostream writeString: 6 value: self.sRiskDesc];
+    }
+    if (self.sUsrRiskLevel != nil)
+    {
+        [ostream writeString: 7 value: self.sUsrRiskLevel];
+    }
+    if (self.sUserRiskAnswer != nil)
+    {
+        [ostream writeString: 8 value: self.sUserRiskAnswer];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (GetPayOrderRsp *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.stAccount = (AccountInfo*)[istream readMessageDef: 0 required: false def: self.stAccount VAR_TYPE: [AccountInfo class]];
+    self.sInnerOrderId = [istream readStringDef: 1 required: false def: self.sInnerOrderId];
+    self.lTimeStamp = [istream readInt64Def: 2 required: false def: self.lTimeStamp];
+    self.sSubject = [istream readStringDef: 3 required: false def: self.sSubject];
+    self.sPeriod = [istream readStringDef: 4 required: false def: self.sPeriod];
+    self.sFee = [istream readStringDef: 5 required: false def: self.sFee];
+    self.sRiskDesc = [istream readStringDef: 6 required: false def: self.sRiskDesc];
+    self.sUsrRiskLevel = [istream readStringDef: 7 required: false def: self.sUsrRiskLevel];
+    self.sUserRiskAnswer = [istream readStringDef: 8 required: false def: self.sUserRiskAnswer];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"stAccount" value : [BaseJSON writeMessage : self.stAccount]];
+    [JsonRoot append:@"sInnerOrderId" value : [BaseJSON writeString : self.sInnerOrderId]];
+    [JsonRoot append:@"lTimeStamp" value : [BaseJSON writeInt64 : self.lTimeStamp]];
+    [JsonRoot append:@"sSubject" value : [BaseJSON writeString : self.sSubject]];
+    [JsonRoot append:@"sPeriod" value : [BaseJSON writeString : self.sPeriod]];
+    [JsonRoot append:@"sFee" value : [BaseJSON writeString : self.sFee]];
+    [JsonRoot append:@"sRiskDesc" value : [BaseJSON writeString : self.sRiskDesc]];
+    [JsonRoot append:@"sUsrRiskLevel" value : [BaseJSON writeString : self.sUsrRiskLevel]];
+    [JsonRoot append:@"sUserRiskAnswer" value : [BaseJSON writeString : self.sUserRiskAnswer]];
+    return JsonRoot;
+}
+
+- (GetPayOrderRsp *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.stAccount = [BaseJSON readMessageDef:[RootMap objectForKey:@"stAccount"] required:false def:self.stAccount VAR_TYPE: [AccountInfo class]];
+    self.sInnerOrderId = [BaseJSON readStringDef:[RootMap objectForKey:@"sInnerOrderId"] required:false def:self.sInnerOrderId];
+    self.lTimeStamp = [BaseJSON readInt64Def:[RootMap objectForKey:@"lTimeStamp"] required:false def:self.lTimeStamp];
+    self.sSubject = [BaseJSON readStringDef:[RootMap objectForKey:@"sSubject"] required:false def:self.sSubject];
+    self.sPeriod = [BaseJSON readStringDef:[RootMap objectForKey:@"sPeriod"] required:false def:self.sPeriod];
+    self.sFee = [BaseJSON readStringDef:[RootMap objectForKey:@"sFee"] required:false def:self.sFee];
+    self.sRiskDesc = [BaseJSON readStringDef:[RootMap objectForKey:@"sRiskDesc"] required:false def:self.sRiskDesc];
+    self.sUsrRiskLevel = [BaseJSON readStringDef:[RootMap objectForKey:@"sUsrRiskLevel"] required:false def:self.sUsrRiskLevel];
+    self.sUserRiskAnswer = [BaseJSON readStringDef:[RootMap objectForKey:@"sUserRiskAnswer"] required:false def:self.sUserRiskAnswer];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation CommitUserSignReq
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.stUserInfo = [[UserInfo alloc] init];
+        self.stAccountTicket = [[AccountTicket alloc] init];
+        self.sOrderId = @"";
+        self.sUserSignStr = @"";
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.stUserInfo != nil)
+    {
+        [ostream writeMessage: 0 value: self.stUserInfo];
+    }
+    if (self.stAccountTicket != nil)
+    {
+        [ostream writeMessage: 1 value: self.stAccountTicket];
+    }
+    if (self.sOrderId != nil)
+    {
+        [ostream writeString: 2 value: self.sOrderId];
+    }
+    if (self.sUserSignStr != nil)
+    {
+        [ostream writeString: 3 value: self.sUserSignStr];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (CommitUserSignReq *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.stUserInfo = (UserInfo*)[istream readMessageDef: 0 required: false def: self.stUserInfo VAR_TYPE: [UserInfo class]];
+    self.stAccountTicket = (AccountTicket*)[istream readMessageDef: 1 required: false def: self.stAccountTicket VAR_TYPE: [AccountTicket class]];
+    self.sOrderId = [istream readStringDef: 2 required: false def: self.sOrderId];
+    self.sUserSignStr = [istream readStringDef: 3 required: false def: self.sUserSignStr];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"stUserInfo" value : [BaseJSON writeMessage : self.stUserInfo]];
+    [JsonRoot append:@"stAccountTicket" value : [BaseJSON writeMessage : self.stAccountTicket]];
+    [JsonRoot append:@"sOrderId" value : [BaseJSON writeString : self.sOrderId]];
+    [JsonRoot append:@"sUserSignStr" value : [BaseJSON writeString : self.sUserSignStr]];
+    return JsonRoot;
+}
+
+- (CommitUserSignReq *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.stUserInfo = [BaseJSON readMessageDef:[RootMap objectForKey:@"stUserInfo"] required:false def:self.stUserInfo VAR_TYPE: [UserInfo class]];
+    self.stAccountTicket = [BaseJSON readMessageDef:[RootMap objectForKey:@"stAccountTicket"] required:false def:self.stAccountTicket VAR_TYPE: [AccountTicket class]];
+    self.sOrderId = [BaseJSON readStringDef:[RootMap objectForKey:@"sOrderId"] required:false def:self.sOrderId];
+    self.sUserSignStr = [BaseJSON readStringDef:[RootMap objectForKey:@"sUserSignStr"] required:false def:self.sUserSignStr];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation CommitUserSignRsp
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.iReturnCode = 0;
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    [ostream writeInt32: 0 value: self.iReturnCode];
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (CommitUserSignRsp *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.iReturnCode = [istream readInt32Def: 0 required: false def: self.iReturnCode];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"iReturnCode" value : [BaseJSON writeInt32 : self.iReturnCode]];
+    return JsonRoot;
+}
+
+- (CommitUserSignRsp *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.iReturnCode = [BaseJSON readInt32Def:[RootMap objectForKey:@"iReturnCode"] required:false def:self.iReturnCode];
     return self;
 }
 

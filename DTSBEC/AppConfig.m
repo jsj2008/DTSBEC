@@ -2137,6 +2137,195 @@
 @end
 
 //////////////////////////////////////////////////////////////
+@implementation PluginItem
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.sFileName = @"";
+        self.sPackName = @"";
+        self.iVersionCode = 0;
+        self.sShowName = @"";
+        self.sDesc = @"";
+        self.lFileSize = 0;
+        self.sDownloadUrl = @"";
+        self.sMd5 = @"";
+        self.iType = 0;
+        self.iMatchMinVer = 0;
+        self.iMatchMaxVer = 0;
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.sFileName != nil)
+    {
+        [ostream writeString: 0 value: self.sFileName];
+    }
+    if (self.sPackName != nil)
+    {
+        [ostream writeString: 1 value: self.sPackName];
+    }
+    [ostream writeInt32: 2 value: self.iVersionCode];
+    if (self.sShowName != nil)
+    {
+        [ostream writeString: 3 value: self.sShowName];
+    }
+    if (self.sDesc != nil)
+    {
+        [ostream writeString: 4 value: self.sDesc];
+    }
+    [ostream writeInt64: 5 value: self.lFileSize];
+    if (self.sDownloadUrl != nil)
+    {
+        [ostream writeString: 6 value: self.sDownloadUrl];
+    }
+    if (self.sMd5 != nil)
+    {
+        [ostream writeString: 7 value: self.sMd5];
+    }
+    [ostream writeInt32: 8 value: self.iType];
+    [ostream writeInt32: 9 value: self.iMatchMinVer];
+    [ostream writeInt32: 10 value: self.iMatchMaxVer];
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (PluginItem *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.sFileName = [istream readStringDef: 0 required: false def: self.sFileName];
+    self.sPackName = [istream readStringDef: 1 required: false def: self.sPackName];
+    self.iVersionCode = [istream readInt32Def: 2 required: false def: self.iVersionCode];
+    self.sShowName = [istream readStringDef: 3 required: false def: self.sShowName];
+    self.sDesc = [istream readStringDef: 4 required: false def: self.sDesc];
+    self.lFileSize = [istream readInt64Def: 5 required: false def: self.lFileSize];
+    self.sDownloadUrl = [istream readStringDef: 6 required: false def: self.sDownloadUrl];
+    self.sMd5 = [istream readStringDef: 7 required: false def: self.sMd5];
+    self.iType = [istream readInt32Def: 8 required: false def: self.iType];
+    self.iMatchMinVer = [istream readInt32Def: 9 required: false def: self.iMatchMinVer];
+    self.iMatchMaxVer = [istream readInt32Def: 10 required: false def: self.iMatchMaxVer];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"sFileName" value : [BaseJSON writeString : self.sFileName]];
+    [JsonRoot append:@"sPackName" value : [BaseJSON writeString : self.sPackName]];
+    [JsonRoot append:@"iVersionCode" value : [BaseJSON writeInt32 : self.iVersionCode]];
+    [JsonRoot append:@"sShowName" value : [BaseJSON writeString : self.sShowName]];
+    [JsonRoot append:@"sDesc" value : [BaseJSON writeString : self.sDesc]];
+    [JsonRoot append:@"lFileSize" value : [BaseJSON writeInt64 : self.lFileSize]];
+    [JsonRoot append:@"sDownloadUrl" value : [BaseJSON writeString : self.sDownloadUrl]];
+    [JsonRoot append:@"sMd5" value : [BaseJSON writeString : self.sMd5]];
+    [JsonRoot append:@"iType" value : [BaseJSON writeInt32 : self.iType]];
+    [JsonRoot append:@"iMatchMinVer" value : [BaseJSON writeInt32 : self.iMatchMinVer]];
+    [JsonRoot append:@"iMatchMaxVer" value : [BaseJSON writeInt32 : self.iMatchMaxVer]];
+    return JsonRoot;
+}
+
+- (PluginItem *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.sFileName = [BaseJSON readStringDef:[RootMap objectForKey:@"sFileName"] required:false def:self.sFileName];
+    self.sPackName = [BaseJSON readStringDef:[RootMap objectForKey:@"sPackName"] required:false def:self.sPackName];
+    self.iVersionCode = [BaseJSON readInt32Def:[RootMap objectForKey:@"iVersionCode"] required:false def:self.iVersionCode];
+    self.sShowName = [BaseJSON readStringDef:[RootMap objectForKey:@"sShowName"] required:false def:self.sShowName];
+    self.sDesc = [BaseJSON readStringDef:[RootMap objectForKey:@"sDesc"] required:false def:self.sDesc];
+    self.lFileSize = [BaseJSON readInt64Def:[RootMap objectForKey:@"lFileSize"] required:false def:self.lFileSize];
+    self.sDownloadUrl = [BaseJSON readStringDef:[RootMap objectForKey:@"sDownloadUrl"] required:false def:self.sDownloadUrl];
+    self.sMd5 = [BaseJSON readStringDef:[RootMap objectForKey:@"sMd5"] required:false def:self.sMd5];
+    self.iType = [BaseJSON readInt32Def:[RootMap objectForKey:@"iType"] required:false def:self.iType];
+    self.iMatchMinVer = [BaseJSON readInt32Def:[RootMap objectForKey:@"iMatchMinVer"] required:false def:self.iMatchMinVer];
+    self.iMatchMaxVer = [BaseJSON readInt32Def:[RootMap objectForKey:@"iMatchMaxVer"] required:false def:self.iMatchMaxVer];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation PluginList
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.vItem = [NSMutableArray arrayWithCapacity:0];
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.vItem != nil)
+    {
+        [ostream writeList: 0 value: self.vItem VAR_TYPE: [THOTH_LIST CREATE: [PluginItem class]]];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (PluginList *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.vItem = [istream readListDef: 0 required: false def: self.vItem VAR_TYPE: [THOTH_LIST CREATE: [PluginItem class]]];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"vItem" value : [BaseJSON writeList : self.vItem VAR_TYPE: [THOTH_LIST CREATE: [PluginItem class]]]];
+    return JsonRoot;
+}
+
+- (PluginList *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.vItem = [BaseJSON readListDef:[RootMap objectForKey:@"vItem"] required:false def:self.vItem VAR_TYPE: [THOTH_LIST CREATE: [PluginItem class]]];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
 @implementation GetConfigReq
 - (id) init
 {

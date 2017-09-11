@@ -8309,6 +8309,7 @@
         self.sDtSecCode = @"";
         self.sDate = @"";
         self.iSize = 0;
+        self.iFrom = 0;
     }
 
     return self;
@@ -8332,6 +8333,7 @@
         [ostream writeString: 2 value: self.sDate];
     }
     [ostream writeInt32: 3 value: self.iSize];
+    [ostream writeInt32: 4 value: self.iFrom];
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -8345,6 +8347,7 @@
     self.sDtSecCode = [istream readStringDef: 1 required: false def: self.sDtSecCode];
     self.sDate = [istream readStringDef: 2 required: false def: self.sDate];
     self.iSize = [istream readInt32Def: 3 required: false def: self.iSize];
+    self.iFrom = [istream readInt32Def: 4 required: false def: self.iFrom];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -8362,6 +8365,7 @@
     [JsonRoot append:@"sDtSecCode" value : [BaseJSON writeString : self.sDtSecCode]];
     [JsonRoot append:@"sDate" value : [BaseJSON writeString : self.sDate]];
     [JsonRoot append:@"iSize" value : [BaseJSON writeInt32 : self.iSize]];
+    [JsonRoot append:@"iFrom" value : [BaseJSON writeInt32 : self.iFrom]];
     return JsonRoot;
 }
 
@@ -8371,6 +8375,7 @@
     self.sDtSecCode = [BaseJSON readStringDef:[RootMap objectForKey:@"sDtSecCode"] required:false def:self.sDtSecCode];
     self.sDate = [BaseJSON readStringDef:[RootMap objectForKey:@"sDate"] required:false def:self.sDate];
     self.iSize = [BaseJSON readInt32Def:[RootMap objectForKey:@"iSize"] required:false def:self.iSize];
+    self.iFrom = [BaseJSON readInt32Def:[RootMap objectForKey:@"iFrom"] required:false def:self.iFrom];
     return self;
 }
 

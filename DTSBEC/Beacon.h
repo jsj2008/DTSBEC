@@ -4,17 +4,17 @@
 #import "BaseEncodeStream.h"
 #import "BaseDecodeStream.h"
 
-typedef NS_ENUM(NSUInteger, E_DEVICE_TOKEN_TYPE) {
+typedef NS_ENUM(NSInteger, E_DEVICE_TOKEN_TYPE) {
     E_DTT_UMENG = 1,
     E_DTT_HUAWEI = 2
 };
 
-typedef NS_ENUM(NSUInteger, E_ENV_TYPE) {
+typedef NS_ENUM(NSInteger, E_ENV_TYPE) {
     E_ENV_FORMAL = 0,
     E_ENV_LOCAL = 1
 };
 
-typedef NS_ENUM(NSUInteger, E_FUND_TYPE) {
+typedef NS_ENUM(NSInteger, E_FUND_TYPE) {
     E_OTHERS = 0,
     E_LOF = 1,
     E_ETF = 2,
@@ -22,7 +22,7 @@ typedef NS_ENUM(NSUInteger, E_FUND_TYPE) {
     E_CC
 };
 
-typedef NS_ENUM(NSUInteger, E_MARKET_TYPE) {
+typedef NS_ENUM(NSInteger, E_MARKET_TYPE) {
     E_MT_NO = 99,
     E_MT_SZ = 0,
     E_MT_SH = 1,
@@ -64,7 +64,7 @@ typedef NS_ENUM(NSUInteger, E_MARKET_TYPE) {
     E_MT_TWN = 98
 };
 
-typedef NS_ENUM(NSUInteger, E_SEC_TYPE) {
+typedef NS_ENUM(NSInteger, E_SEC_TYPE) {
     E_ST_UNKNOWN = 0,
     E_ST_STOCK = 1,
     E_ST_BOND = 2,
@@ -76,7 +76,7 @@ typedef NS_ENUM(NSUInteger, E_SEC_TYPE) {
     E_ST_FUTURES = 6
 };
 
-typedef NS_ENUM(NSUInteger, E_SEC_ATTR) {
+typedef NS_ENUM(NSInteger, E_SEC_ATTR) {
     E_SEC_ATTR_SHHK = 1,
     E_SEC_ATTR_MARGIN = 2,
     E_SEC_ATTR_SUB_NEW = 3,
@@ -86,34 +86,34 @@ typedef NS_ENUM(NSUInteger, E_SEC_ATTR) {
     E_SEC_ATTR_SZHK = 7
 };
 
-typedef NS_ENUM(NSUInteger, E_SEC_CHANGE_STATUS) {
+typedef NS_ENUM(NSInteger, E_SEC_CHANGE_STATUS) {
     E_STATUS_FIX = 0,
     E_STATUS_SUSPEND = 1,
     E_STATUS_PRIVATIZE = 2,
     E_STATUS_LIFTED = 3
 };
 
-typedef NS_ENUM(NSUInteger, E_SEASON_TYPE) {
+typedef NS_ENUM(NSInteger, E_SEASON_TYPE) {
     E_ST_FIRST = 1,
     E_ST_SECOND = 2,
     E_ST_THIRD = 3,
     E_ST_FORTH = 4
 };
 
-typedef NS_ENUM(NSUInteger, E_FR_UNIT) {
+typedef NS_ENUM(NSInteger, E_FR_UNIT) {
     E_FRU_YUAN = 1,
     E_FRU_WANYUAN = 2,
     E_FRU_MILION = 3,
     E_FRU_YIYUAN = 4
 };
 
-typedef NS_ENUM(NSUInteger, ShareholderChange) {
+typedef NS_ENUM(NSInteger, ShareholderChange) {
     SHC_UNCHANGE = 0,
     SHC_INCREASE = 1,
     SHC_DECREASE = 2
 };
 
-typedef NS_ENUM(NSUInteger, E_ATTITUDE_TYPE) {
+typedef NS_ENUM(NSInteger, E_ATTITUDE_TYPE) {
     ATT_NULL = 0,
     ATT_BUY = 1,
     ATT_HOLDINGS = 2,
@@ -123,20 +123,20 @@ typedef NS_ENUM(NSUInteger, E_ATTITUDE_TYPE) {
     ATT_UNRATE = 6
 };
 
-typedef NS_ENUM(NSUInteger, E_TAG_TYPE) {
+typedef NS_ENUM(NSInteger, E_TAG_TYPE) {
     E_TT_COMMON = 1,
     E_TT_INTELI_TYPE = 2,
     E_TT_INTELI_DATASOURCE = 3
 };
 
-typedef NS_ENUM(NSUInteger, E_FIN_UNIT) {
+typedef NS_ENUM(NSInteger, E_FIN_UNIT) {
     E_FU_YUAN = 1,
     E_FU_WAN_YUAN = 2,
     E_FU_BAIWAN_YUAN = 3,
     E_FU_YI_YUAN = 4
 };
 
-typedef NS_ENUM(NSUInteger, E_SEC_HIS_SUBJECT_TYPE) {
+typedef NS_ENUM(NSInteger, E_SEC_HIS_SUBJECT_TYPE) {
     E_HIS_SUBJECT_LH = 0,
     E_HIS_SUBJECT_AYH = 1,
     E_HIS_SUBJECT_BOAO = 2
@@ -154,6 +154,7 @@ typedef NS_ENUM(NSUInteger, E_SEC_HIS_SUBJECT_TYPE) {
 @property (nonatomic, strong) NSMutableDictionary* mpDeviceTokens;
 @property (nonatomic, copy) NSString* sTag;
 @property (nonatomic, assign) int32_t iMember;
+@property (nonatomic, assign) BOOL bHWTokenStatus;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -306,6 +307,25 @@ typedef NS_ENUM(NSUInteger, E_SEC_HIS_SUBJECT_TYPE) {
 - (void) write: (BaseEncodeStream *)eos;
 
 - (SecCoordsInfo *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface CityInfo : Message
+
+@property (nonatomic, copy) NSString* sCityName;
+@property (nonatomic, strong) SecCoordsInfo* stCoords;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (CityInfo *) read: (BaseDecodeStream *)dos;
 
 - (NSString *) writeToJsonString;
 
@@ -744,6 +764,8 @@ typedef NS_ENUM(NSUInteger, E_SEC_HIS_SUBJECT_TYPE) {
 @property (nonatomic, copy) NSString* sTransferType;
 @property (nonatomic, copy) NSString* sMarketStartDate;
 @property (nonatomic, copy) NSString* sMarketMakers;
+@property (nonatomic, copy) NSString* sRegistryLocate;
+@property (nonatomic, strong) NSMutableArray* vController;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -764,6 +786,8 @@ typedef NS_ENUM(NSUInteger, E_SEC_HIS_SUBJECT_TYPE) {
 @property (nonatomic, copy) NSString* sTypeName;
 @property (nonatomic, copy) NSString* sSalesRevenue;
 @property (nonatomic, copy) NSString* sRatio;
+@property (nonatomic, assign) float fRatio;
+@property (nonatomic, assign) double dSalesRevenue;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -849,6 +873,7 @@ typedef NS_ENUM(NSUInteger, E_SEC_HIS_SUBJECT_TYPE) {
 @property (nonatomic, copy) NSString* sRatio;
 @property (nonatomic, assign) ShareholderChange eShareholderChange;
 @property (nonatomic, copy) NSString* sChangeDetail;
+@property (nonatomic, copy) NSString* sUniCode;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -870,11 +895,146 @@ typedef NS_ENUM(NSUInteger, E_SEC_HIS_SUBJECT_TYPE) {
 @property (nonatomic, copy) NSString* sRatio;
 @property (nonatomic, assign) ShareholderChange eShareholderChange;
 @property (nonatomic, copy) NSString* sChangeDetail;
+@property (nonatomic, copy) NSString* sUniCode;
 
 
 - (void) write: (BaseEncodeStream *)eos;
 
 - (Fundsholder *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface SeniorExecutive : Message
+
+@property (nonatomic, copy) NSString* sName;
+@property (nonatomic, assign) int32_t iAge;
+@property (nonatomic, copy) NSString* sEdu;
+@property (nonatomic, copy) NSString* sBusiness;
+@property (nonatomic, copy) NSString* sTimeofOffice;
+@property (nonatomic, assign) float fHoldNum;
+@property (nonatomic, assign) float fPay;
+@property (nonatomic, copy) NSString* sIntroduce;
+@property (nonatomic, copy) NSString* sUniCode;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (SeniorExecutive *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface IndustryCompareItem : Message
+
+@property (nonatomic, assign) int32_t iOrder;
+@property (nonatomic, copy) NSString* sName;
+@property (nonatomic, copy) NSString* sValue;
+@property (nonatomic, assign) int32_t iUpdateTime;
+@property (nonatomic, copy) NSString* sDtSecCode;
+@property (nonatomic, assign) double dValue;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (IndustryCompareItem *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface IndustryCompare : Message
+
+@property (nonatomic, copy) NSString* sCompareType;
+@property (nonatomic, copy) NSString* sUpdateTime;
+@property (nonatomic, strong) NSMutableArray* vtCompItem;
+@property (nonatomic, copy) NSString* sAAvgValue;
+@property (nonatomic, assign) double dAAvgValue;
+@property (nonatomic, copy) NSString* sBAvgValue;
+@property (nonatomic, assign) double dBAvgValue;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (IndustryCompare *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface IndustryCompareList : Message
+
+@property (nonatomic, strong) NSMutableArray* vIndustryCompare;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (IndustryCompareList *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface MainHolderDetail : Message
+
+@property (nonatomic, copy) NSString* sDate;
+@property (nonatomic, copy) NSString* sDateDesc;
+@property (nonatomic, assign) float fRate;
+@property (nonatomic, assign) float fPrice;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (MainHolderDetail *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface MainHolder : Message
+
+@property (nonatomic, assign) int32_t iHolders;
+@property (nonatomic, assign) float fTotalCount;
+@property (nonatomic, assign) float fChange;
+@property (nonatomic, assign) float fRate;
+@property (nonatomic, strong) NSMutableArray* vtMainHolderDetail;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (MainHolder *) read: (BaseDecodeStream *)dos;
 
 - (NSString *) writeToJsonString;
 
@@ -897,6 +1057,11 @@ typedef NS_ENUM(NSUInteger, E_SEC_HIS_SUBJECT_TYPE) {
 @property (nonatomic, copy) NSString* sTopShareholderDate;
 @property (nonatomic, copy) NSString* sFundsholderDate;
 @property (nonatomic, strong) NSMutableArray* vPlateInfo;
+@property (nonatomic, strong) NSMutableArray* vtSExecutive;
+@property (nonatomic, strong) NSMutableArray* vtIndustryCompare;
+@property (nonatomic, strong) MainHolder* stMainHolder;
+@property (nonatomic, strong) NSMutableArray* vTopHolder;
+@property (nonatomic, copy) NSString* sTopHolderDate;
 
 
 - (void) write: (BaseEncodeStream *)eos;

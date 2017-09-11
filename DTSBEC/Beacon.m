@@ -18,6 +18,7 @@
         self.mpDeviceTokens = [NSMutableDictionary dictionaryWithCapacity: 0];
         self.sTag = @"";
         self.iMember = 0;
+        self.bHWTokenStatus = true;
     }
 
     return self;
@@ -52,6 +53,7 @@
         [ostream writeString: 7 value: self.sTag];
     }
     [ostream writeInt32: 8 value: self.iMember];
+    [ostream writeBoolean: 9 value: self.bHWTokenStatus];
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -70,6 +72,7 @@
     self.mpDeviceTokens = [istream readMapDef: 6 required: false def: self.mpDeviceTokens VAR_TYPE: [THOTH_MAP CREATE: [THOTH_INT32 class] VT: [THOTH_STRING class]]];
     self.sTag = [istream readStringDef: 7 required: false def: self.sTag];
     self.iMember = [istream readInt32Def: 8 required: false def: self.iMember];
+    self.bHWTokenStatus = [istream readBooleanDef: 9 required: false def: self.bHWTokenStatus];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -92,6 +95,7 @@
     [JsonRoot append:@"mpDeviceTokens" value : [BaseJSON writeMap : self.mpDeviceTokens VAR_TYPE: [THOTH_MAP CREATE: [THOTH_INT32 class] VT: [THOTH_STRING class]]]];
     [JsonRoot append:@"sTag" value : [BaseJSON writeString : self.sTag]];
     [JsonRoot append:@"iMember" value : [BaseJSON writeInt32 : self.iMember]];
+    [JsonRoot append:@"bHWTokenStatus" value : [BaseJSON writeBoolean : self.bHWTokenStatus]];
     return JsonRoot;
 }
 
@@ -106,6 +110,7 @@
     self.mpDeviceTokens = [BaseJSON readMapDef:[RootMap objectForKey:@"mpDeviceTokens"] required:false def:self.mpDeviceTokens VAR_TYPE: [THOTH_MAP CREATE: [THOTH_INT32 class] VT: [THOTH_STRING class]]];
     self.sTag = [BaseJSON readStringDef:[RootMap objectForKey:@"sTag"] required:false def:self.sTag];
     self.iMember = [BaseJSON readInt32Def:[RootMap objectForKey:@"iMember"] required:false def:self.iMember];
+    self.bHWTokenStatus = [BaseJSON readBooleanDef:[RootMap objectForKey:@"bHWTokenStatus"] required:false def:self.bHWTokenStatus];
     return self;
 }
 
@@ -696,6 +701,76 @@
 {
     self.sLongitude = [BaseJSON readStringDef:[RootMap objectForKey:@"sLongitude"] required:false def:self.sLongitude];
     self.sLatitude = [BaseJSON readStringDef:[RootMap objectForKey:@"sLatitude"] required:false def:self.sLatitude];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation CityInfo
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.sCityName = @"";
+        self.stCoords = [[SecCoordsInfo alloc] init];
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.sCityName != nil)
+    {
+        [ostream writeString: 0 value: self.sCityName];
+    }
+    if (self.stCoords != nil)
+    {
+        [ostream writeMessage: 1 value: self.stCoords];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (CityInfo *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.sCityName = [istream readStringDef: 0 required: false def: self.sCityName];
+    self.stCoords = (SecCoordsInfo*)[istream readMessageDef: 1 required: false def: self.stCoords VAR_TYPE: [SecCoordsInfo class]];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"sCityName" value : [BaseJSON writeString : self.sCityName]];
+    [JsonRoot append:@"stCoords" value : [BaseJSON writeMessage : self.stCoords]];
+    return JsonRoot;
+}
+
+- (CityInfo *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.sCityName = [BaseJSON readStringDef:[RootMap objectForKey:@"sCityName"] required:false def:self.sCityName];
+    self.stCoords = [BaseJSON readMessageDef:[RootMap objectForKey:@"stCoords"] required:false def:self.stCoords VAR_TYPE: [SecCoordsInfo class]];
     return self;
 }
 
@@ -2341,6 +2416,8 @@
         self.sTransferType = @"";
         self.sMarketStartDate = @"";
         self.sMarketMakers = @"";
+        self.sRegistryLocate = @"";
+        self.vController = [NSMutableArray arrayWithCapacity:0];
     }
 
     return self;
@@ -2407,6 +2484,14 @@
     {
         [ostream writeString: 13 value: self.sMarketMakers];
     }
+    if (self.sRegistryLocate != nil)
+    {
+        [ostream writeString: 14 value: self.sRegistryLocate];
+    }
+    if (self.vController != nil)
+    {
+        [ostream writeList: 15 value: self.vController VAR_TYPE: [THOTH_LIST CREATE: [THOTH_STRING class]]];
+    }
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -2430,6 +2515,8 @@
     self.sTransferType = [istream readStringDef: 11 required: false def: self.sTransferType];
     self.sMarketStartDate = [istream readStringDef: 12 required: false def: self.sMarketStartDate];
     self.sMarketMakers = [istream readStringDef: 13 required: false def: self.sMarketMakers];
+    self.sRegistryLocate = [istream readStringDef: 14 required: false def: self.sRegistryLocate];
+    self.vController = [istream readListDef: 15 required: false def: self.vController VAR_TYPE: [THOTH_LIST CREATE: [THOTH_STRING class]]];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -2457,6 +2544,8 @@
     [JsonRoot append:@"sTransferType" value : [BaseJSON writeString : self.sTransferType]];
     [JsonRoot append:@"sMarketStartDate" value : [BaseJSON writeString : self.sMarketStartDate]];
     [JsonRoot append:@"sMarketMakers" value : [BaseJSON writeString : self.sMarketMakers]];
+    [JsonRoot append:@"sRegistryLocate" value : [BaseJSON writeString : self.sRegistryLocate]];
+    [JsonRoot append:@"vController" value : [BaseJSON writeList : self.vController VAR_TYPE: [THOTH_LIST CREATE: [THOTH_STRING class]]]];
     return JsonRoot;
 }
 
@@ -2476,6 +2565,8 @@
     self.sTransferType = [BaseJSON readStringDef:[RootMap objectForKey:@"sTransferType"] required:false def:self.sTransferType];
     self.sMarketStartDate = [BaseJSON readStringDef:[RootMap objectForKey:@"sMarketStartDate"] required:false def:self.sMarketStartDate];
     self.sMarketMakers = [BaseJSON readStringDef:[RootMap objectForKey:@"sMarketMakers"] required:false def:self.sMarketMakers];
+    self.sRegistryLocate = [BaseJSON readStringDef:[RootMap objectForKey:@"sRegistryLocate"] required:false def:self.sRegistryLocate];
+    self.vController = [BaseJSON readListDef:[RootMap objectForKey:@"vController"] required:false def:self.vController VAR_TYPE: [THOTH_LIST CREATE: [THOTH_STRING class]]];
     return self;
 }
 
@@ -2496,6 +2587,8 @@
         self.sTypeName = @"";
         self.sSalesRevenue = @"";
         self.sRatio = @"";
+        self.fRatio = 0;
+        self.dSalesRevenue = 0;
     }
 
     return self;
@@ -2518,6 +2611,8 @@
     {
         [ostream writeString: 2 value: self.sRatio];
     }
+    [ostream writeFloat: 3 value: self.fRatio];
+    [ostream writeDouble: 4 value: self.dSalesRevenue];
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -2530,6 +2625,8 @@
     self.sTypeName = [istream readStringDef: 0 required: false def: self.sTypeName];
     self.sSalesRevenue = [istream readStringDef: 1 required: false def: self.sSalesRevenue];
     self.sRatio = [istream readStringDef: 2 required: false def: self.sRatio];
+    self.fRatio = [istream readFloatDef: 3 required: false def: self.fRatio];
+    self.dSalesRevenue = [istream readDoubleDef: 4 required: false def: self.dSalesRevenue];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -2546,6 +2643,8 @@
     [JsonRoot append:@"sTypeName" value : [BaseJSON writeString : self.sTypeName]];
     [JsonRoot append:@"sSalesRevenue" value : [BaseJSON writeString : self.sSalesRevenue]];
     [JsonRoot append:@"sRatio" value : [BaseJSON writeString : self.sRatio]];
+    [JsonRoot append:@"fRatio" value : [BaseJSON writeFloat : self.fRatio]];
+    [JsonRoot append:@"dSalesRevenue" value : [BaseJSON writeDouble : self.dSalesRevenue]];
     return JsonRoot;
 }
 
@@ -2554,6 +2653,8 @@
     self.sTypeName = [BaseJSON readStringDef:[RootMap objectForKey:@"sTypeName"] required:false def:self.sTypeName];
     self.sSalesRevenue = [BaseJSON readStringDef:[RootMap objectForKey:@"sSalesRevenue"] required:false def:self.sSalesRevenue];
     self.sRatio = [BaseJSON readStringDef:[RootMap objectForKey:@"sRatio"] required:false def:self.sRatio];
+    self.fRatio = [BaseJSON readFloatDef:[RootMap objectForKey:@"fRatio"] required:false def:self.fRatio];
+    self.dSalesRevenue = [BaseJSON readDoubleDef:[RootMap objectForKey:@"dSalesRevenue"] required:false def:self.dSalesRevenue];
     return self;
 }
 
@@ -2835,6 +2936,7 @@
         self.sRatio = @"";
         self.eShareholderChange = SHC_UNCHANGE;
         self.sChangeDetail = @"";
+        self.sUniCode = @"";
     }
 
     return self;
@@ -2858,6 +2960,10 @@
     {
         [ostream writeString: 3 value: self.sChangeDetail];
     }
+    if (self.sUniCode != nil)
+    {
+        [ostream writeString: 4 value: self.sUniCode];
+    }
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -2871,6 +2977,7 @@
     self.sRatio = [istream readStringDef: 1 required: false def: self.sRatio];
     self.eShareholderChange = [istream readInt32Def: 2 required: false def: (int32_t)self.eShareholderChange];
     self.sChangeDetail = [istream readStringDef: 3 required: false def: self.sChangeDetail];
+    self.sUniCode = [istream readStringDef: 4 required: false def: self.sUniCode];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -2888,6 +2995,7 @@
     [JsonRoot append:@"sRatio" value : [BaseJSON writeString : self.sRatio]];
     [JsonRoot append:@"eShareholderChange" value : [BaseJSON writeInt32 : (int32_t)self.eShareholderChange]];
     [JsonRoot append:@"sChangeDetail" value : [BaseJSON writeString : self.sChangeDetail]];
+    [JsonRoot append:@"sUniCode" value : [BaseJSON writeString : self.sUniCode]];
     return JsonRoot;
 }
 
@@ -2897,6 +3005,7 @@
     self.sRatio = [BaseJSON readStringDef:[RootMap objectForKey:@"sRatio"] required:false def:self.sRatio];
     self.eShareholderChange = [BaseJSON readInt32Def:[RootMap objectForKey:@"eShareholderChange"] required:false def:(int32_t)self.eShareholderChange];
     self.sChangeDetail = [BaseJSON readStringDef:[RootMap objectForKey:@"sChangeDetail"] required:false def:self.sChangeDetail];
+    self.sUniCode = [BaseJSON readStringDef:[RootMap objectForKey:@"sUniCode"] required:false def:self.sUniCode];
     return self;
 }
 
@@ -2918,6 +3027,7 @@
         self.sRatio = @"";
         self.eShareholderChange = SHC_UNCHANGE;
         self.sChangeDetail = @"";
+        self.sUniCode = @"";
     }
 
     return self;
@@ -2941,6 +3051,10 @@
     {
         [ostream writeString: 3 value: self.sChangeDetail];
     }
+    if (self.sUniCode != nil)
+    {
+        [ostream writeString: 4 value: self.sUniCode];
+    }
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -2954,6 +3068,7 @@
     self.sRatio = [istream readStringDef: 1 required: false def: self.sRatio];
     self.eShareholderChange = [istream readInt32Def: 2 required: false def: (int32_t)self.eShareholderChange];
     self.sChangeDetail = [istream readStringDef: 3 required: false def: self.sChangeDetail];
+    self.sUniCode = [istream readStringDef: 4 required: false def: self.sUniCode];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -2971,6 +3086,7 @@
     [JsonRoot append:@"sRatio" value : [BaseJSON writeString : self.sRatio]];
     [JsonRoot append:@"eShareholderChange" value : [BaseJSON writeInt32 : (int32_t)self.eShareholderChange]];
     [JsonRoot append:@"sChangeDetail" value : [BaseJSON writeString : self.sChangeDetail]];
+    [JsonRoot append:@"sUniCode" value : [BaseJSON writeString : self.sUniCode]];
     return JsonRoot;
 }
 
@@ -2980,6 +3096,545 @@
     self.sRatio = [BaseJSON readStringDef:[RootMap objectForKey:@"sRatio"] required:false def:self.sRatio];
     self.eShareholderChange = [BaseJSON readInt32Def:[RootMap objectForKey:@"eShareholderChange"] required:false def:(int32_t)self.eShareholderChange];
     self.sChangeDetail = [BaseJSON readStringDef:[RootMap objectForKey:@"sChangeDetail"] required:false def:self.sChangeDetail];
+    self.sUniCode = [BaseJSON readStringDef:[RootMap objectForKey:@"sUniCode"] required:false def:self.sUniCode];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation SeniorExecutive
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.sName = @"";
+        self.iAge = 0;
+        self.sEdu = @"";
+        self.sBusiness = @"";
+        self.sTimeofOffice = @"";
+        self.fHoldNum = 0;
+        self.fPay = 0;
+        self.sIntroduce = @"";
+        self.sUniCode = @"";
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.sName != nil)
+    {
+        [ostream writeString: 0 value: self.sName];
+    }
+    [ostream writeInt32: 1 value: self.iAge];
+    if (self.sEdu != nil)
+    {
+        [ostream writeString: 2 value: self.sEdu];
+    }
+    if (self.sBusiness != nil)
+    {
+        [ostream writeString: 3 value: self.sBusiness];
+    }
+    if (self.sTimeofOffice != nil)
+    {
+        [ostream writeString: 4 value: self.sTimeofOffice];
+    }
+    [ostream writeFloat: 5 value: self.fHoldNum];
+    [ostream writeFloat: 6 value: self.fPay];
+    if (self.sIntroduce != nil)
+    {
+        [ostream writeString: 7 value: self.sIntroduce];
+    }
+    if (self.sUniCode != nil)
+    {
+        [ostream writeString: 8 value: self.sUniCode];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (SeniorExecutive *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.sName = [istream readStringDef: 0 required: false def: self.sName];
+    self.iAge = [istream readInt32Def: 1 required: false def: self.iAge];
+    self.sEdu = [istream readStringDef: 2 required: false def: self.sEdu];
+    self.sBusiness = [istream readStringDef: 3 required: false def: self.sBusiness];
+    self.sTimeofOffice = [istream readStringDef: 4 required: false def: self.sTimeofOffice];
+    self.fHoldNum = [istream readFloatDef: 5 required: false def: self.fHoldNum];
+    self.fPay = [istream readFloatDef: 6 required: false def: self.fPay];
+    self.sIntroduce = [istream readStringDef: 7 required: false def: self.sIntroduce];
+    self.sUniCode = [istream readStringDef: 8 required: false def: self.sUniCode];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"sName" value : [BaseJSON writeString : self.sName]];
+    [JsonRoot append:@"iAge" value : [BaseJSON writeInt32 : self.iAge]];
+    [JsonRoot append:@"sEdu" value : [BaseJSON writeString : self.sEdu]];
+    [JsonRoot append:@"sBusiness" value : [BaseJSON writeString : self.sBusiness]];
+    [JsonRoot append:@"sTimeofOffice" value : [BaseJSON writeString : self.sTimeofOffice]];
+    [JsonRoot append:@"fHoldNum" value : [BaseJSON writeFloat : self.fHoldNum]];
+    [JsonRoot append:@"fPay" value : [BaseJSON writeFloat : self.fPay]];
+    [JsonRoot append:@"sIntroduce" value : [BaseJSON writeString : self.sIntroduce]];
+    [JsonRoot append:@"sUniCode" value : [BaseJSON writeString : self.sUniCode]];
+    return JsonRoot;
+}
+
+- (SeniorExecutive *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.sName = [BaseJSON readStringDef:[RootMap objectForKey:@"sName"] required:false def:self.sName];
+    self.iAge = [BaseJSON readInt32Def:[RootMap objectForKey:@"iAge"] required:false def:self.iAge];
+    self.sEdu = [BaseJSON readStringDef:[RootMap objectForKey:@"sEdu"] required:false def:self.sEdu];
+    self.sBusiness = [BaseJSON readStringDef:[RootMap objectForKey:@"sBusiness"] required:false def:self.sBusiness];
+    self.sTimeofOffice = [BaseJSON readStringDef:[RootMap objectForKey:@"sTimeofOffice"] required:false def:self.sTimeofOffice];
+    self.fHoldNum = [BaseJSON readFloatDef:[RootMap objectForKey:@"fHoldNum"] required:false def:self.fHoldNum];
+    self.fPay = [BaseJSON readFloatDef:[RootMap objectForKey:@"fPay"] required:false def:self.fPay];
+    self.sIntroduce = [BaseJSON readStringDef:[RootMap objectForKey:@"sIntroduce"] required:false def:self.sIntroduce];
+    self.sUniCode = [BaseJSON readStringDef:[RootMap objectForKey:@"sUniCode"] required:false def:self.sUniCode];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation IndustryCompareItem
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.iOrder = 0;
+        self.sName = @"";
+        self.sValue = @"";
+        self.iUpdateTime = 0;
+        self.sDtSecCode = @"";
+        self.dValue = 0;
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    [ostream writeInt32: 0 value: self.iOrder];
+    if (self.sName != nil)
+    {
+        [ostream writeString: 1 value: self.sName];
+    }
+    if (self.sValue != nil)
+    {
+        [ostream writeString: 2 value: self.sValue];
+    }
+    [ostream writeInt32: 3 value: self.iUpdateTime];
+    if (self.sDtSecCode != nil)
+    {
+        [ostream writeString: 4 value: self.sDtSecCode];
+    }
+    [ostream writeDouble: 5 value: self.dValue];
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (IndustryCompareItem *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.iOrder = [istream readInt32Def: 0 required: false def: self.iOrder];
+    self.sName = [istream readStringDef: 1 required: false def: self.sName];
+    self.sValue = [istream readStringDef: 2 required: false def: self.sValue];
+    self.iUpdateTime = [istream readInt32Def: 3 required: false def: self.iUpdateTime];
+    self.sDtSecCode = [istream readStringDef: 4 required: false def: self.sDtSecCode];
+    self.dValue = [istream readDoubleDef: 5 required: false def: self.dValue];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"iOrder" value : [BaseJSON writeInt32 : self.iOrder]];
+    [JsonRoot append:@"sName" value : [BaseJSON writeString : self.sName]];
+    [JsonRoot append:@"sValue" value : [BaseJSON writeString : self.sValue]];
+    [JsonRoot append:@"iUpdateTime" value : [BaseJSON writeInt32 : self.iUpdateTime]];
+    [JsonRoot append:@"sDtSecCode" value : [BaseJSON writeString : self.sDtSecCode]];
+    [JsonRoot append:@"dValue" value : [BaseJSON writeDouble : self.dValue]];
+    return JsonRoot;
+}
+
+- (IndustryCompareItem *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.iOrder = [BaseJSON readInt32Def:[RootMap objectForKey:@"iOrder"] required:false def:self.iOrder];
+    self.sName = [BaseJSON readStringDef:[RootMap objectForKey:@"sName"] required:false def:self.sName];
+    self.sValue = [BaseJSON readStringDef:[RootMap objectForKey:@"sValue"] required:false def:self.sValue];
+    self.iUpdateTime = [BaseJSON readInt32Def:[RootMap objectForKey:@"iUpdateTime"] required:false def:self.iUpdateTime];
+    self.sDtSecCode = [BaseJSON readStringDef:[RootMap objectForKey:@"sDtSecCode"] required:false def:self.sDtSecCode];
+    self.dValue = [BaseJSON readDoubleDef:[RootMap objectForKey:@"dValue"] required:false def:self.dValue];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation IndustryCompare
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.sCompareType = @"";
+        self.sUpdateTime = @"";
+        self.vtCompItem = [NSMutableArray arrayWithCapacity:0];
+        self.sAAvgValue = @"";
+        self.dAAvgValue = 0;
+        self.sBAvgValue = @"";
+        self.dBAvgValue = 0;
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.sCompareType != nil)
+    {
+        [ostream writeString: 0 value: self.sCompareType];
+    }
+    if (self.sUpdateTime != nil)
+    {
+        [ostream writeString: 1 value: self.sUpdateTime];
+    }
+    if (self.vtCompItem != nil)
+    {
+        [ostream writeList: 2 value: self.vtCompItem VAR_TYPE: [THOTH_LIST CREATE: [IndustryCompareItem class]]];
+    }
+    if (self.sAAvgValue != nil)
+    {
+        [ostream writeString: 3 value: self.sAAvgValue];
+    }
+    [ostream writeDouble: 4 value: self.dAAvgValue];
+    if (self.sBAvgValue != nil)
+    {
+        [ostream writeString: 5 value: self.sBAvgValue];
+    }
+    [ostream writeDouble: 6 value: self.dBAvgValue];
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (IndustryCompare *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.sCompareType = [istream readStringDef: 0 required: false def: self.sCompareType];
+    self.sUpdateTime = [istream readStringDef: 1 required: false def: self.sUpdateTime];
+    self.vtCompItem = [istream readListDef: 2 required: false def: self.vtCompItem VAR_TYPE: [THOTH_LIST CREATE: [IndustryCompareItem class]]];
+    self.sAAvgValue = [istream readStringDef: 3 required: false def: self.sAAvgValue];
+    self.dAAvgValue = [istream readDoubleDef: 4 required: false def: self.dAAvgValue];
+    self.sBAvgValue = [istream readStringDef: 5 required: false def: self.sBAvgValue];
+    self.dBAvgValue = [istream readDoubleDef: 6 required: false def: self.dBAvgValue];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"sCompareType" value : [BaseJSON writeString : self.sCompareType]];
+    [JsonRoot append:@"sUpdateTime" value : [BaseJSON writeString : self.sUpdateTime]];
+    [JsonRoot append:@"vtCompItem" value : [BaseJSON writeList : self.vtCompItem VAR_TYPE: [THOTH_LIST CREATE: [IndustryCompareItem class]]]];
+    [JsonRoot append:@"sAAvgValue" value : [BaseJSON writeString : self.sAAvgValue]];
+    [JsonRoot append:@"dAAvgValue" value : [BaseJSON writeDouble : self.dAAvgValue]];
+    [JsonRoot append:@"sBAvgValue" value : [BaseJSON writeString : self.sBAvgValue]];
+    [JsonRoot append:@"dBAvgValue" value : [BaseJSON writeDouble : self.dBAvgValue]];
+    return JsonRoot;
+}
+
+- (IndustryCompare *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.sCompareType = [BaseJSON readStringDef:[RootMap objectForKey:@"sCompareType"] required:false def:self.sCompareType];
+    self.sUpdateTime = [BaseJSON readStringDef:[RootMap objectForKey:@"sUpdateTime"] required:false def:self.sUpdateTime];
+    self.vtCompItem = [BaseJSON readListDef:[RootMap objectForKey:@"vtCompItem"] required:false def:self.vtCompItem VAR_TYPE: [THOTH_LIST CREATE: [IndustryCompareItem class]]];
+    self.sAAvgValue = [BaseJSON readStringDef:[RootMap objectForKey:@"sAAvgValue"] required:false def:self.sAAvgValue];
+    self.dAAvgValue = [BaseJSON readDoubleDef:[RootMap objectForKey:@"dAAvgValue"] required:false def:self.dAAvgValue];
+    self.sBAvgValue = [BaseJSON readStringDef:[RootMap objectForKey:@"sBAvgValue"] required:false def:self.sBAvgValue];
+    self.dBAvgValue = [BaseJSON readDoubleDef:[RootMap objectForKey:@"dBAvgValue"] required:false def:self.dBAvgValue];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation IndustryCompareList
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.vIndustryCompare = [NSMutableArray arrayWithCapacity:0];
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.vIndustryCompare != nil)
+    {
+        [ostream writeList: 0 value: self.vIndustryCompare VAR_TYPE: [THOTH_LIST CREATE: [IndustryCompare class]]];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (IndustryCompareList *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.vIndustryCompare = [istream readListDef: 0 required: false def: self.vIndustryCompare VAR_TYPE: [THOTH_LIST CREATE: [IndustryCompare class]]];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"vIndustryCompare" value : [BaseJSON writeList : self.vIndustryCompare VAR_TYPE: [THOTH_LIST CREATE: [IndustryCompare class]]]];
+    return JsonRoot;
+}
+
+- (IndustryCompareList *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.vIndustryCompare = [BaseJSON readListDef:[RootMap objectForKey:@"vIndustryCompare"] required:false def:self.vIndustryCompare VAR_TYPE: [THOTH_LIST CREATE: [IndustryCompare class]]];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation MainHolderDetail
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.sDate = @"";
+        self.sDateDesc = @"";
+        self.fRate = 0;
+        self.fPrice = 0;
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    if (self.sDate != nil)
+    {
+        [ostream writeString: 0 value: self.sDate];
+    }
+    if (self.sDateDesc != nil)
+    {
+        [ostream writeString: 1 value: self.sDateDesc];
+    }
+    [ostream writeFloat: 2 value: self.fRate];
+    [ostream writeFloat: 3 value: self.fPrice];
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (MainHolderDetail *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.sDate = [istream readStringDef: 0 required: false def: self.sDate];
+    self.sDateDesc = [istream readStringDef: 1 required: false def: self.sDateDesc];
+    self.fRate = [istream readFloatDef: 2 required: false def: self.fRate];
+    self.fPrice = [istream readFloatDef: 3 required: false def: self.fPrice];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"sDate" value : [BaseJSON writeString : self.sDate]];
+    [JsonRoot append:@"sDateDesc" value : [BaseJSON writeString : self.sDateDesc]];
+    [JsonRoot append:@"fRate" value : [BaseJSON writeFloat : self.fRate]];
+    [JsonRoot append:@"fPrice" value : [BaseJSON writeFloat : self.fPrice]];
+    return JsonRoot;
+}
+
+- (MainHolderDetail *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.sDate = [BaseJSON readStringDef:[RootMap objectForKey:@"sDate"] required:false def:self.sDate];
+    self.sDateDesc = [BaseJSON readStringDef:[RootMap objectForKey:@"sDateDesc"] required:false def:self.sDateDesc];
+    self.fRate = [BaseJSON readFloatDef:[RootMap objectForKey:@"fRate"] required:false def:self.fRate];
+    self.fPrice = [BaseJSON readFloatDef:[RootMap objectForKey:@"fPrice"] required:false def:self.fPrice];
+    return self;
+}
+
+- (void) readFromJsonString : (NSString *) strJson
+{
+    JSONValueMessage * JsonRoot = [BaseJSON readJSON: strJson];
+    [self readFromMap: JsonRoot.mTemp];
+}
+
+@end
+
+//////////////////////////////////////////////////////////////
+@implementation MainHolder
+- (id) init
+{
+    if (self = [super init])
+    {
+        self.iHolders = 0;
+        self.fTotalCount = 0;
+        self.fChange = 0;
+        self.fRate = 0;
+        self.vtMainHolderDetail = [NSMutableArray arrayWithCapacity:0];
+    }
+
+    return self;
+}
+
+- (void) write: (BaseEncodeStream *)ostream
+{
+    int _THOTH_BASESTREAM_LASTID_ = ostream.lastid;
+    ostream.lastid = 0;
+
+    [ostream writeInt32: 0 value: self.iHolders];
+    [ostream writeFloat: 1 value: self.fTotalCount];
+    [ostream writeFloat: 2 value: self.fChange];
+    [ostream writeFloat: 3 value: self.fRate];
+    if (self.vtMainHolderDetail != nil)
+    {
+        [ostream writeList: 4 value: self.vtMainHolderDetail VAR_TYPE: [THOTH_LIST CREATE: [MainHolderDetail class]]];
+    }
+    
+    ostream.lastid = _THOTH_BASESTREAM_LASTID_;
+}
+
+- (MainHolder *) read: (BaseDecodeStream *)istream
+{
+    int _THOTH_BASESTREAM_LASTID_ = istream.lastid;
+    istream.lastid = 0;
+
+    self.iHolders = [istream readInt32Def: 0 required: false def: self.iHolders];
+    self.fTotalCount = [istream readFloatDef: 1 required: false def: self.fTotalCount];
+    self.fChange = [istream readFloatDef: 2 required: false def: self.fChange];
+    self.fRate = [istream readFloatDef: 3 required: false def: self.fRate];
+    self.vtMainHolderDetail = [istream readListDef: 4 required: false def: self.vtMainHolderDetail VAR_TYPE: [THOTH_LIST CREATE: [MainHolderDetail class]]];
+    
+    istream.lastid = _THOTH_BASESTREAM_LASTID_;
+    return self;
+}
+
+- (NSString *) writeToJsonString
+{
+    return [BaseJSON MessageToJson : [self writeJSON]];
+}
+
+- (JSONValueMessage *) writeJSON
+{
+    JSONValueMessage * JsonRoot = [[JSONValueMessage alloc] init];
+    [JsonRoot append:@"iHolders" value : [BaseJSON writeInt32 : self.iHolders]];
+    [JsonRoot append:@"fTotalCount" value : [BaseJSON writeFloat : self.fTotalCount]];
+    [JsonRoot append:@"fChange" value : [BaseJSON writeFloat : self.fChange]];
+    [JsonRoot append:@"fRate" value : [BaseJSON writeFloat : self.fRate]];
+    [JsonRoot append:@"vtMainHolderDetail" value : [BaseJSON writeList : self.vtMainHolderDetail VAR_TYPE: [THOTH_LIST CREATE: [MainHolderDetail class]]]];
+    return JsonRoot;
+}
+
+- (MainHolder *) readFromMap : (NSMutableDictionary *) RootMap
+{
+    self.iHolders = [BaseJSON readInt32Def:[RootMap objectForKey:@"iHolders"] required:false def:self.iHolders];
+    self.fTotalCount = [BaseJSON readFloatDef:[RootMap objectForKey:@"fTotalCount"] required:false def:self.fTotalCount];
+    self.fChange = [BaseJSON readFloatDef:[RootMap objectForKey:@"fChange"] required:false def:self.fChange];
+    self.fRate = [BaseJSON readFloatDef:[RootMap objectForKey:@"fRate"] required:false def:self.fRate];
+    self.vtMainHolderDetail = [BaseJSON readListDef:[RootMap objectForKey:@"vtMainHolderDetail"] required:false def:self.vtMainHolderDetail VAR_TYPE: [THOTH_LIST CREATE: [MainHolderDetail class]]];
     return self;
 }
 
@@ -3007,6 +3662,11 @@
         self.sTopShareholderDate = @"";
         self.sFundsholderDate = @"";
         self.vPlateInfo = [NSMutableArray arrayWithCapacity:0];
+        self.vtSExecutive = [NSMutableArray arrayWithCapacity:0];
+        self.vtIndustryCompare = [NSMutableArray arrayWithCapacity:0];
+        self.stMainHolder = [[MainHolder alloc] init];
+        self.vTopHolder = [NSMutableArray arrayWithCapacity:0];
+        self.sTopHolderDate = @"";
     }
 
     return self;
@@ -3057,6 +3717,26 @@
     {
         [ostream writeList: 9 value: self.vPlateInfo VAR_TYPE: [THOTH_LIST CREATE: [PlateInfo class]]];
     }
+    if (self.vtSExecutive != nil)
+    {
+        [ostream writeList: 10 value: self.vtSExecutive VAR_TYPE: [THOTH_LIST CREATE: [SeniorExecutive class]]];
+    }
+    if (self.vtIndustryCompare != nil)
+    {
+        [ostream writeList: 11 value: self.vtIndustryCompare VAR_TYPE: [THOTH_LIST CREATE: [IndustryCompare class]]];
+    }
+    if (self.stMainHolder != nil)
+    {
+        [ostream writeMessage: 12 value: self.stMainHolder];
+    }
+    if (self.vTopHolder != nil)
+    {
+        [ostream writeList: 13 value: self.vTopHolder VAR_TYPE: [THOTH_LIST CREATE: [TopShareholder class]]];
+    }
+    if (self.sTopHolderDate != nil)
+    {
+        [ostream writeString: 14 value: self.sTopHolderDate];
+    }
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -3076,6 +3756,11 @@
     self.sTopShareholderDate = [istream readStringDef: 7 required: false def: self.sTopShareholderDate];
     self.sFundsholderDate = [istream readStringDef: 8 required: false def: self.sFundsholderDate];
     self.vPlateInfo = [istream readListDef: 9 required: false def: self.vPlateInfo VAR_TYPE: [THOTH_LIST CREATE: [PlateInfo class]]];
+    self.vtSExecutive = [istream readListDef: 10 required: false def: self.vtSExecutive VAR_TYPE: [THOTH_LIST CREATE: [SeniorExecutive class]]];
+    self.vtIndustryCompare = [istream readListDef: 11 required: false def: self.vtIndustryCompare VAR_TYPE: [THOTH_LIST CREATE: [IndustryCompare class]]];
+    self.stMainHolder = (MainHolder*)[istream readMessageDef: 12 required: false def: self.stMainHolder VAR_TYPE: [MainHolder class]];
+    self.vTopHolder = [istream readListDef: 13 required: false def: self.vTopHolder VAR_TYPE: [THOTH_LIST CREATE: [TopShareholder class]]];
+    self.sTopHolderDate = [istream readStringDef: 14 required: false def: self.sTopHolderDate];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -3099,6 +3784,11 @@
     [JsonRoot append:@"sTopShareholderDate" value : [BaseJSON writeString : self.sTopShareholderDate]];
     [JsonRoot append:@"sFundsholderDate" value : [BaseJSON writeString : self.sFundsholderDate]];
     [JsonRoot append:@"vPlateInfo" value : [BaseJSON writeList : self.vPlateInfo VAR_TYPE: [THOTH_LIST CREATE: [PlateInfo class]]]];
+    [JsonRoot append:@"vtSExecutive" value : [BaseJSON writeList : self.vtSExecutive VAR_TYPE: [THOTH_LIST CREATE: [SeniorExecutive class]]]];
+    [JsonRoot append:@"vtIndustryCompare" value : [BaseJSON writeList : self.vtIndustryCompare VAR_TYPE: [THOTH_LIST CREATE: [IndustryCompare class]]]];
+    [JsonRoot append:@"stMainHolder" value : [BaseJSON writeMessage : self.stMainHolder]];
+    [JsonRoot append:@"vTopHolder" value : [BaseJSON writeList : self.vTopHolder VAR_TYPE: [THOTH_LIST CREATE: [TopShareholder class]]]];
+    [JsonRoot append:@"sTopHolderDate" value : [BaseJSON writeString : self.sTopHolderDate]];
     return JsonRoot;
 }
 
@@ -3114,6 +3804,11 @@
     self.sTopShareholderDate = [BaseJSON readStringDef:[RootMap objectForKey:@"sTopShareholderDate"] required:false def:self.sTopShareholderDate];
     self.sFundsholderDate = [BaseJSON readStringDef:[RootMap objectForKey:@"sFundsholderDate"] required:false def:self.sFundsholderDate];
     self.vPlateInfo = [BaseJSON readListDef:[RootMap objectForKey:@"vPlateInfo"] required:false def:self.vPlateInfo VAR_TYPE: [THOTH_LIST CREATE: [PlateInfo class]]];
+    self.vtSExecutive = [BaseJSON readListDef:[RootMap objectForKey:@"vtSExecutive"] required:false def:self.vtSExecutive VAR_TYPE: [THOTH_LIST CREATE: [SeniorExecutive class]]];
+    self.vtIndustryCompare = [BaseJSON readListDef:[RootMap objectForKey:@"vtIndustryCompare"] required:false def:self.vtIndustryCompare VAR_TYPE: [THOTH_LIST CREATE: [IndustryCompare class]]];
+    self.stMainHolder = [BaseJSON readMessageDef:[RootMap objectForKey:@"stMainHolder"] required:false def:self.stMainHolder VAR_TYPE: [MainHolder class]];
+    self.vTopHolder = [BaseJSON readListDef:[RootMap objectForKey:@"vTopHolder"] required:false def:self.vTopHolder VAR_TYPE: [THOTH_LIST CREATE: [TopShareholder class]]];
+    self.sTopHolderDate = [BaseJSON readStringDef:[RootMap objectForKey:@"sTopHolderDate"] required:false def:self.sTopHolderDate];
     return self;
 }
 

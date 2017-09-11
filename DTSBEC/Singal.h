@@ -7,26 +7,26 @@
 #import "Account.h"
 #import "Quote.h"
 
-typedef NS_ENUM(NSUInteger, E_IPS_BACKGROUND_TYPE) {
+typedef NS_ENUM(NSInteger, E_IPS_BACKGROUND_TYPE) {
     E_IBT_TECH = 1,
     E_IBT_BASIC = 2,
     E_IBT_MESSAGE = 3
 };
 
-typedef NS_ENUM(NSUInteger, E_IPS_STYLE) {
+typedef NS_ENUM(NSInteger, E_IPS_STYLE) {
     E_IPS_SCALPING = 0,
     E_IPS_SHORT = 1,
     E_IPS_MIDDLE = 2,
     E_IPS_LONG = 3
 };
 
-typedef NS_ENUM(NSUInteger, E_STRATEGY_RANK_TYPE) {
+typedef NS_ENUM(NSInteger, E_STRATEGY_RANK_TYPE) {
     E_SRT_HOT = 1,
     E_SRT_PROFIT = 2,
     E_SRT_WIN = 3
 };
 
-typedef NS_ENUM(NSUInteger, E_SEARCH_CONDITION) {
+typedef NS_ENUM(NSInteger, E_SEARCH_CONDITION) {
     E_SEARCH_CDT_ALL = 0,
     E_SEARCH_CDT_INCREASE = 1,
     E_SEARCH_CDT_SUCCPERCENT = 2,
@@ -35,13 +35,13 @@ typedef NS_ENUM(NSUInteger, E_SEARCH_CONDITION) {
     E_SEARCH_CDT_SOURCE = 5
 };
 
-typedef NS_ENUM(NSUInteger, E_STRATEGY_SUB_ACTION) {
+typedef NS_ENUM(NSInteger, E_STRATEGY_SUB_ACTION) {
     E_SSA_ADD = 1,
     E_SSA_DEL = 2,
     E_SSA_CHECK = 3
 };
 
-typedef NS_ENUM(NSUInteger, E_STRATEGY_SUB_RESULT) {
+typedef NS_ENUM(NSInteger, E_STRATEGY_SUB_RESULT) {
     E_SSR_SUCC = 0,
     E_SSR_EXISTS = 1,
     E_SSR_SAME_NAME = 2,
@@ -49,7 +49,7 @@ typedef NS_ENUM(NSUInteger, E_STRATEGY_SUB_RESULT) {
     E_SSR_UNSUB = 4
 };
 
-typedef NS_ENUM(NSUInteger, E_IPO_STATUS) {
+typedef NS_ENUM(NSInteger, E_IPO_STATUS) {
     E_IPO_ALL = 0,
     E_IPO_FUTURE = 1,
     E_IPO_DOING = 2,
@@ -59,7 +59,7 @@ typedef NS_ENUM(NSUInteger, E_IPO_STATUS) {
     E_IPO_PAY_IN = 6
 };
 
-typedef NS_ENUM(NSUInteger, DT_ACTIVITY_TYPE) {
+typedef NS_ENUM(NSInteger, DT_ACTIVITY_TYPE) {
     T_ACTIVITY_LIST = 0,
     T_ACTIVITY_OPEN_ACCOUNT = 1,
     T_ACTIVITY_OPEN_MEMBER = 2,
@@ -68,20 +68,26 @@ typedef NS_ENUM(NSUInteger, DT_ACTIVITY_TYPE) {
     T_ACTIVITY_JCTJ_AD = 5,
     T_ACTIVITY_SMART_PICK_AD = 6,
     T_ACTIVITY_YXT_ADVANCE_COURSE = 7,
-    T_ACTIVITY_SMBF_AD = 8
+    T_ACTIVITY_SMBF_AD = 8,
+    T_ACTIVITY_NEWS_BANNER = 9,
+    T_ACTIVITY_PDJN_AD = 10,
+    T_ACTIVITY_FPDS_AD = 11,
+    T_ACTIVITY_MEMBER_PACK_AD = 12,
+    T_ACTIVITY_STOCK_PICK_AD = 13,
+    T_ACTIVITY_NEWS_AD = 14
 };
 
-typedef NS_ENUM(NSUInteger, DT_AD_TYPE) {
+typedef NS_ENUM(NSInteger, DT_AD_TYPE) {
     E_AD_ACTIVITY = 0,
     E_AD_PAY = 1
 };
 
-typedef NS_ENUM(NSUInteger, E_SEC_ACT_TYPE) {
+typedef NS_ENUM(NSInteger, E_SEC_ACT_TYPE) {
     E_LHB_ACT_BUY = 1,
     E_LHB_ACT_SELL = 2
 };
 
-typedef NS_ENUM(NSUInteger, SingalErrCode) {
+typedef NS_ENUM(NSInteger, SingalErrCode) {
     E_SINGAL_SUCC = 0,
     E_SINGAL_NOT_LOGIN = -1,
     E_SINGAL_INVALID_STRATEGY_ID = -2,
@@ -90,13 +96,13 @@ typedef NS_ENUM(NSUInteger, SingalErrCode) {
     E_SINGAL_SVR_ERR = -99
 };
 
-typedef NS_ENUM(NSUInteger, E_STRATEGY_SUB_ACT_TYPE) {
+typedef NS_ENUM(NSInteger, E_STRATEGY_SUB_ACT_TYPE) {
     E_STRATEGY_SUB_ACT_ADD = 1,
     E_STRATEGY_SUB_ACT_CANCEL = 2,
     E_STRATEGY_SUB_ACT_TOP = 3
 };
 
-typedef NS_ENUM(NSUInteger, E_PRIV_PACE_CODE) {
+typedef NS_ENUM(NSInteger, E_PRIV_PACE_CODE) {
     PRIV_PC_UNKOWN = 0,
     PRIV_PC_OFFER = 1,
     PRIV_PC_NEGOTIATED = 2,
@@ -106,32 +112,32 @@ typedef NS_ENUM(NSUInteger, E_PRIV_PACE_CODE) {
     PRIV_PC_FAIL = 6
 };
 
-typedef NS_ENUM(NSUInteger, E_PRIV_PACE_TYPE) {
+typedef NS_ENUM(NSInteger, E_PRIV_PACE_TYPE) {
     PRIV_PT_START = 1,
     PRIV_PT_DOING = 2,
     PRIV_PT_END = 3
 };
 
-typedef NS_ENUM(NSUInteger, PlateHisCycleType) {
+typedef NS_ENUM(NSInteger, PlateHisCycleType) {
     E_CYCLE_WEEK = 0,
     E_CYCLE_MONTH = 1,
     E_CYCLE_HALF_YEAR = 2,
     E_CYCLE_YEAR = 3
 };
 
-typedef NS_ENUM(NSUInteger, E_INDEX_STOCKS_REQ_TYPE) {
+typedef NS_ENUM(NSInteger, E_INDEX_STOCKS_REQ_TYPE) {
     E_ALL_REQ = 0,
     E_UP_RATE_REQ = 1,
     E_DOWN_RATE_REQ = 2,
     E_TURNOVER_RATE_REQ = 3
 };
 
-typedef NS_ENUM(NSUInteger, E_DAILY_NEWS_TYPE) {
+typedef NS_ENUM(NSInteger, E_DAILY_NEWS_TYPE) {
     E_DAILY_DEFAULT = 0,
     E_DAILY_PORTFOLIO = 1
 };
 
-typedef NS_ENUM(NSUInteger, E_SCENE_TYPE) {
+typedef NS_ENUM(NSInteger, E_SCENE_TYPE) {
     E_ST_ADR = 1,
     E_ST_IOS = 2,
     E_ST_H5WX = 3,
@@ -2266,6 +2272,7 @@ typedef NS_ENUM(NSUInteger, E_SCENE_TYPE) {
 @property (nonatomic, copy) NSString* sDtSecCode;
 @property (nonatomic, copy) NSString* sDate;
 @property (nonatomic, assign) int32_t iSize;
+@property (nonatomic, assign) int32_t iFrom;
 
 
 - (void) write: (BaseEncodeStream *)eos;

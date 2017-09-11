@@ -124,6 +124,7 @@
         self.fMaxLimit = 0;
         self.fMinLimit = 0;
         self.lVolinstock = 0;
+        self.fVolumeRatio = 0;
     }
 
     return self;
@@ -195,6 +196,7 @@
     [ostream writeFloat: 40 value: self.fMaxLimit];
     [ostream writeFloat: 41 value: self.fMinLimit];
     [ostream writeInt64: 42 value: self.lVolinstock];
+    [ostream writeFloat: 43 value: self.fVolumeRatio];
     
     ostream.lastid = _THOTH_BASESTREAM_LASTID_;
 }
@@ -247,6 +249,7 @@
     self.fMaxLimit = [istream readFloatDef: 40 required: false def: self.fMaxLimit];
     self.fMinLimit = [istream readFloatDef: 41 required: false def: self.fMinLimit];
     self.lVolinstock = [istream readInt64Def: 42 required: false def: self.lVolinstock];
+    self.fVolumeRatio = [istream readFloatDef: 43 required: false def: self.fVolumeRatio];
     
     istream.lastid = _THOTH_BASESTREAM_LASTID_;
     return self;
@@ -303,6 +306,7 @@
     [JsonRoot append:@"fMaxLimit" value : [BaseJSON writeFloat : self.fMaxLimit]];
     [JsonRoot append:@"fMinLimit" value : [BaseJSON writeFloat : self.fMinLimit]];
     [JsonRoot append:@"lVolinstock" value : [BaseJSON writeInt64 : self.lVolinstock]];
+    [JsonRoot append:@"fVolumeRatio" value : [BaseJSON writeFloat : self.fVolumeRatio]];
     return JsonRoot;
 }
 
@@ -351,6 +355,7 @@
     self.fMaxLimit = [BaseJSON readFloatDef:[RootMap objectForKey:@"fMaxLimit"] required:false def:self.fMaxLimit];
     self.fMinLimit = [BaseJSON readFloatDef:[RootMap objectForKey:@"fMinLimit"] required:false def:self.fMinLimit];
     self.lVolinstock = [BaseJSON readInt64Def:[RootMap objectForKey:@"lVolinstock"] required:false def:self.lVolinstock];
+    self.fVolumeRatio = [BaseJSON readFloatDef:[RootMap objectForKey:@"fVolumeRatio"] required:false def:self.fVolumeRatio];
     return self;
 }
 

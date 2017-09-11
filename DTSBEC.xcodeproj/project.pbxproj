@@ -104,6 +104,8 @@
 		BB78E6831ECA9422007BD7C7 /* DtTemp.m in Sources */ = {isa = PBXBuildFile; fileRef = BB78E6811ECA9422007BD7C7 /* DtTemp.m */; };
 		BB78E6851ECAF642007BD7C7 /* InvestSuggestionComm.h in Headers */ = {isa = PBXBuildFile; fileRef = BB78E6841ECAF642007BD7C7 /* InvestSuggestionComm.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BB78E6871ECAF652007BD7C7 /* InvestSuggestionComm.m in Sources */ = {isa = PBXBuildFile; fileRef = BB78E6861ECAF652007BD7C7 /* InvestSuggestionComm.m */; };
+		BBD83CA01F6633A100A261C8 /* IntelliRecom.h in Headers */ = {isa = PBXBuildFile; fileRef = BBD83C9E1F6633A100A261C8 /* IntelliRecom.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BBD83CA11F6633A100A261C8 /* IntelliRecom.m in Sources */ = {isa = PBXBuildFile; fileRef = BBD83C9F1F6633A100A261C8 /* IntelliRecom.m */; };
 		D77608CB6813954B8CEC8980 /* Pods_DTSBEC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEE6D60DCB56572EF72B3323 /* Pods_DTSBEC.framework */; };
 /* End PBXBuildFile section */
 
@@ -210,6 +212,8 @@
 		BB78E6811ECA9422007BD7C7 /* DtTemp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DtTemp.m; sourceTree = "<group>"; };
 		BB78E6841ECAF642007BD7C7 /* InvestSuggestionComm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InvestSuggestionComm.h; sourceTree = "<group>"; };
 		BB78E6861ECAF652007BD7C7 /* InvestSuggestionComm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InvestSuggestionComm.m; sourceTree = "<group>"; };
+		BBD83C9E1F6633A100A261C8 /* IntelliRecom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntelliRecom.h; sourceTree = "<group>"; };
+		BBD83C9F1F6633A100A261C8 /* IntelliRecom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntelliRecom.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -254,6 +258,8 @@
 		BB3DCD231E66CC8B008BDFA4 /* DTSBEC */ = {
 			isa = PBXGroup;
 			children = (
+				BBD83C9E1F6633A100A261C8 /* IntelliRecom.h */,
+				BBD83C9F1F6633A100A261C8 /* IntelliRecom.m */,
 				BB3DCD2C1E66CCCC008BDFA4 /* Account.h */,
 				BB3DCD2D1E66CCCC008BDFA4 /* Account.m */,
 				BB3DCD2E1E66CCCC008BDFA4 /* AccountCache.h */,
@@ -371,6 +377,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BBD83CA01F6633A100A261C8 /* IntelliRecom.h in Headers */,
 				BB3DCDDA1E66CCCC008BDFA4 /* ZipStore.h in Headers */,
 				BB3DCDD61E66CCCC008BDFA4 /* Video.h in Headers */,
 				BB3DCD901E66CCCC008BDFA4 /* AppConfig.h in Headers */,
@@ -573,6 +580,7 @@
 				BB3DCDA81E66CCCC008BDFA4 /* FreqLimit.m in Sources */,
 				BB3DCDB51E66CCCC008BDFA4 /* News.m in Sources */,
 				BB05B0F51EA07A860084EA1D /* MarginTrade.m in Sources */,
+				BBD83CA11F6633A100A261C8 /* IntelliRecom.m in Sources */,
 				BB3DCDAF1E66CCCC008BDFA4 /* LogQuery.m in Sources */,
 				BB3DCDB11E66CCCC008BDFA4 /* LogReport.m in Sources */,
 				BB3DCDD91E66CCCC008BDFA4 /* YunWeb.m in Sources */,

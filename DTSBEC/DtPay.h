@@ -8,7 +8,7 @@
 #import "AccuPoint.h"
 #import "AppConfig.h"
 
-typedef NS_ENUM(NSUInteger, E_DT_PAY_ERROR_CODE) {
+typedef NS_ENUM(NSInteger, E_DT_PAY_ERROR_CODE) {
     E_DT_PAY_SUCC = 0,
     E_DT_PAY_NOT_LOGIN = -1,
     E_DT_PAY_TICKET_EXPIRED = -2,
@@ -26,36 +26,40 @@ typedef NS_ENUM(NSUInteger, E_DT_PAY_ERROR_CODE) {
     E_DT_PAY_NO_TRADE_ID = 15,
     E_DT_PAY_INVALID_SUBJECT_TYPE = -16,
     E_DT_PAY_NOT_BIND_PHONE = -17,
+    E_DT_PAY_INVALID_USER_SIGN = -18,
     E_DT_PAY_SVR_ERR = -99
 };
 
-typedef NS_ENUM(NSUInteger, E_DT_SUBJECT_TYPE) {
+typedef NS_ENUM(NSInteger, E_DT_SUBJECT_TYPE) {
     E_DT_SUBJECT_MEMBER = 0,
     E_DT_SUBJECT_SECRET_DECISION = 1,
     E_DT_SUBJECT_YXT_ADVANCED_COURSE = 2,
     E_DT_SUBJECT_YP_PRIVATE_STOCK_TACTICS = 3,
-    E_DT_SUBJECT_YP_PDJN = 4
+    E_DT_SUBJECT_YP_PDJN = 4,
+    E_DT_SUBJECT_YP_FPDS = 5
 };
 
-typedef NS_ENUM(NSUInteger, E_DT_SUBJECT_RISK_LEVEL) {
+typedef NS_ENUM(NSInteger, E_DT_SUBJECT_RISK_LEVEL) {
     E_DT_SUBJECT_RISK_NO = 0,
     E_DT_SUBJECT_RISK_LOW = 1,
-    E_DT_SUBJECT_RISK_MID = 2,
-    E_DT_SUBJECT_RISK_HIGH = 3
+    E_DT_SUBJECT_RISK_MID_LOW = 2,
+    E_DT_SUBJECT_RISK_MID = 3,
+    E_DT_SUBJECT_RISK_MID_HIGH = 4,
+    E_DT_SUBJECT_RISK_HIGH = 5
 };
 
-typedef NS_ENUM(NSUInteger, E_DT_PAY_TYPE) {
+typedef NS_ENUM(NSInteger, E_DT_PAY_TYPE) {
     E_DT_PAY_WX = 0,
     E_DT_PAY_ALI = 1
 };
 
-typedef NS_ENUM(NSUInteger, E_DT_SUBJECT_PAY_CHANNEL) {
+typedef NS_ENUM(NSInteger, E_DT_SUBJECT_PAY_CHANNEL) {
     E_SUBJECT_PAY_DT = 0,
     E_SUBJECT_PAY_YP = 1,
     E_SUBJECT_PAY_YXT = 2
 };
 
-typedef NS_ENUM(NSUInteger, E_DT_PAY_STATUS) {
+typedef NS_ENUM(NSInteger, E_DT_PAY_STATUS) {
     E_DT_PAY_WATING_PAY = 0,
     E_DT_PAY_SUCCESS = 1,
     E_DT_PAY_FAIL = 2,
@@ -63,14 +67,15 @@ typedef NS_ENUM(NSUInteger, E_DT_PAY_STATUS) {
     E_DT_PAY_PART_PAY = 4
 };
 
-typedef NS_ENUM(NSUInteger, E_DT_PAY_TIME_UNIT) {
+typedef NS_ENUM(NSInteger, E_DT_PAY_TIME_UNIT) {
     E_DT_PAY_TIME_MONTH = 0,
     E_DT_PAY_TIME_DAY = 1
 };
 
-typedef NS_ENUM(NSUInteger, E_DT_PAY_CHANNEL) {
+typedef NS_ENUM(NSInteger, E_DT_PAY_CHANNEL) {
     E_DT_PAY_CHANNEL_APP = 0,
-    E_DT_PAY_CHANNEL_QQ_BROWSER_H5 = 1
+    E_DT_PAY_CHANNEL_QQ_BROWSER_H5 = 1,
+    E_DT_PAY_CHANNEL_YP_H5 = 2
 };
 
 /////////////////////////////////////////////////////////////////
@@ -211,6 +216,8 @@ typedef NS_ENUM(NSUInteger, E_DT_PAY_CHANNEL) {
 @property (nonatomic, copy) NSString* sDtPayOrderId;
 @property (nonatomic, copy) NSString* sPassback;
 @property (nonatomic, copy) NSString* sAppId;
+@property (nonatomic, assign) int32_t iReqType;
+@property (nonatomic, copy) NSString* sOpenId;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -295,6 +302,9 @@ typedef NS_ENUM(NSUInteger, E_DT_PAY_CHANNEL) {
 @property (nonatomic, assign) int32_t iAvgMoney;
 @property (nonatomic, assign) int32_t iTotalMoney;
 @property (nonatomic, assign) int32_t iUnit;
+@property (nonatomic, copy) NSString* sDesc;
+@property (nonatomic, copy) NSString* sTag;
+@property (nonatomic, assign) BOOL bLineCrossed;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -577,6 +587,7 @@ typedef NS_ENUM(NSUInteger, E_DT_PAY_CHANNEL) {
 
 @property (nonatomic, assign) int32_t iCouponNum;
 @property (nonatomic, strong) UserRiskEvalResult* stRiskResult;
+@property (nonatomic, assign) int32_t iNeedSign;
 
 
 - (void) write: (BaseEncodeStream *)eos;
@@ -624,6 +635,91 @@ typedef NS_ENUM(NSUInteger, E_DT_PAY_CHANNEL) {
 - (void) write: (BaseEncodeStream *)eos;
 
 - (GetPayCouponRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetPayOrderReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+@property (nonatomic, strong) AccountTicket* stAccountTicket;
+@property (nonatomic, copy) NSString* sOrderId;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetPayOrderReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface GetPayOrderRsp : Message
+
+@property (nonatomic, strong) AccountInfo* stAccount;
+@property (nonatomic, copy) NSString* sInnerOrderId;
+@property (nonatomic, assign) int64_t lTimeStamp;
+@property (nonatomic, copy) NSString* sSubject;
+@property (nonatomic, copy) NSString* sPeriod;
+@property (nonatomic, copy) NSString* sFee;
+@property (nonatomic, copy) NSString* sRiskDesc;
+@property (nonatomic, copy) NSString* sUsrRiskLevel;
+@property (nonatomic, copy) NSString* sUserRiskAnswer;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (GetPayOrderRsp *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface CommitUserSignReq : Message
+
+@property (nonatomic, strong) UserInfo* stUserInfo;
+@property (nonatomic, strong) AccountTicket* stAccountTicket;
+@property (nonatomic, copy) NSString* sOrderId;
+@property (nonatomic, copy) NSString* sUserSignStr;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (CommitUserSignReq *) read: (BaseDecodeStream *)dos;
+
+- (NSString *) writeToJsonString;
+
+- (JSONValueMessage *) writeJSON;
+
+- (void) readFromJsonString : (NSString *) strJson;
+
+@end
+
+/////////////////////////////////////////////////////////////////
+@interface CommitUserSignRsp : Message
+
+@property (nonatomic, assign) int32_t iReturnCode;
+
+
+- (void) write: (BaseEncodeStream *)eos;
+
+- (CommitUserSignRsp *) read: (BaseDecodeStream *)dos;
 
 - (NSString *) writeToJsonString;
 
